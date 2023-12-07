@@ -2,16 +2,18 @@ import React from "react";
 
 const PoemOfTheDay = () => {
    return (
-      <div className="mt-7">
-         <div className="flex gap-2">
-            <h2 className="text-xl text-clr-tertiary font-semibold">Poem of the Day</h2>
+      <div>
+         <div className="flex gap-2 items-center md:gap-4">
+            <h2 className="text-xl md:text-3xl lg:text-4xl text-clr-tertiary font-semibold">
+               Poem of the Day
+            </h2>
             <svg
                xmlns="http://www.w3.org/2000/svg"
                fill="none"
                viewBox="0 0 24 24"
-               strokeWidth={1.8}
+               strokeWidth={1.5}
                stroke="currentColor"
-               className="w-6 h-6 text-clr-tertiary"
+               className="w-6 h-6 md:w-10 md:h-10 text-clr-tertiary"
             >
                <path
                   strokeLinecap="round"
@@ -21,19 +23,25 @@ const PoemOfTheDay = () => {
             </svg>
          </div>
 
-         <div className="grid grid-cols-[2fr_1fr] mt-3">
+         <div className="grid grid-cols-[2fr_1fr] mt-3 md:justify-between">
             <div className="grid pr-3 gap-3">
                <div className="grid -gap-1">
-                  <a href=" " className="block text-base font-medium">
+                  <a
+                     href=" "
+                     className="transition-all block text-base md:text-xl lg:text-2xl text-clr-black hover:text-clr-tertiary font-medium"
+                  >
                      Unchained Melody
                   </a>
-                  <a href=" " className="text-xs text-clr-black-faded font-light">
+                  <a
+                     href=" "
+                     className="text-xs md:text-sm lg:text-base text-clr-black-faded font-light"
+                  >
                      By Righteous Brothers
                   </a>
                </div>
 
                <div>
-                  <p className="text-xs font-light line-clamp-4">
+                  <p className="text-xs md:text-base font-light line-clamp-4">
                      Lonely rivers flow to the sea
                      <br />
                      I'll be coming home, wait for me,
@@ -45,7 +53,7 @@ const PoemOfTheDay = () => {
 
                <a
                   href=" "
-                  className="justify-self-start text-xs text-clr-tertiary inline-block underline"
+                  className="transition-all justify-self-start text-xs md:text-base text-clr-tertiary hover:text-clr-black inline-block underline"
                >
                   View
                </a>
@@ -54,7 +62,7 @@ const PoemOfTheDay = () => {
             <img
                src="https://images.pexels.com/photos/167092/pexels-photo-167092.jpeg"
                alt="music"
-               className="object-cover border w-full h-24 border-clr-tertiary"
+               className="object-cover border w-full h-24 md:h-32 border-clr-tertiary"
             />
          </div>
       </div>

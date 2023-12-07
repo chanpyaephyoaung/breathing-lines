@@ -14,9 +14,9 @@ const links = [
 const UserDropdown = () => {
    return (
       <Menu as="div" className="relative inline-block text-left z-40">
-         <div>
+         <div className="grid items-center">
             <Menu.Button className="inline-flex w-full justify-center rounded-md ">
-               <UserIcon className="w-6 h-6 text-clr-black" />
+               <UserIcon className="transition-all w-6 md:w-8 text-clr-black stroke-1 hover:text-clr-primary" />
             </Menu.Button>
          </div>
          <Transition

@@ -4,7 +4,13 @@ import Input from "./Input/Input.tsx";
 const SearchForm = () => {
    return (
       <form>
-         <Input size="sm" label="search" type="text" placeholder="Search for anything">
+         <Input
+            size="sm"
+            label="search"
+            type="text"
+            placeholder="Search for anything"
+            showLabel={false}
+         >
             <path
                strokeLinecap="round"
                strokeLinejoin="round"

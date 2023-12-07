@@ -5,7 +5,7 @@ import UploadPoemForm from "../Forms/UploadPoemForm.tsx";
 const UploadPoemSection = () => {
    return (
       <FormContainer>
-         <h2 className="text-lg font-bold text-clr-black">Sign In</h2>
+         <h2 className="text-lg md:text-2xl font-bold text-clr-black">Upload a Poem!</h2>
          <UploadPoemForm />
       </FormContainer>
    );

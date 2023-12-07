@@ -3,7 +3,8 @@ import PoemPreviewPost from "./PoemPreviewPost.tsx";
 
 const PoemPreviewPosts = () => {
    return (
-      <div className="w-4/6 mx-auto grid gap-6 py-5">
+      <div className="mt-6 w-4/6 md:w-5/6 max-w-[900px] mx-auto grid gap-6 py-5 md:grid-cols-2">
+         <PoemPreviewPost />
          <PoemPreviewPost />
          <PoemPreviewPost />
       </div>

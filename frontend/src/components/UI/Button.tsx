@@ -1,8 +1,8 @@
 import React from "react";
 
 const Button = ({ type, size, children, customStyle }) => {
-   const btnSmClasses = "text-xs py-2 px-5";
-   const btnLgClasses = "text-sm py-3 px-5";
+   const btnSmClasses = "text-xs py-2 px-5 md:text-base md:py-3 md:px-5";
+   const btnLgClasses = "text-sm py-3 px-5 md:text-base";
 
    const btnPrimaryStyle =
       " text-clr-primary font-medium border border-clr-primary rounded-lg hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1";

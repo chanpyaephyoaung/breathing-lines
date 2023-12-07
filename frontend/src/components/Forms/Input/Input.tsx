@@ -1,9 +1,9 @@
 import React from "react";
 
 const Input = ({ label, type, placeholder = "", size, showLabel, children }) => {
-   const inputSmClasses = "text-xs py-2 pl-8 pr-3";
-   const inputLgClasses = "text-sm py-3 pl-12 pr-3";
-   const defaultInputClasses = "text-sm py-3 pl-4 pr-4";
+   const inputSmClasses = "text-xs md:text-base py-2 md:py-3 pl-8 md:pl-12 pr-3";
+   const inputLgClasses = "text-base py-3 pl-12 pr-3";
+   const defaultInputClasses = "text-sm md:text-base py-3 md:py-3 pl-4 pr-4";
 
    return (
       <label className="relative text-xs grid justify-items-start gap-y-2">

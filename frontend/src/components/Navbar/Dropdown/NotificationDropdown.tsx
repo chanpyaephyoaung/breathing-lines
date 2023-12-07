@@ -37,9 +37,9 @@ const dummyData = [
 const NotificationDropdown = () => {
    return (
       <Menu as="div" className="relative inline-block text-left z-40">
-         <div>
+         <div className="grid items-center">
             <Menu.Button className="inline-flex w-full justify-center rounded-md ">
-               <BellIcon className="w-6 h-6 text-clr-black" />
+               <BellIcon className="transition-all w-6 md:w-8 text-clr-black hover:text-clr-primary stroke-1" />
             </Menu.Button>
          </div>
          <Transition
@@ -65,14 +65,14 @@ const NotificationDropdown = () => {
                            >
                               <img
                                  src={data.userProfileImg}
-                                 className="rounded-full w-9 h-9 object-cover row-span-2 self-start"
+                                 className="rounded-full w-9 h-10 md:w-10 md:h-10 object-cover row-span-2 self-start"
                                  alt=""
                               />
-                              <p className="col-start-2 text-xs font-normal line-clamp-2">
+                              <p className="col-start-2 text-xs md:text-sm font-normal line-clamp-2">
                                  {`${data.otherUser} ${data.action} your poem: ${data.targetPoem}.`}
                               </p>
                               <span
-                                 className={`col-start-2 row-start-2 text-2xs ${
+                                 className={`col-start-2 row-start-2 text-2xs md:text-xs ${
                                     active ? "text-clr-white" : "text-clr-black-faded"
                                  }`}
                               >
