@@ -32,6 +32,9 @@ jobs:
          - name: Run tests
            run: npm run test
 
+         - name: Lint
+           run: npm run lint
+
          - name: Stop containers
            if: always()
            run: docker-compose -f "docker-compose.yml" down
