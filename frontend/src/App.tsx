@@ -1,6 +1,5 @@
 import React from "react";
 import { useState } from "react";
-
 import PoemPreviewPosts from "./components/Poems/PoemPreview/PoemPreviewPosts.tsx";
 import HeaderSection from "./components/Section/HeaderSection.tsx";
 // import SignInSection from "./components/Section/SignInSection.tsx";
@@ -30,7 +29,7 @@ function App() {
             onHideMainNav={hideMainNavHandler}
             showMainNav={showMainNav}
          />
-         <HeaderSection userType={userType} />
+         <HeaderSection />
          <PoemPreviewPosts />
          {/* <SignInSection /> */}
          {/* <SignUpSection /> */}
