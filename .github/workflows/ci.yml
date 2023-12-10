@@ -6,6 +6,7 @@ on:
          - main
          - cicd
          - cicd2
+         - cicd2.2
    pull_request:
       branches:
          - main
@@ -32,6 +33,9 @@ jobs:
 
          - name: Run tests
            run: npm run test
+
+         - name: Lint
+           run: npm run lint
 
          - name: Stop containers
            if: always()
