@@ -30,7 +30,7 @@ function App() {
             onHideMainNav={hideMainNavHandler}
             showMainNav={showMainNav}
          />
-         <HeaderSection userType={userType} />
+         <HeaderSection />
          <PoemPreviewPosts />
          {/* <SignInSection /> */}
          {/* <SignUpSection /> */}
