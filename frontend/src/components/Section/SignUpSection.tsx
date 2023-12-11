@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import SignUpForm from "../Forms/SignUpForm.tsx";
 import Divider from "../UI/Divider.tsx";
 import FormContainer from "../UI/FormContainer.tsx";
@@ -11,9 +12,9 @@ const SignUpSection = () => {
          <Divider />
          <p className="text-clr-black-faded text-xs md:text-sm">
             Already have an account?{" "}
-            <a href=" " className="text-clr-primary font-normal hover:underline">
+            <Link to="/signin" className="text-clr-primary font-normal hover:underline">
                Sign in
-            </a>
+            </Link>
          </p>
       </FormContainer>
    );

@@ -1,10 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { generatePoemContentMarkup } from "../../../utils/poemUtils.tsx";
 
-const PoemPreviewPost = () => {
+const PoemPreviewPost = ({ id, datePosted, viewsCount, coverImg, title, author, content }) => {
    return (
       <div className="grid gap-2 p-3 md:p-5 border border-clr-black">
          <div className="text-2xs md:text-xs w-full flex justify-between">
-            <span>Nov 5, 2023</span>
+            <span>{datePosted}</span>
             <span className="flex gap-1">
                <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -25,43 +27,38 @@ const PoemPreviewPost = () => {
                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                   />
                </svg>
-               <span>500 views</span>
+               <span>{viewsCount} views</span>
             </span>
          </div>
 
-         <img
-            className="w-full h-32 md:h-40 lg:h-60 object-cover"
-            src="https://images.pexels.com/photos/844297/pexels-photo-844297.jpeg"
-            alt="sky"
-         />
+         <img className="w-full h-32 md:h-40 lg:h-60 object-cover" src={coverImg} alt="" />
 
          <div className="grid -gap-1">
-            <a href=" " className="block text-base md:text-xl font-medium">
-               Tears In Heaven
-            </a>
-            <a href=" " className="text-xs md:text-sm text-clr-black-faded font-light">
-               By Eric Clapton
+            <Link
+               to={`poem/${id}`}
+               className="transition-all block text-base md:text-xl font-medium hover:text-clr-primary"
+            >
+               {title}
+            </Link>
+            <a
+               href=" "
+               className="transition-all text-xs md:text-sm text-clr-black-faded font-light hover:text-clr-primary"
+            >
+               By {author}
             </a>
          </div>
 
          <div className="line-clamp-4">
-            <p className="text-xs md:text-base font-light">
-               Would you know my name?
-               <br />
-               If I saw you in heaven
-               <br />
-               Would it be the same?
-               <br />
-               If I saw you in heaven
-            </p>
+            <p className="text-xs md:text-base font-light">{generatePoemContentMarkup(content)}</p>
          </div>
 
-         <a
-            href=" "
+         <Link
+            to={`poem/${id}`}
+            preventScrollReset={true}
             className="transition-all justify-self-start text-xs font-light md:text-base text-clr-black-faded hover:text-clr-primary inline-block underline"
          >
             Breathe more
-         </a>
+         </Link>
       </div>
    );
 };

@@ -1,4 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { dummyPoems } from "../../../sampleData";
+import { generatePoemContentMarkup } from "../../../utils/poemUtils.tsx";
+
+const poemOfTheDay = dummyPoems[2];
 
 const PoemOfTheDay = () => {
    return (
@@ -26,37 +31,32 @@ const PoemOfTheDay = () => {
          <div className="grid grid-cols-[2fr_1fr] mt-3 md:justify-between">
             <div className="grid pr-3 gap-3">
                <div className="grid -gap-1">
-                  <a
-                     href=" "
+                  <Link
+                     to={`poem/${poemOfTheDay.id}`}
                      className="transition-all block text-base md:text-xl lg:text-2xl text-clr-black hover:text-clr-tertiary font-medium"
                   >
-                     Unchained Melody
-                  </a>
+                     {poemOfTheDay.title}
+                  </Link>
                   <a
                      href=" "
                      className="text-xs md:text-sm lg:text-base text-clr-black-faded font-light"
                   >
-                     By Righteous Brothers
+                     By {poemOfTheDay.author}
                   </a>
                </div>
 
                <div>
                   <p className="text-xs md:text-base font-light line-clamp-4">
-                     Lonely rivers flow to the sea
-                     <br />
-                     I'll be coming home, wait for me,
-                     <br />
-                     Oh my love, my darlling I've hungered for your touch
-                     <br />A long, lonely time
+                     {generatePoemContentMarkup(poemOfTheDay.content)}
                   </p>
                </div>
 
-               <a
-                  href=" "
+               <Link
+                  to={`poem/${poemOfTheDay.id}`}
                   className="transition-all justify-self-start text-xs md:text-base text-clr-tertiary hover:text-clr-black inline-block underline"
                >
                   View
-               </a>
+               </Link>
             </div>
 
             <img

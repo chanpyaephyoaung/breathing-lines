@@ -26,7 +26,9 @@ const PoemPostInteractionBar = () => {
          <div className="text-xs md:text-sm py-3 px-6 border border-1 border-t-clr-black flex justify-between">
             <div className="grid gap-y-1 items-center justify-items-start">
                <p>200 likes</p>
-               <p className="hover:underline cursor-pointer">View all 5 comments</p>
+               <p className="hover:underline hover:text-clr-primary cursor-pointer">
+                  View all 5 comments
+               </p>
             </div>
 
             <div className="grid gap-y-1  items-center justify-items-end">

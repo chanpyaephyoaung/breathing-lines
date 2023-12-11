@@ -11,7 +11,7 @@ const ToggleNavBar = ({ onHideMainNav, showMainNav }) => {
       <div
          className={`transition-all ${
             showMainNav ? "opacity-100 visible" : "opacity-0 invisible"
-         } w-full h-screen overflow-hidden bg-clr-bg fixed top-0 left-0 z-50`}
+         } w-full h-screen overflow-hidden bg-clr-bg fixed top-0 left-0 z-[100]`}
       >
          <a onClick={handleMainNavClick} href=" ">
             <XMarkIcon className="w-9 h-9 md:w-11 md:h-11 text-clr-black stroke-[0.7] absolute right-4 top-4" />

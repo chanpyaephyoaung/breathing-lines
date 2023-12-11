@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Bars3Icon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 import UserDropdown from "./Dropdown/UserDropdown.tsx";
 import NotificationDropdown from "./Dropdown/NotificationDropdown.tsx";
@@ -17,12 +18,12 @@ const Navbar = ({ onShowMainNav, userType }) => {
                className="transition-all w-6 md:w-8 text-clr-black hover:text-clr-primary cursor-pointer stroke-1"
             />
 
-            <a
-               href=" "
+            <Link
+               to="/"
                className="justify-self-center text-lg md:text-2xl font-['Playfair_Display'] tracking-wider cursor-pointer"
             >
                BreathingLines
-            </a>
+            </Link>
 
             <div className="justify-self-end flex gap-3 items-center">
                {userType === "user" && (
@@ -33,7 +34,12 @@ const Navbar = ({ onShowMainNav, userType }) => {
                   </>
                )}
                {userType === "admin" && (
-                  <ArrowRightOnRectangleIcon className="transition-all w-6 md:w-8 text-clr-black hover:text-clr-primary stroke-1 cursor-pointer" />
+                  <Link
+                     to="/signin"
+                     className="transition-all w-6 md:w-8 text-clr-black hover:text-clr-primary cursor-pointer"
+                  >
+                     <ArrowRightOnRectangleIcon className="stroke-1" />
+                  </Link>
                )}
             </div>
          </div>

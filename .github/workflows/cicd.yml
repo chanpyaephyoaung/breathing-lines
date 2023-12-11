@@ -5,6 +5,7 @@ on:
       branches:
          - main
          - addCicd
+         - routes
    pull_request:
       branches:
          - main
