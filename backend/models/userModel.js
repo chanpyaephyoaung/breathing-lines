@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema(
          required: true,
          default: false,
       },
+      poems: {
+         type: [mongoose.Schema.Types.ObjectId],
+         required: true,
+         ref: "Poem",
+      },
    },
    { timestamps: true }
 );
