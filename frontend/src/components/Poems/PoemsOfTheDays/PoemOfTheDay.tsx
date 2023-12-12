@@ -1,11 +1,30 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { dummyPoems } from "../../../sampleData";
+import axios from "axios";
 import { generatePoemContentMarkup } from "../../../utils/poemUtils.tsx";
 
-const poemOfTheDay = dummyPoems[2];
-
 const PoemOfTheDay = () => {
+   const [poemOfTheDay, setPoemOfTheDay] = useState({
+      _id: {},
+      datePosted: "",
+      viewsCount: 0,
+      coverImg: "",
+      title: "",
+      author: "",
+      content: "",
+      tags: [],
+   });
+
+   useEffect(() => {
+      async function fetchPoem() {
+         const { data } = await axios.get(`/api/poems`);
+         setPoemOfTheDay(data[2]);
+      }
+
+      fetchPoem();
+   }, []);
+
    return (
       <div>
          <div className="flex gap-2 items-center md:gap-4">
@@ -32,7 +51,7 @@ const PoemOfTheDay = () => {
             <div className="grid pr-3 gap-3">
                <div className="grid -gap-1">
                   <Link
-                     to={`poem/${poemOfTheDay.id}`}
+                     to={`poem/${poemOfTheDay._id}`}
                      className="transition-all block text-base md:text-xl lg:text-2xl text-clr-black hover:text-clr-tertiary font-medium"
                   >
                      {poemOfTheDay.title}
@@ -52,7 +71,7 @@ const PoemOfTheDay = () => {
                </div>
 
                <Link
-                  to={`poem/${poemOfTheDay.id}`}
+                  to={`poem/${poemOfTheDay._id}`}
                   className="transition-all justify-self-start text-xs md:text-base text-clr-tertiary hover:text-clr-black inline-block underline"
                >
                   View

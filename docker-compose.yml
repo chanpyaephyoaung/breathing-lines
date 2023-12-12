@@ -17,6 +17,7 @@ services:
       environment:
          PORT: ${PORT}
          NODE_ENV: ${NODE_ENV}
+         MONGO_URI: ${MONGO_URI}
       volumes:
          - ./backend:/app
       depends_on:

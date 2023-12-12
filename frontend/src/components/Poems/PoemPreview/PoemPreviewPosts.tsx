@@ -20,8 +20,8 @@ const PoemPreviewPosts = () => {
       <div className="mt-6 w-4/6 md:w-5/6 max-w-[950px] mx-auto grid gap-10 py-5 md:grid-cols-2">
          {poems.map((poem) => (
             <PoemPreviewPost
-               key={poem["id"]}
-               id={poem["id"]}
+               key={poem["_id"]}
+               id={poem["_id"]}
                datePosted={poem["datePosted"]}
                viewsCount={poem["viewsCount"]}
                coverImg={poem["coverImg"]}

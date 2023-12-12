@@ -7,7 +7,7 @@ const PoemsOfPreviousDay = ({ poem }) => {
       <div className="grid gap-y-1 pb-2 border-b border-clr-black-faded">
          <p className="text-sm text-clr-tertiary font-medium">Yesterday</p>
          <Link
-            to={`poem/${poem.id}`}
+            to={`poem/${poem._id}`}
             className="transition-all text-lg font-medium text-clr-black hover:text-clr-tertiary"
          >
             {poem.title}

@@ -11,7 +11,7 @@ import OverlayBgBlur from "../../UI/OverlayBgBlur.tsx";
 
 const PoemFullPost = () => {
    const [poem, setPoem] = useState({
-      id: "",
+      id: {},
       datePosted: "",
       viewsCount: 0,
       coverImg: "",
@@ -26,12 +26,12 @@ const PoemFullPost = () => {
    useEffect(() => {
       async function fetchPoem() {
          const { data } = await axios.get(`/api/poems/${poemId}`);
-         console.log(data);
          setPoem(data);
       }
 
       fetchPoem();
    }, [poemId]);
+
    return (
       <>
          <OverlayBgBlur />
