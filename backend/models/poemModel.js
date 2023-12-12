@@ -30,7 +30,7 @@ const poemSchema = new mongoose.Schema(
          type: String,
          required: true,
       },
-      viewCounts: {
+      viewsCount: {
          type: Number,
          required: true,
          default: 0,

@@ -14,6 +14,9 @@ const PoemFullPost = () => {
       id: {},
       datePosted: "",
       viewsCount: 0,
+      likesCount: 0,
+      sharesCount: 0,
+      reviewsCount: 0,
       coverImg: "",
       title: "",
       author: "",
@@ -46,7 +49,8 @@ const PoemFullPost = () => {
                <div className="text-2xs md:text-xs text-clr-black flex justify-between items-center mb-1">
                   <p>{poem?.datePosted}</p>
                   <p className="flex gap-x-1 items-center">
-                     <EyeIcon className="w-4 h-4 md:w-5 md:h-5 text-clr-black" /> 500 views
+                     <EyeIcon className="w-4 h-4 md:w-5 md:h-5 text-clr-black" /> {poem.viewsCount}{" "}
+                     views
                   </p>
                </div>
 
@@ -78,7 +82,7 @@ const PoemFullPost = () => {
             </div>
 
             <div className="w-full absolute bottom-0 z-10">
-               <PoemPostInteractionBar />
+               <PoemPostInteractionBar poem={poem} />
             </div>
          </div>
       </>

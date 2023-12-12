@@ -7,7 +7,7 @@ import {
    StarIcon,
 } from "@heroicons/react/24/outline";
 
-const PoemPostInteractionBar = () => {
+const PoemPostInteractionBar = ({ poem }) => {
    return (
       <>
          <div className="py-3 px-6 border border-1 border-t-clr-black flex justify-between">
@@ -25,14 +25,14 @@ const PoemPostInteractionBar = () => {
 
          <div className="text-xs md:text-sm py-3 px-6 border border-1 border-t-clr-black flex justify-between">
             <div className="grid gap-y-1 items-center justify-items-start">
-               <p>200 likes</p>
+               <p>{poem.likesCount} likes</p>
                <p className="hover:underline hover:text-clr-primary cursor-pointer">
                   View all 5 comments
                </p>
             </div>
 
             <div className="grid gap-y-1  items-center justify-items-end">
-               <p>13 shares</p>
+               <p>{poem.sharesCount} shares</p>
                <div className="flex gap-x-1">
                   <div className="flex">
                      <StarIcon className="w-4 md:w-5 fill-clr-secondary" />
@@ -41,7 +41,7 @@ const PoemPostInteractionBar = () => {
                      <StarIcon className="w-4 md:w-5 fill-clr-secondary" />
                      <StarIcon className="w-4 md:w-5" />
                   </div>
-                  <span>(14)</span>
+                  <span>({poem.reviewsCount})</span>
                </div>
             </div>
          </div>
