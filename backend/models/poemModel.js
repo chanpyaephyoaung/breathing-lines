@@ -19,7 +19,7 @@ const commentSchema = mongoose.Schema(
    { timestamps: true }
 );
 
-const poemSchema = new mongoose.Schema(
+export const poemSchema = new mongoose.Schema(
    {
       user: {
          type: mongoose.Schema.Types.ObjectId,

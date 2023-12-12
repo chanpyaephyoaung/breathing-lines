@@ -2,11 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { generatePoemContentMarkup } from "../../../utils/poemUtils.tsx";
 
-const PoemPreviewPost = ({ id, datePosted, viewsCount, coverImg, title, author, content }) => {
+const PoemPreviewPost = ({ id, date, viewsCount, coverImg, title, author, content }) => {
    return (
       <div className="grid gap-2 p-3 md:p-5 border border-clr-black">
          <div className="text-2xs md:text-xs w-full flex justify-between">
-            <span>{datePosted}</span>
+            <span>{new Date(date).toDateString()}</span>
             <span className="flex gap-1">
                <svg
                   xmlns="http://www.w3.org/2000/svg"

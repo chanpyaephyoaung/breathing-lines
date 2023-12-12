@@ -1,35 +1,44 @@
 import React from "react";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import PoemPreviewPost from "./PoemPreviewPost.tsx";
-// import { dummyPoems } from "../../../sampleData.js";
+import { useGetPoemsQuery } from "../../../slices/poemsApiSlice.ts";
 
 const PoemPreviewPosts = () => {
-   const [poems, setPoems] = useState([]);
+   const { data: poems, isLoading, error } = useGetPoemsQuery();
 
-   useEffect(() => {
-      const fetchPoems = async () => {
-         const { data } = await axios.get("/api/poems");
-         setPoems(data);
-      };
+   let errorMsg: string | undefined = "";
 
-      fetchPoems();
-   }, []);
+   if (error) {
+      if ("status" in error) {
+         // you can access all properties of `FetchBaseQueryError` here
+         errorMsg = "error" in error ? error.error : JSON.stringify(error.data);
+      } else {
+         // you can access all properties of `SerializedError` here
+         errorMsg = error.message;
+      }
+   }
 
    return (
       <div className="mt-6 w-4/6 md:w-5/6 max-w-[950px] mx-auto grid gap-10 py-5 md:grid-cols-2">
-         {poems.map((poem) => (
-            <PoemPreviewPost
-               key={poem["_id"]}
-               id={poem["_id"]}
-               datePosted={poem["datePosted"]}
-               viewsCount={poem["viewsCount"]}
-               coverImg={poem["coverImg"]}
-               title={poem["title"]}
-               author={poem["author"]}
-               content={poem["content"]}
-            />
-         ))}
+         {isLoading ? (
+            <h2>Loading...</h2>
+         ) : error ? (
+            <h2>{errorMsg}</h2>
+         ) : (
+            <>
+               {poems?.map((poem) => (
+                  <PoemPreviewPost
+                     key={poem["_id"]}
+                     id={poem["_id"]}
+                     date={poem["date"]}
+                     viewsCount={poem["viewsCount"]}
+                     coverImg={poem["coverImg"]}
+                     title={poem["title"]}
+                     author={poem["author"]}
+                     content={poem["content"]}
+                  />
+               ))}
+            </>
+         )}
       </div>
    );
 };

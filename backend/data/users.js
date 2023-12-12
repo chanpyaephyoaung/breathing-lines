@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { poemSchema } from "../models/poemModel";
 
 const users = [
    {
@@ -8,16 +9,25 @@ const users = [
       isAdmin: true,
    },
    {
-      name: "John Doe",
-      email: "john@gmail.com",
+      name: "Eric Clapton",
+      email: "ericclapton@gmail.com",
       password: bcrypt.hashSync("12345", 10),
       isAdmin: false,
+      poems: [poemSchema],
    },
    {
-      name: "Jane Doe",
-      email: "jane@gmail.com",
+      name: "John Lennon",
+      email: "johnlennon@gmail.com",
       password: bcrypt.hashSync("12345", 10),
       isAdmin: false,
+      poems: [poemSchema],
+   },
+   {
+      name: "Gloria Gaynor",
+      email: "gloriagaynor@gmail.com",
+      password: bcrypt.hashSync("12345", 10),
+      isAdmin: false,
+      poems: [poemSchema],
    },
 ];
 

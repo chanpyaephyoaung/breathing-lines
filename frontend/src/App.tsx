@@ -12,6 +12,8 @@ import WritePoemPage from "./screens/WritePoemPage.tsx";
 import SignInPage from "./screens/SignInPage.tsx";
 import SignUpPage from "./screens/SignUpPage.tsx";
 import PoemFullPost from "./components/Poems/PoemFullPost/PoemFullPost.tsx";
+import { Provider } from "react-redux";
+import store from "./store.js";
 
 const router = createBrowserRouter(
    createRoutesFromElements(
@@ -26,7 +28,11 @@ const router = createBrowserRouter(
 );
 
 function App() {
-   return <RouterProvider router={router} />;
+   return (
+      <Provider store={store}>
+         <RouterProvider router={router} />
+      </Provider>
+   );
 }
 
 export default App;
