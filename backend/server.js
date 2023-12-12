@@ -19,4 +19,9 @@ app.get("/api/poems", (req, res) => {
    res.json(dummyPoems);
 });
 
+app.get("/api/poems/:poemId", (req, res) => {
+   const poem = dummyPoems.find((p) => p.id === req.params.poemId);
+   res.json(poem);
+});
+
 app.listen(port, () => console.log(`Server running on port ${port}!!!`));

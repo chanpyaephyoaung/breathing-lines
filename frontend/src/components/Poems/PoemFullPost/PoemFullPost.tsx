@@ -1,17 +1,38 @@
 import React from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router";
-import { dummyPoems } from "../../../sampleData.js";
+// import { dummyPoems } from "../../../sampleData.js";
 import { generatePoemContentMarkup } from "../../../utils/poemUtils.tsx";
 import { ArrowUturnLeftIcon, EyeIcon, TagIcon } from "@heroicons/react/24/outline";
 import PoemPostInteractionBar from "./PoemPostInteractionBar.tsx";
 import OverlayBgBlur from "../../UI/OverlayBgBlur.tsx";
 
 const PoemFullPost = () => {
+   const [poem, setPoem] = useState({
+      id: "",
+      datePosted: "",
+      viewsCount: 0,
+      coverImg: "",
+      title: "",
+      author: "",
+      content: "",
+      tags: [],
+   });
+
    const { poemId } = useParams();
+   // console.log(poem, poemId);
 
-   const poem = dummyPoems.find((dumPoem) => dumPoem.id === poemId);
+   useEffect(() => {
+      async function fetchPoem() {
+         const { data } = await axios.get(`/api/poems/${poemId}`);
+         console.log(data);
+         setPoem(data);
+      }
 
+      fetchPoem();
+   }, [poemId]);
    return (
       <>
          <OverlayBgBlur />
