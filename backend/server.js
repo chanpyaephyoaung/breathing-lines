@@ -1,14 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
-import { dummyPoems } from "./data/sampleData.js";
+import { poems } from "./data/poems.js";
+import connectDB from "./config/db.js";
 
 dotenv.config();
 
-console.log(process.env.NODE_ENV);
-console.log(process.env.PORT);
-
 const port = process.env.PORT || 3001;
 
+connectDB(); // Connect to MongoDB Atlas
 const app = express();
 
 app.get("/", (req, res) => {
@@ -16,11 +15,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/poems", (req, res) => {
-   res.json(dummyPoems);
+   res.json(poems);
 });
 
 app.get("/api/poems/:poemId", (req, res) => {
-   const poem = dummyPoems.find((p) => p.id === req.params.poemId);
+   const poem = poems.find((p) => p.id === req.params.poemId);
    res.json(poem);
 });
 

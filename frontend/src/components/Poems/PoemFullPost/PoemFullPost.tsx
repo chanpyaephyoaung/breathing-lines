@@ -22,7 +22,6 @@ const PoemFullPost = () => {
    });
 
    const { poemId } = useParams();
-   // console.log(poem, poemId);
 
    useEffect(() => {
       async function fetchPoem() {
