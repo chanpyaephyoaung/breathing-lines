@@ -1,14 +1,21 @@
 import React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Divider from "../components/UI/Divider.tsx";
 import FormContainer from "../components/UI/FormContainer.tsx";
-import Button from "../components/UI/Button.tsx";
 
 const SignInPage = () => {
+   const [email, setEmail] = useState("");
+   const [password, setPassword] = useState("");
+
+   const submitHandler = (e) => {
+      e.preventDefault();
+   };
+
    return (
       <FormContainer>
          <h2 className="text-lg md:text-2xl font-bold text-clr-black">Sign In</h2>
-         <form className="grid gap-6">
+         <form className="grid gap-6" onSubmit={submitHandler}>
             <label className="relative text-xs grid justify-items-start gap-y-2">
                <span className="sr-only">email address</span>
                <div className="justify-self-stretch relative">
@@ -34,6 +41,8 @@ const SignInPage = () => {
                      placeholder="email address"
                      type="email"
                      name="email address"
+                     value={email}
+                     onChange={(e) => setEmail(e.target.value)}
                   />
                </div>
             </label>
@@ -63,13 +72,18 @@ const SignInPage = () => {
                      placeholder="password"
                      type="password"
                      name="password"
+                     value={password}
+                     onChange={(e) => setPassword(e.target.value)}
                   />
                </div>
             </label>
 
-            <Button customStyle="primary" type="submit" size="lg">
-               Sign Up
-            </Button>
+            <button
+               type="submit"
+               className="text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-lg hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
+            >
+               Sign In
+            </button>
          </form>
          <Divider />
          <p className="text-clr-black-faded text-xs md:text-sm">

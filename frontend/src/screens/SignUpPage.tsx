@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Divider from "../components/UI/Divider.tsx";
 import FormContainer from "../components/UI/FormContainer.tsx";
-import Button from "../components/UI/Button.tsx";
 
 const SignUpPage = () => {
    return (
@@ -122,9 +121,12 @@ const SignUpPage = () => {
                </div>
             </label>
 
-            <Button customStyle="primary" type="submit" size="lg">
-               Sign In
-            </Button>
+            <button
+               type="submit"
+               className="text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-lg hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
+            >
+               Sign Up
+            </button>
          </form>
          <Divider />
          <p className="text-clr-black-faded text-xs md:text-sm">
