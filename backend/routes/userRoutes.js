@@ -13,5 +13,6 @@ router.route("/").post(registerUser);
 router.post("/logout", logoutUser);
 router.post("/login", authUser);
 router.route("/profile").get(protect, getUserProfile);
+router.post("/write", protect, (req, res) => res.json({ message: "Written" }));
 
 export default router;

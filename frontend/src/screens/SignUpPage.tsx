@@ -1,15 +1,58 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Divider from "../components/UI/Divider.tsx";
 import FormContainer from "../components/UI/FormContainer.tsx";
+import { useRegisterMutation } from "../slices/usersApiSlice.ts";
+import { setCredentials } from "../slices/authSlice.ts";
+import { toast } from "react-toastify";
+import { RootState } from "../store.tsx";
 
 const SignUpPage = () => {
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
+
+   const [name, setName] = useState("");
+   const [email, setEmail] = useState("");
+   const [password, setPassword] = useState("");
+   const [confirmPassword, setConfirmPassword] = useState("");
+
+   const [register, { isLoading }] = useRegisterMutation();
+
+   const { userInfo } = useSelector((state: RootState) => state.auth);
+   const { search } = useLocation();
+   const searchParams = new URLSearchParams(search);
+   const redirect = searchParams.get("redirect") || "/";
+
+   const submitHandler = async (e) => {
+      e.preventDefault();
+      if (password !== confirmPassword) {
+         toast.error("Passwords do not match!");
+         return;
+      } else {
+         try {
+            const res = await register({ name, email, password }).unwrap();
+            dispatch(setCredentials({ ...res }));
+            navigate(redirect);
+         } catch (err) {
+            toast.error(err?.data?.message || err.error);
+         }
+      }
+   };
+
+   useEffect(() => {
+      if (userInfo) {
+         navigate(redirect);
+      }
+   }, [userInfo, redirect, navigate]);
+
    return (
       <FormContainer>
          <h2 className="text-lg md:text-2xl font-medium text-clr-black">Sign Up</h2>
-         <form className="grid gap-6">
+         <form onSubmit={submitHandler} className="grid gap-6">
             <label className="relative text-xs grid justify-items-start gap-y-2">
-               <span className="sr-only">username</span>
+               <span className="sr-only">name</span>
                <div className="justify-self-stretch relative">
                   <span className="absolute inset-y-0 left-0 flex items-center pl-2">
                      <svg
@@ -30,9 +73,11 @@ const SignUpPage = () => {
 
                   <input
                      className="placeholder:text-clr-bg-faded text-sm md:text-base py-3 md:py-3 pl-12 pr-4 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none"
-                     placeholder="username"
+                     placeholder="name"
                      type="text"
-                     name="username"
+                     name="name"
+                     value={name}
+                     onChange={(e) => setName(e.target.value)}
                   />
                </div>
             </label>
@@ -61,6 +106,8 @@ const SignUpPage = () => {
                      placeholder="email address"
                      type="email"
                      name="email address"
+                     value={email}
+                     onChange={(e) => setEmail(e.target.value)}
                   />
                </div>
             </label>
@@ -89,6 +136,8 @@ const SignUpPage = () => {
                      placeholder="password"
                      type="password"
                      name="password"
+                     value={password}
+                     onChange={(e) => setPassword(e.target.value)}
                   />
                </div>
             </label>
@@ -117,6 +166,8 @@ const SignUpPage = () => {
                      placeholder="confirm password"
                      type="password"
                      name="confirm password"
+                     value={confirmPassword}
+                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />
                </div>
             </label>
@@ -127,6 +178,7 @@ const SignUpPage = () => {
             >
                Sign Up
             </button>
+            {isLoading && <h2>Loading...</h2>}
          </form>
          <Divider />
          <p className="text-clr-black-faded text-xs md:text-sm">

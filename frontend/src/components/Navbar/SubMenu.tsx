@@ -1,8 +1,11 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store.tsx";
 import SearchForm from "../Forms/SearchForm.tsx";
 import { Link } from "react-router-dom";
 
-const SubMenu = ({ userType }) => {
+const SubMenu = () => {
+   const { userInfo } = useSelector((state: RootState) => state.auth);
    return (
       <div className="w-full bg-clr-bg ">
          <div className="border-b border-clr-black border-1 px-6 flex md:w-4/5 max-w-[1100px] mx-auto py-4 justify-between items-center">
@@ -12,7 +15,7 @@ const SubMenu = ({ userType }) => {
                      Home
                   </Link>
                </li>
-               {userType === "user" && (
+               {userInfo && !userInfo.isAdmin && (
                   <>
                      <li>
                         <Link to="/latest" className="transition-all hover:text-clr-primary">

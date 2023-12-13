@@ -3,12 +3,12 @@ import Navbar from "./Navbar.tsx";
 import SubMenu from "./SubMenu.tsx";
 import ToggleNavBar from "./ToggleNavBar.tsx";
 
-const MainNav = ({ onShowMainNav, onHideMainNav, userType, showMainNav }) => {
+const MainNav = ({ onShowMainNav, onHideMainNav, showMainNav }) => {
    return (
       <div className="sticky top-0">
-         <Navbar onShowMainNav={onShowMainNav} userType={userType} />
+         <Navbar onShowMainNav={onShowMainNav} />
          <ToggleNavBar onHideMainNav={onHideMainNav} showMainNav={showMainNav} />
-         <SubMenu userType={userType} />
+         <SubMenu />
       </div>
    );
 };

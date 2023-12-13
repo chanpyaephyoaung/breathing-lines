@@ -19,7 +19,6 @@ const SignInPage = () => {
    const [login, { isLoading }] = useLoginMutation();
 
    const { userInfo } = useSelector((state: RootState) => state.auth);
-
    const { search } = useLocation();
    const searchParams = new URLSearchParams(search);
    const redirect = searchParams.get("redirect") || "/";
