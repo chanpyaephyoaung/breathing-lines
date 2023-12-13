@@ -1,5 +1,5 @@
 import { POEMS_URL } from "../constants";
-import { apiSlice } from "./apiSlice";
+import { apiSlice } from "./apiSlice.ts";
 
 type Poems = [
    {

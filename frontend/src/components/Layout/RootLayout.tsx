@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Outlet } from "react-router";
 import MainNav from "../Navbar/MainNav.tsx";
 
-const userType = "user";
+const userType = "guest";
 
 const RootLayout = () => {
    const [showMainNav, setShowMainNav] = useState<boolean>(false);

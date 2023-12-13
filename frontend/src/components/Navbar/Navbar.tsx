@@ -33,7 +33,7 @@ const Navbar = ({ onShowMainNav, userType }) => {
                      <UserDropdown />
                   </>
                )}
-               {userType === "admin" && (
+               {userType === "guest" && (
                   <Link
                      to="/signin"
                      className="transition-all w-6 md:w-8 text-clr-black hover:text-clr-primary cursor-pointer"
