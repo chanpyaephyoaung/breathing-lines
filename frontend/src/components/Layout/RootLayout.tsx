@@ -1,6 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import { Outlet } from "react-router";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import MainNav from "../Navbar/MainNav.tsx";
 
 const userType = "guest";
@@ -24,6 +26,7 @@ const RootLayout = () => {
             showMainNav={showMainNav}
          />
          <Outlet />
+         <ToastContainer />
       </>
    );
 };

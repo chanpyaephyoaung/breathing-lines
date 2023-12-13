@@ -1,15 +1,44 @@
 import React from "react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Divider from "../components/UI/Divider.tsx";
+import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/UI/FormContainer.tsx";
+import { useLoginMutation } from "../slices/usersApiSlice.ts";
+import { setCredentials } from "../slices/authSlice.ts";
+import { toast } from "react-toastify";
+import { RootState } from "../store.tsx";
 
 const SignInPage = () => {
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
+
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
 
-   const submitHandler = (e) => {
+   const [login, { isLoading }] = useLoginMutation();
+
+   const { userInfo } = useSelector((state: RootState) => state.auth);
+
+   const { search } = useLocation();
+   const searchParams = new URLSearchParams(search);
+   const redirect = searchParams.get("redirect") || "/";
+
+   useEffect(() => {
+      if (userInfo) {
+         navigate(redirect);
+      }
+   }, [userInfo, redirect, navigate]);
+
+   const submitHandler = async (e) => {
       e.preventDefault();
+      try {
+         const res = await login({ email, password }).unwrap();
+         dispatch(setCredentials({ ...res }));
+         navigate(redirect);
+      } catch (err) {
+         toast.error(err?.data?.message || err.error);
+      }
    };
 
    return (
@@ -37,7 +66,7 @@ const SignInPage = () => {
                   </span>
 
                   <input
-                     className={`placeholder:text-clr-bg-faded text-sm md:text-base py-3 md:py-3 pl-4 pr-4 pl-8 md:pl-12 pr-3 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
+                     className="placeholder:text-clr-bg-faded text-sm md:text-base py-3 md:py-3 pl-12 pr-4 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none"
                      placeholder="email address"
                      type="email"
                      name="email address"
@@ -68,7 +97,7 @@ const SignInPage = () => {
                   </span>
 
                   <input
-                     className={`placeholder:text-clr-bg-faded text-sm md:text-base py-3 md:py-3 pl-4 pr-4 pl-8 md:pl-12 pr-3 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
+                     className="placeholder:text-clr-bg-faded text-sm md:text-base py-3 md:py-3 pl-12 pr-4 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none"
                      placeholder="password"
                      type="password"
                      name="password"
@@ -80,15 +109,21 @@ const SignInPage = () => {
 
             <button
                type="submit"
+               disabled={isLoading}
                className="text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-lg hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
             >
                Sign In
             </button>
+
+            {isLoading && <h2>Loading...</h2>}
          </form>
          <Divider />
          <p className="text-clr-black-faded text-xs md:text-sm">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-clr-primary font-normal hover:underline">
+            <Link
+               to={redirect ? `/signup?redirect=${redirect}` : "/signup"}
+               className="text-clr-primary font-normal hover:underline"
+            >
                Sign up
             </Link>
          </p>

@@ -13,7 +13,7 @@ import SignInPage from "./screens/SignInPage.tsx";
 import SignUpPage from "./screens/SignUpPage.tsx";
 import PoemFullPost from "./components/Poems/PoemFullPost/PoemFullPost.tsx";
 import { Provider } from "react-redux";
-import store from "./store.js";
+import store from "./store.tsx";
 
 const router = createBrowserRouter(
    createRoutesFromElements(
