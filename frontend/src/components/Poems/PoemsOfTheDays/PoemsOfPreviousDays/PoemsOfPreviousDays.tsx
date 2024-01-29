@@ -38,8 +38,8 @@ const PoemsOfPreviousDays = () => {
 
    return (
       <div className="hidden md:grid gap-y-2">
-         <PoemsOfPreviousDay poem={poemOfPrevDay1} />
-         <PoemsOfPreviousDay poem={poemOfPrevDay2} />
+         <PoemsOfPreviousDay poem={poemOfPrevDay1} day="Yesterday" />
+         <PoemsOfPreviousDay poem={poemOfPrevDay2} day="2 Days Ago" />
       </div>
    );
 };

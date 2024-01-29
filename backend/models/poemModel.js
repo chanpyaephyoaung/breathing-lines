@@ -56,14 +56,17 @@ export const poemSchema = new mongoose.Schema(
       reviewsCount: {
          type: Number,
          required: true,
+         default: 0,
       },
       likesCount: {
          type: Number,
          required: true,
+         default: 0,
       },
       sharesCount: {
          type: Number,
          required: true,
+         default: 0,
       },
    },
    { timestamps: true }

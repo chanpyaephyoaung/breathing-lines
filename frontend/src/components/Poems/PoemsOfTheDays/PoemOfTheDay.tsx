@@ -19,6 +19,7 @@ const PoemOfTheDay = () => {
    useEffect(() => {
       async function fetchPoem() {
          const { data } = await axios.get(`/api/poems`);
+         console.log(data);
          setPoemOfTheDay(data[2]);
       }
 
@@ -51,7 +52,7 @@ const PoemOfTheDay = () => {
             <div className="grid pr-3 gap-3">
                <div className="grid -gap-1">
                   <Link
-                     to={`poem/${poemOfTheDay._id}`}
+                     to={`poem/${poemOfTheDay?._id}`}
                      className="transition-all block text-base md:text-xl lg:text-2xl text-clr-black hover:text-clr-tertiary font-medium"
                   >
                      {poemOfTheDay.title}
@@ -60,18 +61,18 @@ const PoemOfTheDay = () => {
                      href=" "
                      className="text-xs md:text-sm lg:text-base text-clr-black-faded font-light"
                   >
-                     By {poemOfTheDay.author}
+                     By {poemOfTheDay?.author}
                   </a>
                </div>
 
                <div>
                   <p className="text-xs md:text-base font-light line-clamp-4">
-                     {generatePoemContentMarkup(poemOfTheDay.content)}
+                     {generatePoemContentMarkup(poemOfTheDay?.content)}
                   </p>
                </div>
 
                <Link
-                  to={`poem/${poemOfTheDay._id}`}
+                  to={`poem/${poemOfTheDay?._id}`}
                   className="transition-all justify-self-start text-xs md:text-base text-clr-tertiary hover:text-clr-black inline-block underline"
                >
                   View

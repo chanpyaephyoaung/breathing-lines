@@ -46,7 +46,14 @@ export const poemsApiSlice = apiSlice.injectEndpoints({
          }),
          keepUnusedDataFor: 5,
       }),
+      uploadPoem: builder.mutation({
+         query: (data) => ({
+            url: `${POEMS_URL}/write`,
+            method: "POST",
+            body: data,
+         }),
+      }),
    }),
 });
 
-export const { useGetPoemsQuery, useGetPoemDetailsQuery } = poemsApiSlice;
+export const { useGetPoemsQuery, useGetPoemDetailsQuery, useUploadPoemMutation } = poemsApiSlice;
