@@ -7,6 +7,8 @@
       "server": "nodemon -L backend/server.js",
       "client": "npm start --prefix frontend",
       "dev": "concurrently \"npm run server\" \"npm run client\"",
+      "data:seed": "node backend/seeder.js -s",
+      "data:remove": "node backend/seeder.js -r",
       "test": "jest --coverage",
       "lint": "eslint ./frontend/src/**/*.{js,jsx,ts,tsx}"
    },

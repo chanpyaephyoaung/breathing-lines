@@ -12,6 +12,11 @@ const dummyUsers = [
       email: "albus@gmail.com",
       password: bcrypt.hashSync("123abc", 10),
    },
+   {
+      name: "Severus Snape",
+      email: "severus@gmail.com",
+      password: bcrypt.hashSync("123abc", 10),
+   },
 ];
 
 export default dummyUsers;
