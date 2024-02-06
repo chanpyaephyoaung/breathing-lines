@@ -21,9 +21,10 @@ router.get(
 
       if (targetPoem) {
          return res.json(targetPoem);
+      } else {
+         res.status(404);
+         throw new Error("Poem not found!");
       }
-
-      res.status(404).json({ message: "Poem not found!" });
    })
 );
 
