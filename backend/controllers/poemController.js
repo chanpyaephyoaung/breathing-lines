@@ -1,11 +1,12 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Poem from "../models/poemModel.js";
+import User from "../models/userModel.js";
 
 // @desc    Fetch all poems
 // @route   GET /api/poems
 // @access  Public
 const getAllPoems = asyncHandler(async (req, res) => {
-   const poems = await Poem.find({});
+   const poems = await Poem.find({}).populate("author", "name");
    res.json(poems);
 });
 
@@ -13,8 +14,7 @@ const getAllPoems = asyncHandler(async (req, res) => {
 // @route   GET /api/poems/:poemId
 // @access  Public
 const getSinglePoemById = asyncHandler(async (req, res) => {
-   const targetPoem = await Poem.findById(req.params.poemId);
-   console.log(targetPoem);
+   const targetPoem = await Poem.findById(req.params.poemId).populate("author", "name");
 
    if (targetPoem) {
       return res.json(targetPoem);
