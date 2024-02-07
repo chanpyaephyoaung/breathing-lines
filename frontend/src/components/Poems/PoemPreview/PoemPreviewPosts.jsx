@@ -1,6 +1,7 @@
 import PoemPreviewPost from "./PoemPreviewPost.jsx";
 import { useGetAllPoemsQuery } from "../../../slices/poemsApiSlice.js";
 import Container from "../../UI/Container.jsx";
+import LoaderSpinner from "../../UI/LoaderSpinner.jsx";
 
 const PoemPreviewPosts = () => {
    const { data: poems, isLoading, error } = useGetAllPoemsQuery();
@@ -10,7 +11,7 @@ const PoemPreviewPosts = () => {
       <>
          {isLoading ? (
             <Container>
-               <h2>Loading...</h2>
+               <LoaderSpinner />
             </Container>
          ) : error ? (
             <Container>

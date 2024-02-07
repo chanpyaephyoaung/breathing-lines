@@ -5,6 +5,7 @@ import PoemPostInteractionBar from "./PoemPostInteractionBar.jsx";
 import OverlayBgBlur from "../../UI/OverlayBgBlur.jsx";
 import { useGetSinglePoemByIdQuery } from "../../../slices/poemsApiSlice.js";
 import Container from "../../UI/Container.jsx";
+import LoaderSpinner from "../../UI/LoaderSpinner.jsx";
 
 const PoemFullPost = () => {
    const { poemId } = useParams();
@@ -15,7 +16,7 @@ const PoemFullPost = () => {
       <>
          {isLoading ? (
             <Container>
-               <h2>Loading...</h2>
+               <LoaderSpinner />
             </Container>
          ) : error ? (
             <Container>
