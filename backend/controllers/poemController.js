@@ -5,7 +5,7 @@ import User from "../models/userModel.js";
 // @desc    Fetch all poems
 // @route   GET /api/poems
 // @access  Public
-const getAllPoems = asyncHandler(async (req, res) => {
+export const getAllPoems = asyncHandler(async (req, res) => {
    const poems = await Poem.find({}).populate("author", "name");
    res.json(poems);
 });
@@ -13,7 +13,7 @@ const getAllPoems = asyncHandler(async (req, res) => {
 // @desc    Fetch a single poem by ID
 // @route   GET /api/poems/:poemId
 // @access  Public
-const getSinglePoemById = asyncHandler(async (req, res) => {
+export const getSinglePoemById = asyncHandler(async (req, res) => {
    const targetPoem = await Poem.findById(req.params.poemId).populate("author", "name");
 
    if (targetPoem) {
@@ -23,5 +23,3 @@ const getSinglePoemById = asyncHandler(async (req, res) => {
       throw new Error("Poem not found!");
    }
 });
-
-export { getAllPoems, getSinglePoemById };

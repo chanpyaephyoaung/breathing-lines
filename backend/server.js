@@ -4,6 +4,8 @@ dotenv.config();
 import connectDB from "./config/database.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import poemRoutes from "./routes/poemRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import adminUserRoutes from "./routes/adminUserRoutes.js";
 
 const port = process.env.PORT || 3001;
 
@@ -17,6 +19,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/poems", poemRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/users/admin", adminUserRoutes);
 
 // Middleware
 app.use(notFound);
