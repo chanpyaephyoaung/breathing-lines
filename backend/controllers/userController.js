@@ -1,6 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
-import jwt from "jsonwebtoken";
+import generateJwtToken from "../helpers/generateJwtToken.js";
 
 // @desc    Authenticate user & get token
 // @route   POST /api/users/signin
@@ -11,25 +11,9 @@ export const authUser = asyncHandler(async (req, res) => {
    const user = await User.findOne({ email });
 
    if (user && (await user.comparePassword(password))) {
-      const jwtToken = jwt.sign(
-         {
-            userId: user._id,
-         },
-         process.env.JWT_SECRET,
-         {
-            expiresIn: "10d",
-         }
-      );
+      generateJwtToken(res, user._id);
 
-      // Set JWT as HTTP-Only Cookie
-      res.cookie("jwt", jwtToken, {
-         httpOnly: true,
-         secure: process.env.NODE_ENV === "production",
-         sameSite: "strict",
-         maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
-      });
-
-      res.json({
+      res.status(200).json({
          _id: user._id,
          name: user.name,
          email: user.email,
@@ -39,15 +23,40 @@ export const authUser = asyncHandler(async (req, res) => {
       res.status(401);
       throw new Error("Invalid email or password!");
    }
-
-   res.send("Auth user!");
 });
 
 // @desc    Register new user
 // @route   POST /api/users/register
 // @access  Public
 export const registerUser = asyncHandler(async (req, res) => {
-   res.send("Register user!");
+   const { name, email, password } = req.body;
+
+   const isUserExists = await User.findOne({ email });
+
+   if (isUserExists) {
+      res.status(400);
+      throw new Error("User is already registered!");
+   }
+
+   const newUser = await User.create({
+      name,
+      email,
+      password,
+   });
+
+   if (newUser) {
+      generateJwtToken(res, newUser._id);
+
+      res.status(201).json({
+         _id: newUser._id,
+         name: newUser.name,
+         email: newUser.email,
+         isAdmin: newUser.isAdmin,
+      });
+   } else {
+      res.status(400);
+      throw new Error("Invalid user form data!");
+   }
 });
 
 // @desc    Sign out user & remove cookie
@@ -65,9 +74,7 @@ export const signOutUser = asyncHandler(async (req, res) => {
 // @desc    Get user account profile details
 // @route   GET /api/users/profile
 // @access  Public
-export const getUserAccProfile = asyncHandler(async (req, res) => {
-   res.send("Get user profile!");
-});
+export const getUserAccProfile = asyncHandler(async (req, res) => {});
 
 // @desc    Update user account profile details
 // @route   PUT /api/users/profile
