@@ -94,5 +94,26 @@ export const getUserAccProfile = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/profile
 // @access  Private
 export const updateUserAccProfile = asyncHandler(async (req, res) => {
-   res.send("Update user profile!");
+   const currentUser = await User.findById(req.currentUser._id);
+
+   if (currentUser) {
+      currentUser.name = req.body.name || currentUser.name;
+      currentUser.email = req.body.email || currentUser.email;
+
+      if (req.body.password) {
+         currentUser.password = req.body.password;
+      }
+
+      const updatedCurrentUser = await currentUser.save();
+
+      res.status(200).json({
+         _id: updatedCurrentUser._id,
+         isAdmin: updatedCurrentUser.isAdmin,
+         name: updatedCurrentUser.name,
+         email: updatedCurrentUser.email,
+      });
+   } else {
+      res.status(404);
+      throw new Error("Profile update unsuccessful. User not found.");
+   }
 });
