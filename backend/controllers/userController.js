@@ -74,7 +74,21 @@ export const signOutUser = asyncHandler(async (req, res) => {
 // @desc    Get user account profile details
 // @route   GET /api/users/profile
 // @access  Public
-export const getUserAccProfile = asyncHandler(async (req, res) => {});
+export const getUserAccProfile = asyncHandler(async (req, res) => {
+   const currentUser = await User.findById(req.currentUser._id);
+
+   if (currentUser) {
+      res.status(200).json({
+         _id: currentUser._id,
+         name: currentUser.name,
+         email: currentUser.email,
+         isAdmin: currentUser.isAdmin,
+      });
+   } else {
+      res.status(404);
+      throw new Error("Current user not found!");
+   }
+});
 
 // @desc    Update user account profile details
 // @route   PUT /api/users/profile
