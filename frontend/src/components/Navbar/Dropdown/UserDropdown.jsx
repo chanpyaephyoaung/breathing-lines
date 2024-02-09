@@ -1,15 +1,14 @@
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { UserIcon } from "@heroicons/react/24/outline";
 
-const links = [
-   { href: " ", label: "Profile" },
-   { href: " ", label: "Poems" },
-   { href: " ", label: "Collections" },
-   { href: " ", label: "Sign out" },
-];
-
 const UserDropdown = () => {
+   const { userAccInfo } = useSelector((state) => state.authUser);
+
+   const logoutHandler = async () => {};
+
    return (
       <Menu as="div" className="relative inline-block text-left z-40">
          <div className="grid items-center">
@@ -28,21 +27,58 @@ const UserDropdown = () => {
          >
             <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg border border-1 border-clr-black">
                <div className="p-2">
-                  {links.map((link) => (
-                     /* Use the `active` state to conditionally style the active item. */
-                     <Menu.Item key={link.label} as={Fragment}>
-                        {({ active }) => (
-                           <a
-                              href={link.href}
-                              className={`${
-                                 active ? "bg-clr-primary text-white" : "text-gray-900"
-                              } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                           >
-                              {link.label}
-                           </a>
-                        )}
-                     </Menu.Item>
-                  ))}
+                  <Menu.Item as={Fragment}>
+                     {({ active }) => (
+                        <Link
+                           to="/profile"
+                           className={`${
+                              active ? "bg-clr-primary text-white" : "text-gray-900"
+                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        >
+                           Profile ({userAccInfo.name.split(" ")[0]})
+                        </Link>
+                     )}
+                  </Menu.Item>
+
+                  <Menu.Item as={Fragment}>
+                     {({ active }) => (
+                        <Link
+                           to="/users/:userId/poems"
+                           className={`${
+                              active ? "bg-clr-primary text-white" : "text-gray-900"
+                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        >
+                           Poems
+                        </Link>
+                     )}
+                  </Menu.Item>
+
+                  <Menu.Item as={Fragment}>
+                     {({ active }) => (
+                        <Link
+                           to="/users/:userId/collections"
+                           className={`${
+                              active ? "bg-clr-primary text-white" : "text-gray-900"
+                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        >
+                           Collections
+                        </Link>
+                     )}
+                  </Menu.Item>
+
+                  <Menu.Item as={Fragment}>
+                     {({ active }) => (
+                        <Link
+                           to="/signout"
+                           onClick={logoutHandler}
+                           className={`${
+                              active ? "bg-clr-primary text-white" : "text-gray-900"
+                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        >
+                           Sign out
+                        </Link>
+                     )}
+                  </Menu.Item>
                </div>
             </Menu.Items>
          </Transition>

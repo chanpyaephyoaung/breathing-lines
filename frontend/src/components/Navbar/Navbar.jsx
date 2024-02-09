@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Bars3Icon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 import UserDropdown from "./Dropdown/UserDropdown.jsx";
 import NotificationDropdown from "./Dropdown/NotificationDropdown.jsx";
 
 const Navbar = ({ onShowMainNav, userType }) => {
+   const { userAccInfo } = useSelector((state) => state.authUser);
+
    const handleMainNavClick = (e) => {
       e.preventDefault();
       onShowMainNav();
@@ -25,14 +28,13 @@ const Navbar = ({ onShowMainNav, userType }) => {
             </Link>
 
             <div className="justify-self-end flex gap-3 items-center">
-               {userType === "user" && (
+               {userAccInfo ? (
                   <>
                      <NotificationDropdown />
 
                      <UserDropdown />
                   </>
-               )}
-               {userType === "admin" && (
+               ) : (
                   <Link
                      to="/signin"
                      className="transition-all w-6 md:w-8 text-clr-black hover:text-clr-primary cursor-pointer"

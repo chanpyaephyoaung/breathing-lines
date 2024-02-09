@@ -1,14 +1,45 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Divider from "../components/UI/Divider.jsx";
 import FormContainer from "../components/UI/FormContainer.jsx";
+import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
+import { useSignInMutation } from "../slices/usersApiSlice.js";
+import { setSignInDetails } from "../slices/authSlice.js";
+import { toast } from "react-toastify";
 
 const SignInPage = () => {
+   const navigate = useNavigate();
+   const dispatch = useDispatch();
+
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
 
-   const submitHandler = (e) => {
+   const { userAccInfo } = useSelector((state) => state.authUser);
+
+   // Retrieve the redirect path if there is one
+   const { search } = useLocation();
+   const searchParams = new URLSearchParams(search);
+   const redirectPath = searchParams.get("redirect") || "/";
+
+   const [signIn, { isLoading }] = useSignInMutation();
+
+   useEffect(() => {
+      if (userAccInfo) {
+         navigate(redirectPath);
+      }
+   }, [redirectPath, userAccInfo, navigate]);
+
+   const submitHandler = async (e) => {
       e.preventDefault();
+
+      try {
+         const res = await signIn({ email, password }).unwrap();
+         dispatch(setSignInDetails({ ...res }));
+         navigate(redirectPath);
+      } catch (err) {
+         toast.error(err?.data?.message || err.error);
+      }
    };
 
    return (
@@ -80,14 +111,20 @@ const SignInPage = () => {
             <button
                type="submit"
                className="text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-lg hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
+               disabled={isLoading}
             >
                Sign In
             </button>
+
+            {isLoading && <LoaderSpinner />}
          </form>
          <Divider />
          <p className="text-clr-black-faded text-xs md:text-sm">
             {"Don't have an account? "}
-            <Link to="/signup" className="text-clr-primary font-normal hover:underline">
+            <Link
+               to={redirectPath ? `/signup?redirect=${redirectPath}` : "/signup"}
+               className="text-clr-primary font-normal hover:underline"
+            >
                Sign up
             </Link>
          </p>
