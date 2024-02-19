@@ -4,7 +4,7 @@ import { Bars3Icon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outlin
 import UserDropdown from "./Dropdown/UserDropdown.jsx";
 import NotificationDropdown from "./Dropdown/NotificationDropdown.jsx";
 
-const Navbar = ({ onShowMainNav, userType }) => {
+const Navbar = ({ onShowMainNav }) => {
    const { userAccInfo } = useSelector((state) => state.authUser);
 
    const handleMainNavClick = (e) => {

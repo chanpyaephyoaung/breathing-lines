@@ -1,13 +1,28 @@
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { UserIcon } from "@heroicons/react/24/outline";
+import { useSignOutMutation } from "../../../slices/usersApiSlice.js";
+import { removeSignInDetails } from "../../../slices/authSlice.js";
 
 const UserDropdown = () => {
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
+
    const { userAccInfo } = useSelector((state) => state.authUser);
 
-   const logoutHandler = async () => {};
+   const [signOut] = useSignOutMutation();
+
+   const logoutHandler = async () => {
+      try {
+         await signOut().unwrap();
+         dispatch(removeSignInDetails());
+         navigate("/signin");
+      } catch (err) {
+         console.log(err);
+      }
+   };
 
    return (
       <Menu as="div" className="relative inline-block text-left z-40">
