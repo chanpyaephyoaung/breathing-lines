@@ -1,7 +1,9 @@
-import SearchForm from "../Forms/SearchForm.jsx";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import SearchForm from "../Forms/SearchForm.jsx";
 
-const SubMenu = ({ userType }) => {
+const SubMenu = () => {
+   const { userAccInfo } = useSelector((state) => state.authUser);
    return (
       <div className="w-full bg-clr-bg ">
          <div className="border-b border-clr-black border-1 px-6 flex md:w-4/5 max-w-[1100px] mx-auto py-4 justify-between items-center">
@@ -11,7 +13,7 @@ const SubMenu = ({ userType }) => {
                      Home
                   </Link>
                </li>
-               {userType === "user" && (
+               {userAccInfo && (
                   <>
                      <li>
                         <Link to="/latest" className="transition-all hover:text-clr-primary">
