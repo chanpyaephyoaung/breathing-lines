@@ -4,6 +4,7 @@ on:
    push:
       branches:
          - main
+         - usersTest
    pull_request:
       branches:
          - main
@@ -12,6 +13,10 @@ jobs:
    docker:
       timeout-minutes: 10
       runs-on: ubuntu-latest
+
+      env:
+         MONGOATLAS_URI_TEST: ${{ secrets.MONGOATLAS_URI_TEST }}
+         JWT_TOKEN_SECRET: ${{ secrets.JWT_TOKEN_SECRET }}
 
       steps:
          - name: Checkout
@@ -28,8 +33,8 @@ jobs:
          - name: Install root dependencies
            run: npm install
 
-         - name: Run tests
-           run: npm run test
+         - name: Run DB Integration Tests
+           run: npm run test:db-integration
 
          - name: Run ESLint tests
            run: npm run lint

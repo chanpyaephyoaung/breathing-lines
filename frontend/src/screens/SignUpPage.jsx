@@ -44,7 +44,7 @@ const SignUpPage = () => {
             dispatch(setSignInDetails({ ...res }));
             navigate(redirectPath);
          } catch (err) {
-            toast.error(err?.data?.message || err.error);
+            toast.error(err?.data?.errMessage || err.error);
          }
       }
    };

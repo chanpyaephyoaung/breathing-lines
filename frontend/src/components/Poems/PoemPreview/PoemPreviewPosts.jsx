@@ -15,7 +15,7 @@ const PoemPreviewPosts = () => {
             </Container>
          ) : error ? (
             <Container>
-               <h2>{error?.data?.message || error.error}</h2>
+               <h2>{error?.data?.errMessage || error.error}</h2>
             </Container>
          ) : (
             <div className="mt-6 w-4/6 md:w-5/6 max-w-[900px] mx-auto grid gap-6 py-5 md:grid-cols-2">
