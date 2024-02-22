@@ -16,7 +16,7 @@ jobs:
 
       env:
          MONGOATLAS_URI_TEST: ${{ secrets.MONGOATLAS_URI_TEST }}
-         JWT_TOKEN_SECRET: ${{ secrets.JWT_TOKEN_SECRET }}
+         JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       steps:
          - name: Checkout
