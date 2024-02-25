@@ -8,6 +8,7 @@ import Poem from "./models/poemModel.js";
 import AuthorProfileReview from "./models/authorProfileReviewModel.js";
 import PoemRating from "./models/poemRatingModel.js";
 import UserNotification from "./models/userNotificationModel.js";
+import dummyProfileReviews from "./dummyData/profileReviews.js";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ export const seedDummyData = async () => {
       const createdDummyUsers = await User.insertMany(dummyUsers);
       const admin = createdDummyUsers[0]._id;
       const user = createdDummyUsers[1]._id;
+      const user1 = createdDummyUsers[2]._id;
 
       // Use first normal user as the author to sample poems
       const samplePoems = dummyPoems.map((poem) => ({
@@ -34,6 +36,16 @@ export const seedDummyData = async () => {
       }));
 
       await Poem.insertMany(samplePoems);
+
+      // Sample profile review
+      const sampleProfileReview = dummyProfileReviews.map((review) => ({
+         ...review,
+         reviewedFor: user,
+         reviewedBy: user1,
+      }));
+
+      await AuthorProfileReview.insertMany(sampleProfileReview);
+
       console.log("Dummy Data Has Been Successfully SEEDED!");
 
       if (process.env.NODE_ENV !== "test") {
