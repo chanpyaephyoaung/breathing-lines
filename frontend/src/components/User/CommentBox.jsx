@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { formatDate } from "../../utils/date.js";
 
-const CommentBox = () => {
+const CommentBox = ({ review }) => {
+   console.log(review);
    return (
       <div className="grid grid-cols-[28px_1fr] grid-rows-2 gap-x-2 items-center pb-2 border-b border-1 border-clr-black">
          <img
@@ -11,14 +13,16 @@ const CommentBox = () => {
          <div className="grid row-start-1">
             <div className="flex flex-wrap gap-x-2 items-center">
                <Link className="transition-all text-clr-black hover:text-clr-primary font-regular text-xs md:text-base cursor-pointer">
-                  Voldemort
+                  {review.reviewedBy.name}
                </Link>
-               <p className="text-clr-black-faded text-2xs md:text-xs">5 mins ago</p>
+               <p className="text-clr-black-faded text-2xs md:text-xs">
+                  {formatDate(review.reviewedAt)}
+               </p>
             </div>
          </div>
 
          <p className="row-start-2 col-start-2 text-clr-black font-light text-xs md:text-base -mt-2 md:-mt-3 text-left">
-            You do not seek to kill me, Dumbledore?
+            {review.review}
          </p>
       </div>
    );

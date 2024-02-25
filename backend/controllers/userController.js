@@ -1,5 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
+import AuthorProfileReview from "../models/authorProfileReviewModel.js";
 import generateJwtToken from "../helpers/generateJwtToken.js";
 
 // @desc    Authenticate user & get token
@@ -75,24 +76,19 @@ export const signOutUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users/profile
 // @access  Public
 export const getUserAccProfile = asyncHandler(async (req, res) => {
-   const currentUser = await User.findById(req.currentUser._id);
+   const currentUser = await User.findById(req.currentUser._id).populate({
+      path: "profileReviews",
+      select: "review reviewedAt reviewedBy",
+      populate: {
+         path: "reviewedBy",
+         select: "name",
+      },
+   });
+
+   console.log(currentUser.profileReviews[0].reviewedBy);
 
    if (currentUser) {
-      res.status(200).json({
-         _id: currentUser._id,
-         name: currentUser.name,
-         email: currentUser.email,
-         isAdmin: currentUser.isAdmin,
-         profileViewsCount: currentUser.profileViewsCount,
-         profileDesc: currentUser.profileDesc,
-         isBanned: currentUser.isBanned,
-         poems: currentUser.poems,
-         collections: currentUser.collections,
-         profileReviews: currentUser.profileReviews,
-         followers: currentUser.followers,
-         followings: currentUser.followings,
-         notifications: currentUser.notifications,
-      });
+      res.status(200).json(currentUser);
    } else {
       res.status(404);
       throw new Error("Current user not found!");

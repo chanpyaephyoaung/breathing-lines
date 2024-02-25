@@ -72,8 +72,9 @@ const UserProfilePage = () => {
                            <p className="text-clr-black text-sm md:text-lg font-regular underline">
                               Reviews
                            </p>
-                           <CommentBox />
-                           <CommentBox />
+                           {userProfileDetails.profileReviews.map((comment) => (
+                              <CommentBox key={comment._id} review={comment} />
+                           ))}
 
                            <button
                               type="button"

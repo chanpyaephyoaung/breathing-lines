@@ -53,7 +53,7 @@ const userSchema = new mongoose.Schema({
       {
          type: mongoose.Schema.Types.ObjectId,
          required: true,
-         ref: "ProfileReview",
+         ref: "AuthorProfileReview",
       },
    ],
    followers: [

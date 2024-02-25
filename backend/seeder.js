@@ -27,7 +27,8 @@ export const seedDummyData = async () => {
       const createdDummyUsers = await User.insertMany(dummyUsers);
       const admin = createdDummyUsers[0]._id;
       const user = createdDummyUsers[1]._id;
-      const user1 = createdDummyUsers[2]._id;
+      const user1Doc = createdDummyUsers[1];
+      const user2Doc = createdDummyUsers[2];
 
       // Use first normal user as the author to sample poems
       const samplePoems = dummyPoems.map((poem) => ({
@@ -35,16 +36,23 @@ export const seedDummyData = async () => {
          author: user,
       }));
 
-      await Poem.insertMany(samplePoems);
+      const poemsRes = await Poem.insertMany(samplePoems);
+      // Insert poems ids to poems field of the user
+      user1Doc.poems = poemsRes.map((poem) => poem._id);
 
       // Sample profile review
       const sampleProfileReview = dummyProfileReviews.map((review) => ({
          ...review,
          reviewedFor: user,
-         reviewedBy: user1,
+         reviewedBy: user2Doc._id,
       }));
 
-      await AuthorProfileReview.insertMany(sampleProfileReview);
+      const profileReviewsRes = await AuthorProfileReview.insertMany(sampleProfileReview);
+      // Insert profile reviews to profileReviews field of the user
+      user1Doc.profileReviews = profileReviewsRes.map((review) => review._id);
+
+      // Save the document
+      await user1Doc.save();
 
       console.log("Dummy Data Has Been Successfully SEEDED!");
 
