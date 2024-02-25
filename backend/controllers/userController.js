@@ -83,6 +83,15 @@ export const getUserAccProfile = asyncHandler(async (req, res) => {
          name: currentUser.name,
          email: currentUser.email,
          isAdmin: currentUser.isAdmin,
+         profileViewsCount: currentUser.profileViewsCount,
+         profileDesc: currentUser.profileDesc,
+         isBanned: currentUser.isBanned,
+         poems: currentUser.poems,
+         collections: currentUser.collections,
+         profileReviews: currentUser.profileReviews,
+         followers: currentUser.followers,
+         followings: currentUser.followings,
+         notifications: currentUser.notifications,
       });
    } else {
       res.status(404);

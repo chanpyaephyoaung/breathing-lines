@@ -14,7 +14,7 @@ router.post("/signin", authUser);
 router.post("/register", registerUser);
 router.post("/signout", signOutUser);
 router
-   .route("/profile")
+   .route("/account-profile")
    .get(protectRoutes, getUserAccProfile)
    .put(protectRoutes, updateUserAccProfile);
 

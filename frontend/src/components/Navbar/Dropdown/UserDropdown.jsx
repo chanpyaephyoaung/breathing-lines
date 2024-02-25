@@ -45,7 +45,7 @@ const UserDropdown = () => {
                   <Menu.Item as={Fragment}>
                      {({ active }) => (
                         <Link
-                           to="/profile"
+                           to="/account-profile"
                            className={`${
                               active ? "bg-clr-primary text-white" : "text-gray-900"
                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}

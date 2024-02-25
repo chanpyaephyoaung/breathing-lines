@@ -11,6 +11,8 @@ const dummyUsers = [
       name: "Albus Dumbledore",
       email: "albus@gmail.com",
       password: bcrypt.hashSync("123abc", 10),
+      profileDesc:
+         "Remember, if the time should come when you have to make a choice between what is right and what is easy, remember what happened to a boy who was good, and kind, and brave, because he strayed across the path of Lord Voldemort. Remember Cedric Diggory.",
    },
    {
       name: "Severus Snape",

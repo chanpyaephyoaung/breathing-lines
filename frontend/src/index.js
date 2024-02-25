@@ -17,6 +17,8 @@ import WritePoemPage from "./screens/WritePoemPage.jsx";
 import SignInPage from "./screens/SignInPage.jsx";
 import SignUpPage from "./screens/SignUpPage.jsx";
 import PoemFullPost from "./components/Poems/PoemFullPost/PoemFullPost.jsx";
+import ProtectedComponent from "./components/UI/ProtectedComponent.jsx";
+import UserProfilePage from "./screens/UserProfilePage.jsx";
 
 const router = createBrowserRouter(
    createRoutesFromElements(
@@ -26,6 +28,11 @@ const router = createBrowserRouter(
          <Route path="write" element={<WritePoemPage />} />
          <Route path="signin" element={<SignInPage />} />
          <Route path="signup" element={<SignUpPage />} />
+         <Route path="profile" element={<SignUpPage />} />
+
+         <Route path="" element={<ProtectedComponent />}>
+            <Route path="/account-profile" element={<UserProfilePage />} />
+         </Route>
       </Route>
    )
 );
