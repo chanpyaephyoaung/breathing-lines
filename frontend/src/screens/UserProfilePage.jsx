@@ -38,12 +38,12 @@ const UserProfilePage = () => {
                   <p className="text-sm md:text-base font-light text-clr-black mt-4">
                      &ldquo;{userProfileDetails?.profileDesc}&ldquo;
                   </p>
-                  <button
-                     type="submit"
-                     className="text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none mt-4"
+                  <Link
+                     to="/account-profile/update"
+                     className="inline-block text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none mt-4"
                   >
                      Edit Profile
-                  </button>
+                  </Link>
                </div>
 
                <div className="grid justify-items-center mb-8">

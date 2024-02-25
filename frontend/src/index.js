@@ -19,6 +19,8 @@ import SignUpPage from "./screens/SignUpPage.jsx";
 import PoemFullPost from "./components/Poems/PoemFullPost/PoemFullPost.jsx";
 import ProtectedComponent from "./components/UI/ProtectedComponent.jsx";
 import UserProfilePage from "./screens/UserProfilePage.jsx";
+import AccountUpdatePage from "./screens/AccountUpdatePage.jsx";
+import UserProfileUpdatePage from "./screens/UserProfileUpdatePage.jsx";
 
 const router = createBrowserRouter(
    createRoutesFromElements(
@@ -32,6 +34,8 @@ const router = createBrowserRouter(
 
          <Route path="" element={<ProtectedComponent />}>
             <Route path="/account-profile" element={<UserProfilePage />} />
+            <Route path="/account-profile/update" element={<UserProfileUpdatePage />} />
+            <Route path="/account-profile/account/update" element={<AccountUpdatePage />} />
          </Route>
       </Route>
    )
