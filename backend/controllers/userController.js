@@ -76,23 +76,32 @@ export const signOutUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users/profile
 // @access  Public
 export const getUserAccProfile = asyncHandler(async (req, res) => {
-   const currentUser = await User.findById(req.currentUser._id).populate({
-      path: "profileReviews",
-      select: "review reviewedAt reviewedBy",
-      populate: {
-         path: "reviewedBy",
-         select: "name",
-      },
-   });
+   const currentUser = await User.findById(req.currentUser._id);
 
-   console.log(currentUser.profileReviews[0].reviewedBy);
+   if (currentUser && currentUser.profileReviews.length > 0) {
+      const currentUserWithProfileReviews = await currentUser.populate({
+         path: "profileReviews",
+         select: "review reviewedAt reviewedBy",
+         populate: {
+            path: "reviewedBy",
+            select: "name",
+         },
+      });
 
-   if (currentUser) {
+      res.status(200).json(currentUserWithProfileReviews);
+   } else if (currentUser && currentUser.profileReviews.length === 0) {
       res.status(200).json(currentUser);
    } else {
       res.status(404);
       throw new Error("Current user not found!");
    }
+
+   // if (currentUser) {
+   //    res.status(200).json(currentUser);
+   // } else {
+   //    res.status(404);
+   //    throw new Error("Current user not found!");
+   // }
 });
 
 // @desc    Update user account profile details
@@ -102,7 +111,6 @@ export const updateUserAccProfile = asyncHandler(async (req, res) => {
    const currentUser = await User.findById(req.currentUser._id);
 
    if (currentUser) {
-      currentUser.name = req.body.name || currentUser.name;
       currentUser.email = req.body.email || currentUser.email;
 
       if (req.body.password) {
@@ -114,7 +122,7 @@ export const updateUserAccProfile = asyncHandler(async (req, res) => {
       res.status(200).json({
          _id: updatedCurrentUser._id,
          isAdmin: updatedCurrentUser.isAdmin,
-         name: updatedCurrentUser.name,
+         name: currentUser.name,
          email: updatedCurrentUser.email,
       });
    } else {

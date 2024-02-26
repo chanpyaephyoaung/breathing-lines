@@ -7,6 +7,7 @@ import { USER_PROFILE_SUB_MENU_LINKS } from "../constants.js";
 import BorderBox from "../components/UI/BorderBox.jsx";
 import CommentBox from "../components/User/CommentBox.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
+import Message from "../components/Typography/Message.jsx";
 
 const UserProfilePage = () => {
    const { userAccInfo } = useSelector((state) => state.authUser);
@@ -36,7 +37,11 @@ const UserProfilePage = () => {
                      </Link>
                   </p>
                   <p className="text-sm md:text-base font-light text-clr-black mt-4">
-                     &ldquo;{userProfileDetails?.profileDesc}&ldquo;
+                     {userProfileDetails?.profileDesc
+                        ? `&ldquo;${userProfileDetails?.profileDesc}&ldquo;`
+                        : userAccInfo._id === userProfileDetails._id
+                        ? "Add your description..."
+                        : ""}
                   </p>
                   <Link
                      to="/account-profile/update"
@@ -57,11 +62,14 @@ const UserProfilePage = () => {
                            <p className="text-clr-black text-sm md:text-lg font-regular underline">
                               Views
                            </p>
-                           <p className="text-clr-black text-sm md:text-base lg:text-lg font-light">
-                              {userProfileDetails?.profileViewsCount === 0
-                                 ? "You have not been yet discovered!"
-                                 : `${userProfileDetails?.profileViewsCount} people have viewed your profile!`}
-                           </p>
+                           {userProfileDetails?.profileViewsCount === 0 ? (
+                              <Message type="success">You have not yet been discovered!</Message>
+                           ) : (
+                              <Message type="success">
+                                 `${userProfileDetails?.profileViewsCount} people have viewed your
+                                 profile!`
+                              </Message>
+                           )}
                         </div>
                      </BorderBox>
                   </div>
@@ -72,16 +80,23 @@ const UserProfilePage = () => {
                            <p className="text-clr-black text-sm md:text-lg font-regular underline">
                               Reviews
                            </p>
-                           {userProfileDetails.profileReviews.map((comment) => (
-                              <CommentBox key={comment._id} review={comment} />
-                           ))}
 
-                           <button
-                              type="button"
-                              className="justify-self-center text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
-                           >
-                              View all
-                           </button>
+                           {userProfileDetails.profileReviews &&
+                           userProfileDetails.profileReviews.length > 0 ? (
+                              <>
+                                 {userProfileDetails.profileReviews.map((comment) => (
+                                    <CommentBox key={comment._id} review={comment} />
+                                 ))}
+                                 <button
+                                    type="button"
+                                    className="justify-self-center text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
+                                 >
+                                    View all
+                                 </button>
+                              </>
+                           ) : (
+                              <Message type="success">No reviews yet!</Message>
+                           )}
                         </div>
                      </BorderBox>
                   </div>
