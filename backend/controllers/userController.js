@@ -73,10 +73,10 @@ export const signOutUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get user account profile details
-// @route   GET /api/users/profile
-// @access  Public
+// @route   GET /api/users/account-profile
+// @access  Private
 export const getUserAccProfile = asyncHandler(async (req, res) => {
-   const currentUser = await User.findById(req.currentUser._id);
+   const currentUser = await User.findById(req?.currentUser?._id);
 
    if (currentUser && currentUser.profileReviews.length > 0) {
       const currentUserWithProfileReviews = await currentUser.populate({
@@ -95,17 +95,10 @@ export const getUserAccProfile = asyncHandler(async (req, res) => {
       res.status(404);
       throw new Error("Current user not found!");
    }
-
-   // if (currentUser) {
-   //    res.status(200).json(currentUser);
-   // } else {
-   //    res.status(404);
-   //    throw new Error("Current user not found!");
-   // }
 });
 
 // @desc    Update user account profile details
-// @route   PUT /api/users/profile
+// @route   PUT /api/users/account-profile
 // @access  Private
 export const updateUserAccProfile = asyncHandler(async (req, res) => {
    const currentUser = await User.findById(req.currentUser._id);

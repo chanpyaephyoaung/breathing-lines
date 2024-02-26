@@ -6,7 +6,7 @@ import {
    getUserAccProfile,
    updateUserAccProfile,
 } from "../controllers/userController.js";
-import { protectRoutes, verifyAdmin } from "../middleware/authMiddleware.js";
+import { protectRoutes } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
