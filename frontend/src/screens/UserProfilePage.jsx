@@ -38,7 +38,7 @@ const UserProfilePage = () => {
                   </p>
                   <p className="text-sm md:text-base font-light text-clr-black mt-4">
                      {userProfileDetails?.profileDesc
-                        ? `&ldquo;${userProfileDetails?.profileDesc}&ldquo;`
+                        ? `"${userProfileDetails?.profileDesc}"`
                         : userAccInfo._id === userProfileDetails._id
                         ? "Add your description..."
                         : ""}

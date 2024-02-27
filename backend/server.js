@@ -1,12 +1,16 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
 import { createServer } from "node:http";
 import connectDB from "./config/database.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import poemRoutes from "./routes/poemRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
 import adminUserRoutes from "./routes/adminUserRoutes.js";
+import { s3UploadV3 } from "./s3Service.js";
 
 dotenv.config();
 
@@ -34,6 +38,7 @@ app.get("/", (req, res) => {
 app.use("/api/poems", poemRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/users/admin", adminUserRoutes);
+app.use("/api/upload", uploadRoutes);
 
 // Middleware
 app.use(notFound);
