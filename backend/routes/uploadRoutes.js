@@ -15,7 +15,7 @@ const fileFilter = (req, file, cb) => {
    }
 };
 
-const upload = multer({ storage, fileFilter, limits: { fileSize: 1000000, files: 1 } });
+const upload = multer({ storage, fileFilter, limits: { fileSize: 10000000, files: 1 } });
 
 router.post("/", upload.single("file"), async (req, res) => {
    const file = req.file;

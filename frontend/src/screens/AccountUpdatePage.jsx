@@ -5,7 +5,7 @@ import { EnvelopeIcon, LockClosedIcon, CheckCircleIcon } from "@heroicons/react/
 import FormContainer from "../components/UI/FormContainer.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
 import { setSignInDetails } from "../slices/authSlice.js";
-import { useUpdateUserAccProfileMutation } from "../slices/usersApiSlice.js";
+import { useUpdateAccDetailsMutation } from "../slices/usersApiSlice.js";
 import Message from "../components/Typography/Message.jsx";
 
 const AccountUpdatePage = () => {
@@ -17,7 +17,7 @@ const AccountUpdatePage = () => {
    const [confirmPassword, setConfirmPassword] = useState("");
    const [error, setError] = useState(null);
 
-   const [updateUserAccProfile, { isLoading }] = useUpdateUserAccProfileMutation();
+   const [updateAccDetails, { isLoading }] = useUpdateAccDetailsMutation();
 
    const submitHandler = async (e) => {
       e.preventDefault();
@@ -25,7 +25,7 @@ const AccountUpdatePage = () => {
          setError("Passwords do not match. Please try again.");
       } else {
          try {
-            const res = await updateUserAccProfile({
+            const res = await updateAccDetails({
                email,
                password,
             }).unwrap();
@@ -49,7 +49,7 @@ const AccountUpdatePage = () => {
                   </span>
 
                   <input
-                     className={`placeholder:text-clr-bg-faded text-sm md:text-base py-3 md:py-3 pl-8 md:pl-12 pr-3 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
+                     className={`placeholder:text-clr-black-faded text-sm md:text-base py-3 md:py-3 pl-8 md:pl-12 pr-3 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
                      placeholder="email address"
                      type="email"
                      name="email address"
@@ -67,7 +67,7 @@ const AccountUpdatePage = () => {
                   </span>
 
                   <input
-                     className={`placeholder:text-clr-bg-faded text-sm md:text-base py-3 md:py-3 pl-8 md:pl-12 pr-3 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
+                     className={`placeholder:text-clr-black-faded text-sm md:text-base py-3 md:py-3 pl-8 md:pl-12 pr-3 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
                      placeholder="password"
                      type="password"
                      name="password"
@@ -85,7 +85,7 @@ const AccountUpdatePage = () => {
                   </span>
 
                   <input
-                     className={`placeholder:text-clr-bg-faded text-sm md:text-base py-3 md:py-3 pl-8 md:pl-12 pr-3 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
+                     className={`placeholder:text-clr-black-faded text-sm md:text-base py-3 md:py-3 pl-8 md:pl-12 pr-3 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
                      placeholder="Confirm Password"
                      type="password"
                      name="confirmPassword"

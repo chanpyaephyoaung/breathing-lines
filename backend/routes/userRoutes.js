@@ -5,6 +5,7 @@ import {
    signOutUser,
    getUserAccProfile,
    updateUserAccProfile,
+   updateUserProfile,
 } from "../controllers/userController.js";
 import { protectRoutes } from "../middleware/authMiddleware.js";
 
@@ -17,5 +18,6 @@ router
    .route("/account-profile")
    .get(protectRoutes, getUserAccProfile)
    .put(protectRoutes, updateUserAccProfile);
+router.put("/user-profile", protectRoutes, updateUserProfile);
 
 export default router;

@@ -2,6 +2,8 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
 import AuthorProfileReview from "../models/authorProfileReviewModel.js";
 import generateJwtToken from "../helpers/generateJwtToken.js";
+import { s3RetrieveV3 } from "../s3Service.js";
+import { Buffer } from "buffer";
 
 // @desc    Authenticate user & get token
 // @route   POST /api/users/signin
@@ -78,6 +80,9 @@ export const signOutUser = asyncHandler(async (req, res) => {
 export const getUserAccProfile = asyncHandler(async (req, res) => {
    const currentUser = await User.findById(req?.currentUser?._id);
 
+   const result = await s3RetrieveV3(currentUser.profileImg);
+   const image = await result.Body?.transformToString("base64");
+
    if (currentUser && currentUser.profileReviews.length > 0) {
       const currentUserWithProfileReviews = await currentUser.populate({
          path: "profileReviews",
@@ -88,12 +93,35 @@ export const getUserAccProfile = asyncHandler(async (req, res) => {
          },
       });
 
-      res.status(200).json(currentUserWithProfileReviews);
+      res.status(200).json({
+         currentUser: currentUserWithProfileReviews,
+         encodedProfileImage: image,
+      });
    } else if (currentUser && currentUser.profileReviews.length === 0) {
-      res.status(200).json(currentUser);
+      res.status(200).json({ currentUser, encodedProfileImage: image });
    } else {
       res.status(404);
       throw new Error("Current user not found!");
+   }
+});
+
+// @desc    Update user profile details
+// @route   PUT /api/users/account-profile
+// @access  Private
+export const updateUserProfile = asyncHandler(async (req, res) => {
+   const currentUser = await User.findById(req.currentUser._id);
+
+   if (currentUser) {
+      currentUser.name = req.body.name || currentUser.name;
+      currentUser.profileImg = req.body.profileImg || currentUser.profileImg;
+      currentUser.profileDesc = req.body.profileDesc || currentUser.profileDesc;
+
+      const updatedCurrentUser = await currentUser.save();
+
+      res.status(200).json(updatedCurrentUser);
+   } else {
+      res.status(404);
+      throw new Error("Profile update unsuccessful. User not found.");
    }
 });
 
@@ -120,6 +148,6 @@ export const updateUserAccProfile = asyncHandler(async (req, res) => {
       });
    } else {
       res.status(404);
-      throw new Error("Profile update unsuccessful. User not found.");
+      throw new Error("Account update unsuccessful. User not found.");
    }
 });

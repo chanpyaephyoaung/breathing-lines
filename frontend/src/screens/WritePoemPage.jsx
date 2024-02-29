@@ -11,7 +11,7 @@ const WritePoemPage = () => {
                <p className="capitalize text-base font-medium">Title</p>
                <div className="justify-self-stretch relative">
                   <input
-                     className={`placeholder:text-clr-bg-faded text-sm md:text-base py-3 md:py-3 pl-4 pr-4 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
+                     className={`placeholder:text-clr-black-faded text-sm md:text-base py-3 md:py-3 pl-4 pr-4 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
                      placeholder="title"
                      type="text"
                      name="title"
@@ -29,7 +29,7 @@ const WritePoemPage = () => {
                   id="about"
                   name="about"
                   rows={7}
-                  className="py-3 pl-4 pr-4 placeholder:text-clr-bg-faded block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-5"
+                  className="py-3 pl-4 pr-4 placeholder:text-clr-black-faded block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-5"
                ></textarea>
             </div>
 
@@ -38,7 +38,7 @@ const WritePoemPage = () => {
                <p className="capitalize text-base font-medium">Genre Tags</p>
                <div className="justify-self-stretch relative">
                   <input
-                     className={`placeholder:text-clr-bg-faded text-sm md:text-base py-3 md:py-3 pl-4 pr-4 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
+                     className={`placeholder:text-clr-black-faded text-sm md:text-base py-3 md:py-3 pl-4 pr-4 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
                      placeholder="genre"
                      type="text"
                      name="genre"

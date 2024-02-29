@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Divider from "../components/UI/Divider.jsx";
 import FormContainer from "../components/UI/FormContainer.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
-import { EnvelopeIcon, LockClosedIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
+import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { useSignInMutation } from "../slices/usersApiSlice.js";
 import { setSignInDetails } from "../slices/authSlice.js";
 import { toast } from "react-toastify";
@@ -55,7 +55,7 @@ const SignInPage = () => {
                   </span>
 
                   <input
-                     className={`placeholder:text-clr-bg-faded text-sm md:text-base py-3 md:py-3 pl-8 md:pl-12 pr-3 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
+                     className={`placeholder:text-clr-black-faded text-sm md:text-base py-3 md:py-3 pl-8 md:pl-12 pr-3 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
                      placeholder="email address"
                      type="email"
                      name="email address"
@@ -73,7 +73,7 @@ const SignInPage = () => {
                   </span>
 
                   <input
-                     className={`placeholder:text-clr-bg-faded text-sm md:text-base py-3 md:py-3 pl-8 md:pl-12 pr-3 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
+                     className={`placeholder:text-clr-black-faded text-sm md:text-base py-3 md:py-3 pl-8 md:pl-12 pr-3 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
                      placeholder="password"
                      type="password"
                      name="password"

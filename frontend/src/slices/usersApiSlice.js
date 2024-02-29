@@ -1,4 +1,4 @@
-import { USERS_URL } from "../constants.js";
+import { USERS_URL, UPLOAD_URL } from "../constants.js";
 import { apiSlice } from "./apiSlice.js";
 
 export const usersApiSlice = apiSlice.injectEndpoints({
@@ -29,9 +29,23 @@ export const usersApiSlice = apiSlice.injectEndpoints({
          }),
          keepUnusedDataFor: 5,
       }),
-      updateUserAccProfile: builder.mutation({
-         query: (newProfileData) => ({
+      updateAccDetails: builder.mutation({
+         query: (newAccDetails) => ({
             url: `${USERS_URL}/account-profile`,
+            method: "PUT",
+            body: newAccDetails,
+         }),
+      }),
+      uploadUserProfileImage: builder.mutation({
+         query: (data) => ({
+            url: `${UPLOAD_URL}`,
+            method: "POST",
+            body: data,
+         }),
+      }),
+      updateUserProfile: builder.mutation({
+         query: (newProfileData) => ({
+            url: `${USERS_URL}/user-profile`,
             method: "PUT",
             body: newProfileData,
          }),
@@ -44,5 +58,7 @@ export const {
    useSignOutMutation,
    useSignUpMutation,
    useGetUserProfileQuery,
-   useUpdateUserAccProfileMutation,
+   useUpdateAccDetailsMutation,
+   useUploadUserProfileImageMutation,
+   useUpdateUserProfileMutation,
 } = usersApiSlice;
