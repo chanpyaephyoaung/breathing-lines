@@ -122,7 +122,7 @@ const SignUpPage = () => {
 
                   <input
                      className={`placeholder:text-clr-black-faded text-sm md:text-base py-3 md:py-3 pl-8 md:pl-12 pr-3 block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
-                     placeholder="Confirm Password"
+                     placeholder="confirm password"
                      type="password"
                      name="confirmPassword"
                      value={confirmPassword}
