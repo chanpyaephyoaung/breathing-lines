@@ -21,7 +21,7 @@ const UserProfilePage = () => {
          {isLoading ? (
             <LoaderSpinner />
          ) : error ? (
-            <h2>{error?.data?.errMessage || error.error}</h2>
+            <Message type="danger">{error?.data?.errMessage || error.error}</Message>
          ) : (
             <>
                <div className="mb-6">

@@ -6,6 +6,7 @@ import OverlayBgBlur from "../../UI/OverlayBgBlur.jsx";
 import { useGetSinglePoemByIdQuery } from "../../../slices/poemsApiSlice.js";
 import Container from "../../UI/Container.jsx";
 import LoaderSpinner from "../../UI/LoaderSpinner.jsx";
+import Message from "../../Typography/Message.jsx";
 
 const PoemFullPost = () => {
    const { poemId } = useParams();
@@ -20,7 +21,7 @@ const PoemFullPost = () => {
             </Container>
          ) : error ? (
             <Container>
-               <h2>{error?.data?.message || error.error}</h2>
+               <Message type="danger">{error?.data?.message || error.error}</Message>
             </Container>
          ) : (
             <>
