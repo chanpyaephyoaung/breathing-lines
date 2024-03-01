@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { dummyPoems } from "../../../sampleData.js";
-import { generatePoemContentMarkup } from "../../../utils/poemUtils.jsx";
+import { generateLineBreakBtwSentences } from "../../../utils/text.jsx";
 
 const poemOfTheDay = dummyPoems[2];
 
@@ -46,7 +46,7 @@ const PoemOfTheDay = () => {
 
                <div>
                   <p className="text-xs md:text-base font-light line-clamp-4">
-                     {generatePoemContentMarkup(poemOfTheDay.content)}
+                     {generateLineBreakBtwSentences(poemOfTheDay.content)}
                   </p>
                </div>
 

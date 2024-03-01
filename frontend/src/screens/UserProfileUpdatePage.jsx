@@ -11,7 +11,6 @@ import {
 } from "../slices/usersApiSlice.js";
 import { setSignInDetails } from "../slices/authSlice.js";
 import { toast } from "react-toastify";
-import { set } from "mongoose";
 
 const UserProfileUpdatePage = () => {
    const navigate = useNavigate();
@@ -23,7 +22,8 @@ const UserProfileUpdatePage = () => {
    const [profileImg, setProfileImg] = useState("");
    const [profileDesc, setProfileDesc] = useState("");
 
-   const { data: userProfileDetails, error, isLoading } = useGetUserProfileQuery();
+   const { data: userProfileDetails, error, isLoading, refetch } = useGetUserProfileQuery();
+   console.log(userProfileDetails);
 
    const [uploadUserProfileImage, { isLoading: loadingUserProfileUpload }] =
       useUploadUserProfileImageMutation();
@@ -50,6 +50,7 @@ const UserProfileUpdatePage = () => {
          }).unwrap();
          navigate("/account-profile");
          dispatch(setSignInDetails({ ...userAccInfo, name: username }));
+         refetch();
       } catch (err) {
          toast(err?.data?.errMessage || err.error);
       }

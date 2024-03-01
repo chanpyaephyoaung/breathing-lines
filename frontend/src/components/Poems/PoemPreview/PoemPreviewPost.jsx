@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { generatePoemContentMarkup } from "../../../utils/poemUtils.jsx";
+import { generateLineBreakBtwSentences } from "../../../utils/text.jsx";
 
 const PoemPreviewPost = ({ id, datePosted, viewsCount, coverImg, title, author, content }) => {
    return (
@@ -48,7 +48,9 @@ const PoemPreviewPost = ({ id, datePosted, viewsCount, coverImg, title, author, 
          </div>
 
          <div className="line-clamp-4">
-            <p className="text-xs md:text-base font-light">{generatePoemContentMarkup(content)}</p>
+            <p className="text-xs md:text-base font-light">
+               {generateLineBreakBtwSentences(content)}
+            </p>
          </div>
 
          <Link

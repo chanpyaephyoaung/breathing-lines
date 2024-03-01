@@ -8,13 +8,13 @@ import BorderBox from "../components/UI/BorderBox.jsx";
 import CommentBox from "../components/User/CommentBox.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
 import Message from "../components/Typography/Message.jsx";
+import { generateLineBreakBtwSentences } from "../utils/text.jsx";
 
 const UserProfilePage = () => {
    const { userAccInfo } = useSelector((state) => state.authUser);
    const { activeNavIdentifier } = USER_PROFILE_SUB_MENU_LINKS[0];
 
    const { data: userProfileDetails, error, isLoading } = useGetUserProfileQuery();
-   console.log(userProfileDetails);
 
    return (
       <Container>
@@ -48,7 +48,9 @@ const UserProfilePage = () => {
                   </div>
                   <p className="text-sm md:text-base font-light text-clr-black mt-6">
                      {userProfileDetails?.currentUser?.profileDesc
-                        ? `"${userProfileDetails?.currentUser?.profileDesc}"`
+                        ? generateLineBreakBtwSentences(
+                             userProfileDetails?.currentUser?.profileDesc
+                          )
                         : userAccInfo._id === userProfileDetails?.currentUser._id
                         ? "Add your description..."
                         : ""}
