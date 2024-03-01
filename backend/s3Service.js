@@ -19,7 +19,6 @@ export const s3UploadV3 = async (file) => {
 
 export const s3RetrieveV3 = async (fileKey) => {
    const s3client = new S3Client();
-   console.log(s3client);
 
    const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
