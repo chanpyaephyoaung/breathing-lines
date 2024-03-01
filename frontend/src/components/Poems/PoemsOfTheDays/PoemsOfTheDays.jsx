@@ -3,7 +3,7 @@ import PoemsOfPreviousDays from "./PoemsOfPreviousDays/PoemsOfPreviousDays.jsx";
 
 const PoemsOfTheDays = () => {
    return (
-      <div className="md:flex md:gap-x-6 md:justify-between mt-2 md:mt-14">
+      <div className="md:flex md:gap-x-6 md:justify-between mt-2 md:mt-4">
          <PoemOfTheDay />
          <PoemsOfPreviousDays />
       </div>

@@ -40,8 +40,14 @@ const UserProfileUpdatePage = () => {
    useEffect(() => {
       if (userProfileDetails) {
          setUsername(userProfileDetails?.currentUser?.name);
-         setProfileImg(userProfileDetails?.currentUser?.profileImg.split("uploads/")[1]);
-         setProfileDesc(userProfileDetails?.currentUser?.profileDesc);
+
+         if (userProfileDetails?.currentUser?.profileDesc) {
+            setProfileDesc(userProfileDetails?.currentUser?.profileDesc);
+         }
+
+         if (userProfileDetails?.currentUser?.profileImg) {
+            setProfileImg(userProfileDetails?.currentUser?.profileImg.split("uploads/")[1]);
+         }
       }
    }, [userProfileDetails]);
 

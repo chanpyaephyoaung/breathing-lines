@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Container from "../components/UI/Container";
+import { UserIcon } from "@heroicons/react/24/outline";
 import { useGetUserProfileQuery } from "../slices/usersApiSlice.js";
 import UserProfileSubMenu from "../components/Navbar/UserProfileSubMenu.jsx";
 import { USER_PROFILE_SUB_MENU_LINKS } from "../constants.js";
@@ -15,6 +16,7 @@ const UserProfilePage = () => {
    const { activeNavIdentifier } = USER_PROFILE_SUB_MENU_LINKS[0];
 
    const { data: userProfileDetails, error, isLoading } = useGetUserProfileQuery();
+   console.log(userProfileDetails);
 
    return (
       <Container>
@@ -26,11 +28,17 @@ const UserProfilePage = () => {
             <>
                <div className="mb-6">
                   <div className="flex items-center gap-x-6">
-                     <img
-                        src={`data:image/jpeg;base64,${userProfileDetails?.encodedProfileImage}`}
-                        className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 border-clr-black"
-                        alt=""
-                     />
+                     {userProfileDetails?.encodedProfileImage ? (
+                        <img
+                           src={`data:image/jpeg;base64,${userProfileDetails?.encodedProfileImage}`}
+                           className="w-16 h-16 md:w-20 md:h-20 text-xs rounded-full object-cover border-2 border-clr-black"
+                           alt="user profile image"
+                        />
+                     ) : (
+                        <div className="grid place-items-center w-16 h-16 md:w-20 md:h-20 text-xs rounded-full border-2 border-clr-black">
+                           <UserIcon className="w-8 h-8 md:w-12 md:h-12 text-xs rounded-full" />
+                        </div>
+                     )}
                      <div>
                         <h2 className="text-lg md:text-2xl font-bold text-clr-black">
                            {userAccInfo.name}

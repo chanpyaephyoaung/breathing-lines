@@ -3,7 +3,6 @@ import User from "../models/userModel.js";
 import AuthorProfileReview from "../models/authorProfileReviewModel.js";
 import generateJwtToken from "../helpers/generateJwtToken.js";
 import { s3RetrieveV3 } from "../s3Service.js";
-import { Buffer } from "buffer";
 
 // @desc    Authenticate user & get token
 // @route   POST /api/users/signin
@@ -80,9 +79,12 @@ export const signOutUser = asyncHandler(async (req, res) => {
 export const getUserAccProfile = asyncHandler(async (req, res) => {
    const currentUser = await User.findById(req?.currentUser?._id);
 
-   // const result = await s3RetrieveV3(currentUser.profileImg);
-   // const image = await result.Body?.transformToString("base64");
-   const image = 1;
+   let image = "";
+
+   if (currentUser?.profileImg) {
+      const result = await s3RetrieveV3(currentUser.profileImg);
+      image = await result.Body?.transformToString("base64");
+   }
 
    if (currentUser && currentUser.profileReviews.length > 0) {
       const currentUserWithProfileReviews = await currentUser.populate({
@@ -118,7 +120,6 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
       currentUser.profileDesc = req.body.profileDesc || currentUser.profileDesc;
 
       const updatedCurrentUser = await currentUser.save();
-      console.log(updatedCurrentUser);
 
       res.status(200).json(updatedCurrentUser);
    } else {
