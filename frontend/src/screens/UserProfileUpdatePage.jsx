@@ -29,7 +29,6 @@ const UserProfileUpdatePage = () => {
       isLoading: loadingFetchingUserProfile,
       refetch,
    } = useGetUserProfileQuery();
-   console.log(userProfileDetails);
 
    const [uploadUserProfileImage, { isLoading: loadingUserProfileUpload }] =
       useUploadUserProfileImageMutation();
@@ -51,6 +50,7 @@ const UserProfileUpdatePage = () => {
       }
    }, [userProfileDetails]);
 
+   // Updating user profile
    const submitHandler = async (e) => {
       e.preventDefault();
 
@@ -68,6 +68,7 @@ const UserProfileUpdatePage = () => {
       }
    };
 
+   // Uploading profile image
    const uploadFileHandler = async (e) => {
       const formData = new FormData();
       formData.append("file", e.target.files[0]);
@@ -145,14 +146,17 @@ const UserProfileUpdatePage = () => {
 
                   <div className="grid gap-y-2 text-left">
                      <span className="sr-only">description</span>
-                     <label htmlFor="about" className="block text-clr-black-faded text-base pl-2">
+                     <label
+                        htmlFor="about"
+                        className="block text-clr-black text-base font-medium pl-2"
+                     >
                         Add your description
                      </label>
 
                      <textarea
                         id="about"
                         name="about"
-                        rows={3}
+                        rows={5}
                         className="py-3 pl-4 pr-4 placeholder:text-clr-black-faded block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-5"
                         value={profileDesc}
                         onChange={(e) => setProfileDesc(e.target.value)}

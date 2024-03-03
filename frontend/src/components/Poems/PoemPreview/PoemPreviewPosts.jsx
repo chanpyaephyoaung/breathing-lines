@@ -18,7 +18,7 @@ const PoemPreviewPosts = () => {
                <h2>{error?.data?.errMessage || error.error}</h2>
             </Container>
          ) : (
-            <div className="mt-6 w-4/6 md:w-5/6 max-w-[900px] mx-auto grid gap-6 py-5 md:grid-cols-2">
+            <div className="mt-6 w-4/6 md:w-5/6 max-w-[450px] mx-auto grid gap-6 py-5">
                {poems.map((poem) => (
                   <PoemPreviewPost
                      key={poem._id}

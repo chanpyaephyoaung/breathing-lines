@@ -23,3 +23,29 @@ export const getSinglePoemById = asyncHandler(async (req, res) => {
       throw new Error("Poem not found!");
    }
 });
+
+// @desc    Write
+// @route   POST /api/poems/write
+// @access  Private
+export const writePoem = asyncHandler(async (req, res) => {
+   const { title, content, coverImg, status, genres } = req.body;
+
+   const newPoem = new Poem({
+      title,
+      content,
+      author: req.currentUser._id,
+      coverImg,
+      status,
+      genres,
+   });
+
+   const savedPoem = await newPoem.save();
+
+   // Add the poem to the user's poems field
+   const currentUser = await User.findById(req.currentUser._id);
+   currentUser.poems.push(savedPoem._id);
+
+   await currentUser.save();
+
+   res.status(201).json(savedPoem);
+});
