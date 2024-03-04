@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import FormContainer from "../components/UI/FormContainer.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
@@ -11,6 +12,8 @@ import { useWriteNewPoemMutation } from "../slices/poemsApiSlice.js";
 import { toast } from "react-toastify";
 
 const WritePoemPage = () => {
+   const navigate = useNavigate();
+
    const [title, setTitle] = useState("");
    const [content, setContent] = useState("");
    const [coverImg, setCoverImg] = useState("");
@@ -20,7 +23,11 @@ const WritePoemPage = () => {
 
    const submitHandler = async (e, status) => {
       e.preventDefault();
-      console.log(status);
+
+      if (status === POEM_WRITE_STATUS_DISCARD) {
+         navigate("/account-profile");
+         return;
+      }
 
       if (!title || !content || !genres) {
          toast.error("All fields are required!");
