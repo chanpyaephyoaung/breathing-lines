@@ -30,7 +30,9 @@ const PoemPreviewPost = ({ id, datePosted, viewsCount, coverImg, title, author, 
             </span>
          </div>
 
-         <img className="w-full h-32 md:h-40 lg:h-60 object-cover" src={coverImg} alt="" />
+         {coverImg && (
+            <img className="w-full h-32 md:h-40 lg:h-60 object-cover" src={coverImg} alt="" />
+         )}
 
          <div className="grid -gap-1">
             <Link
