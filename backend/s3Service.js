@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { PutObjectCommand, S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 
-export const s3UploadV3 = async (file) => {
+export const s3UploadV3 = async (file, folder) => {
    const s3client = new S3Client();
 
    const params = {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import FormContainer from "../components/UI/FormContainer.jsx";
@@ -8,7 +8,10 @@ import {
    POEM_WRITE_STATUS_DRAFT,
    POEM_WRITE_STATUS_PUBLISH,
 } from "../constants.js";
-import { useWriteNewPoemMutation } from "../slices/poemsApiSlice.js";
+import {
+   useWriteNewPoemMutation,
+   useUploadPoemCoverImageMutation,
+} from "../slices/poemsApiSlice.js";
 import { toast } from "react-toastify";
 
 const WritePoemPage = () => {
@@ -19,7 +22,22 @@ const WritePoemPage = () => {
    const [coverImg, setCoverImg] = useState("");
    const [genres, setGenres] = useState("");
 
+   const [uploadPoemCoverImage, { isLoading: loadingUploadPoemCoverImage }] =
+      useUploadPoemCoverImageMutation();
+
    const [writeNewPoem, { isLoading: loadingWriteNewPoem }] = useWriteNewPoemMutation();
+
+   const uploadFileHandler = async (e) => {
+      const formData = new FormData();
+      formData.append("file", e.target.files[0]);
+      try {
+         const res = await uploadPoemCoverImage(formData).unwrap();
+         toast.success(res.message);
+         setCoverImg(res.result.fileKey);
+      } catch (err) {
+         toast.error(err?.data?.errMessage || err.error);
+      }
+   };
 
    const submitHandler = async (e, status) => {
       e.preventDefault();
@@ -43,6 +61,8 @@ const WritePoemPage = () => {
             };
             await writeNewPoem(newPoem).unwrap();
             toast.success(`Poem ${status.toLowerCase()}ed successfully!`);
+
+            // Add navigation to poems list page
          } catch (err) {
             toast(err?.data?.errMessage || err.error);
          }
@@ -98,6 +118,8 @@ const WritePoemPage = () => {
                         placeholder="Enter cover image url"
                         type="text"
                         name="coverImg"
+                        value={coverImg}
+                        onChange={(e) => setCoverImg(e.target.value)}
                      />
                   </div>
                </label>
@@ -109,6 +131,7 @@ const WritePoemPage = () => {
                         className="block file:text-clr-white file:rounded file:border-0 file:py-3 file:px-6 file:mr-4 file:bg-clr-primary file:cursor-pointer text-clr-black-faded text-sm md:text-base pr-3 bg-clr-bg w-full border border-t-0 border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 cursor-pointer leading-none"
                         label="Choose file"
                         type="file"
+                        onChange={uploadFileHandler}
                      />
                   </div>
                </div>
@@ -155,6 +178,7 @@ const WritePoemPage = () => {
                </button>
             </div>
 
+            {loadingUploadPoemCoverImage && <LoaderSpinner />}
             {loadingWriteNewPoem && <LoaderSpinner />}
          </form>
       </FormContainer>

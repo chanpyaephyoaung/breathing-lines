@@ -1,4 +1,4 @@
-import { POEMS_URL } from "../constants.js";
+import { POEMS_URL, UPLOAD_URL } from "../constants.js";
 import { apiSlice } from "./apiSlice.js";
 
 export const poemsApiSlice = apiSlice.injectEndpoints({
@@ -22,8 +22,19 @@ export const poemsApiSlice = apiSlice.injectEndpoints({
             body: newPoemData,
          }),
       }),
+      uploadPoemCoverImage: builder.mutation({
+         query: (data) => ({
+            url: `${UPLOAD_URL}`,
+            method: "POST",
+            body: data,
+         }),
+      }),
    }),
 });
 
-export const { useGetAllPoemsQuery, useGetSinglePoemByIdQuery, useWriteNewPoemMutation } =
-   poemsApiSlice;
+export const {
+   useGetAllPoemsQuery,
+   useGetSinglePoemByIdQuery,
+   useWriteNewPoemMutation,
+   useUploadPoemCoverImageMutation,
+} = poemsApiSlice;
