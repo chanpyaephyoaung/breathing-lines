@@ -1,7 +1,17 @@
 import { Link } from "react-router-dom";
 import { generateLineBreakBtwSentences } from "../../../utils/text.jsx";
 
-const PoemPreviewPost = ({ id, datePosted, viewsCount, coverImg, title, author, content }) => {
+const PoemPreviewPost = ({
+   id,
+   datePosted,
+   viewsCount,
+   coverImg,
+   title,
+   author,
+   content,
+   encodedCoverImg,
+}) => {
+   console.log(encodedCoverImg);
    return (
       <div className="grid gap-2 p-3 md:p-5 border border-clr-black">
          <div className="text-2xs md:text-xs w-full flex justify-between">
@@ -31,7 +41,11 @@ const PoemPreviewPost = ({ id, datePosted, viewsCount, coverImg, title, author, 
          </div>
 
          {coverImg && (
-            <img className="w-full h-32 md:h-40 lg:h-60 object-cover" src={coverImg} alt="" />
+            <img
+               className="w-full h-32 md:h-40 lg:h-60 object-cover"
+               src={encodedCoverImg ? `data:image/jpeg;base64,${encodedCoverImg}` : coverImg}
+               alt=""
+            />
          )}
 
          <div className="grid -gap-1">
