@@ -9,19 +9,21 @@ import { s3RetrieveV3 } from "../s3Service.js";
 export const getAllPoems = asyncHandler(async (req, res) => {
    const poems = await Poem.find({}).populate("author", "name");
 
-   const poemsWithEncodedCoverImg = await Promise.all(
-      poems.map(async (poem, i) => {
-         let image = "";
-         if (poem?.coverImg && i === 3) {
-            // Just for testing purpose. Remove the second condition in production
-            const result = await s3RetrieveV3(poem.coverImg);
-            image = await result.Body?.transformToString("base64");
-         }
-         return { poem, encodedCoverImg: image };
-      })
-   );
+   res.json({ poems });
 
-   res.json(poemsWithEncodedCoverImg);
+   // const poemsWithEncodedCoverImg = await Promise.all(
+   //    poems.map(async (poem, i) => {
+   //       let image = "";
+   //       if (poem?.coverImg && i === 3) {
+   //          // Just for testing purpose. Remove the second condition in production
+   //          const result = await s3RetrieveV3(poem.coverImg);
+   //          image = await result.Body?.transformToString("base64");
+   //       }
+   //       return { poem, encodedCoverImg: image };
+   //    })
+   // );
+
+   // res.json(poemsWithEncodedCoverImg);
 });
 
 // @desc    Fetch a single poem by ID
