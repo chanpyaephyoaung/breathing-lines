@@ -35,6 +35,13 @@ export const poemsApiSlice = apiSlice.injectEndpoints({
             method: "PUT",
          }),
       }),
+      ratePoem: builder.mutation({
+         query: ({ poemId, rating }) => ({
+            url: `${POEMS_URL}/${poemId}/rate`,
+            method: "PUT",
+            body: { rating },
+         }),
+      }),
    }),
 });
 
@@ -44,4 +51,5 @@ export const {
    useWriteNewPoemMutation,
    useUploadPoemCoverImageMutation,
    useLikePoemMutation,
+   useRatePoemMutation,
 } = poemsApiSlice;

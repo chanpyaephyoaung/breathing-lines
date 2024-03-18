@@ -16,7 +16,7 @@ import LoaderSpinner from "../../UI/LoaderSpinner.jsx";
 import Message from "../../Typography/Message.jsx";
 import Rating from "react-rating";
 import { toast } from "react-toastify";
-import { useLikePoemMutation } from "../../../slices/poemsApiSlice.js";
+import { useLikePoemMutation, useRatePoemMutation } from "../../../slices/poemsApiSlice.js";
 
 const emptyStarIcon = (
    <StarIcon className="transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] cursor-pointe" />
@@ -39,19 +39,33 @@ const PoemFullPost = () => {
 
    const { poemId } = useParams();
    const [isLiked, setIsLiked] = useState(false);
+   const [initialRating, setInitialRating] = useState(0);
 
+   const [likePoem] = useLikePoemMutation();
+   const [ratePoem] = useRatePoemMutation();
+   const { data: poem, isLoading, error, refetch } = useGetSinglePoemByIdQuery(poemId);
+
+   // Like a poem
    const likePoemHandler = async () => {
       try {
-         await likePoem(poemId);
          setIsLiked((prevState) => !prevState);
+         await likePoem(poemId);
          refetch();
       } catch (err) {
          toast(err?.data?.errMessage || err.error);
       }
    };
 
-   const [likePoem] = useLikePoemMutation();
-   const { data: poem, isLoading, error, refetch } = useGetSinglePoemByIdQuery(poemId);
+   // Rate a poem
+   const ratingChangeHandler = async (value) => {
+      try {
+         setInitialRating(value);
+         await ratePoem({ poemId, rating: value });
+         refetch();
+      } catch (err) {
+         toast(err?.data?.errMessage || err.error);
+      }
+   };
 
    useEffect(() => {
       if (poem) {
@@ -60,6 +74,10 @@ const PoemFullPost = () => {
          );
          if (alreadyLiked) {
             setIsLiked(true);
+         }
+         const currentRating = poem.ratings.find((rating) => rating.ratedBy === userAccInfo?._id);
+         if (currentRating) {
+            setInitialRating(currentRating?.rating);
          }
       }
    }, [poem, userAccInfo?._id]);
@@ -168,7 +186,12 @@ const PoemFullPost = () => {
                         Ratings & Review
                      </p>
                      <div className="grid justify-start text-center gap-x-6">
-                        <Rating emptySymbol={emptyStarIcon} fullSymbol={fullStarIcon} />
+                        <Rating
+                           initialRating={initialRating}
+                           onChange={ratingChangeHandler}
+                           emptySymbol={emptyStarIcon}
+                           fullSymbol={fullStarIcon}
+                        />
                         <p className="text-sm text-clr-black">Rate this poem</p>
                      </div>
                      <form action="" className="w-full grid md:grid-cols-[3fr_2fr] gap-x-8 gap-y-4">

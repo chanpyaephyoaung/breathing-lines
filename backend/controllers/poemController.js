@@ -1,6 +1,7 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Poem from "../models/poemModel.js";
 import User from "../models/userModel.js";
+import PoemRating from "../models/poemRatingModel.js";
 import { s3RetrieveV3 } from "../s3Service.js";
 
 // @desc    Fetch all poems
@@ -30,7 +31,9 @@ export const getAllPoems = asyncHandler(async (req, res) => {
 // @route   GET /api/poems/:poemId
 // @access  Public
 export const getSinglePoemById = asyncHandler(async (req, res) => {
-   const targetPoem = await Poem.findById(req.params.poemId).populate("author", "name");
+   const targetPoem = await Poem.findById(req.params.poemId)
+      .populate("author", "name")
+      .populate("ratings", "ratedBy rating");
 
    if (targetPoem) {
       return res.json(targetPoem);
@@ -40,7 +43,7 @@ export const getSinglePoemById = asyncHandler(async (req, res) => {
    }
 });
 
-// @desc    Write
+// @desc    Write a poem
 // @route   POST /api/poems/write
 // @access  Private
 export const writePoem = asyncHandler(async (req, res) => {
@@ -66,8 +69,8 @@ export const writePoem = asyncHandler(async (req, res) => {
    res.status(201).json(savedPoem);
 });
 
-// @desc    Write
-// @route   PUT /api/poems/:id/love
+// @desc    Like a poem
+// @route   PUT /api/poems/:poemId/like
 // @access  Private
 export const likePoem = asyncHandler(async (req, res) => {
    const poemId = req.params.poemId;
@@ -100,5 +103,40 @@ export const likePoem = asyncHandler(async (req, res) => {
    } else {
       res.status(404);
       throw new Error("Poem not found!");
+   }
+});
+
+// @desc    Rate a poem
+// @route   PUT /api/poems/:poemId/rate
+// @access  Private
+export const ratePoem = asyncHandler(async (req, res) => {
+   const poemId = req.params.poemId;
+   const { rating } = req.body;
+
+   const poem = await Poem.findById(poemId);
+   const currentUser = req.currentUser._id;
+
+   const currentRating = await PoemRating.findOne({ ratedBy: currentUser });
+
+   if (!currentRating) {
+      // Create and save new rating
+      const newRating = new PoemRating({
+         rating,
+         ratedAt: new Date(),
+         ratedBy: currentUser,
+         ratedPoem: poemId,
+      });
+      const savedRating = await newRating.save();
+
+      // Add and save the rating to the poem's ratings array
+      poem.ratings.push(savedRating._id);
+      await poem.save();
+
+      res.status(201).json(savedRating);
+   } else {
+      // Update the existing rating and save
+      currentRating.rating = rating;
+      await currentRating.save();
+      res.status(200).json(currentRating);
    }
 });
