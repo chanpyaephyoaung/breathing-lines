@@ -16,7 +16,6 @@ const UserProfilePage = () => {
    const { activeNavIdentifier } = USER_PROFILE_SUB_MENU_LINKS[0];
 
    const { data: userProfileDetails, error, isLoading } = useGetUserProfileQuery();
-   console.log(userProfileDetails);
 
    return (
       <Container>

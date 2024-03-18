@@ -65,3 +65,40 @@ export const writePoem = asyncHandler(async (req, res) => {
 
    res.status(201).json(savedPoem);
 });
+
+// @desc    Write
+// @route   PUT /api/poems/:id/love
+// @access  Private
+export const likePoem = asyncHandler(async (req, res) => {
+   const poemId = req.params.poemId;
+
+   // Retreive the poem
+   const poem = await Poem.findById(poemId);
+
+   if (poem) {
+      const alreadyLiked = poem.likes.find(
+         (user) => user.toString() === req.currentUser._id.toString()
+      );
+
+      if (!alreadyLiked) {
+         // Increase the likes count
+         poem.likesCount += 1;
+         // Add the user to the likes array
+         poem.likes.push(req.currentUser._id);
+      } else {
+         // Decrease the likes count
+         poem.likesCount -= 1;
+         // Remove the user from the likes array
+         poem.likes = poem.likes.filter(
+            (user) => user.toString() !== req.currentUser._id.toString()
+         );
+      }
+
+      // Save updated poem
+      const updatedPoem = await poem.save();
+      res.status(200).json(updatedPoem);
+   } else {
+      res.status(404);
+      throw new Error("Poem not found!");
+   }
+});

@@ -56,7 +56,7 @@ const poemSchema = new mongoose.Schema({
          ref: "PoemReview",
       },
    ],
-   shares: [
+   likes: [
       {
          type: mongoose.Schema.Types.ObjectId,
          required: true,

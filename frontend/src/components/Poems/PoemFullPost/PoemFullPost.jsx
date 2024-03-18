@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router";
+import { useSelector } from "react-redux";
 import { TagIcon, HeartIcon, StarIcon } from "@heroicons/react/24/outline";
 import {
    EyeIcon as SolidEyeIcon,
@@ -14,6 +15,8 @@ import CommentBox from "../../User/CommentBox.jsx";
 import LoaderSpinner from "../../UI/LoaderSpinner.jsx";
 import Message from "../../Typography/Message.jsx";
 import Rating from "react-rating";
+import { toast } from "react-toastify";
+import { useLikePoemMutation } from "../../../slices/poemsApiSlice.js";
 
 const emptyStarIcon = (
    <StarIcon className="transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] cursor-pointe" />
@@ -32,14 +35,34 @@ const dummyReview = {
 };
 
 const PoemFullPost = () => {
+   const { userAccInfo } = useSelector((state) => state.authUser);
+
    const { poemId } = useParams();
    const [isLiked, setIsLiked] = useState(false);
 
-   const likePoemHandler = () => {
-      setIsLiked((prevState) => !prevState);
+   const likePoemHandler = async () => {
+      try {
+         await likePoem(poemId);
+         setIsLiked((prevState) => !prevState);
+         refetch();
+      } catch (err) {
+         toast(err?.data?.errMessage || err.error);
+      }
    };
 
-   const { data: poem, isLoading, error } = useGetSinglePoemByIdQuery(poemId);
+   const [likePoem] = useLikePoemMutation();
+   const { data: poem, isLoading, error, refetch } = useGetSinglePoemByIdQuery(poemId);
+
+   useEffect(() => {
+      if (poem) {
+         const alreadyLiked = poem.likes.find(
+            (user) => user.toString() === userAccInfo?._id.toString()
+         );
+         if (alreadyLiked) {
+            setIsLiked(true);
+         }
+      }
+   }, [poem, userAccInfo?._id]);
 
    return (
       <>
@@ -113,7 +136,7 @@ const PoemFullPost = () => {
                         <SolidHeartIcon className="transition-all w-[45px] md:w-[55px] text-clr-black-light stroke-[1.5] hover:text-clr-primary" />
                         <div className="grid items-center">
                            <span className="inline-block text-xl md:text-3xl font-light leading-none">
-                              5
+                              {poem?.likesCount}
                            </span>
                            <span className="text-sm md:text-base font-light -mt-1">loves</span>
                         </div>

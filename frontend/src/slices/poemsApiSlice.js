@@ -29,6 +29,12 @@ export const poemsApiSlice = apiSlice.injectEndpoints({
             body: data,
          }),
       }),
+      likePoem: builder.mutation({
+         query: (poemId) => ({
+            url: `${POEMS_URL}/${poemId}/like`,
+            method: "PUT",
+         }),
+      }),
    }),
 });
 
@@ -37,4 +43,5 @@ export const {
    useGetSinglePoemByIdQuery,
    useWriteNewPoemMutation,
    useUploadPoemCoverImageMutation,
+   useLikePoemMutation,
 } = poemsApiSlice;
