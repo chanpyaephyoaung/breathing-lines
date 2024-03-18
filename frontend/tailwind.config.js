@@ -9,6 +9,7 @@ module.exports = {
             "clr-tertiary": "#FF9D29",
             "clr-bg": "#FFFCFB",
             "clr-black": "#333333",
+            "clr-black-light": "#686868",
             "clr-black-faded": "rgba(51,51,51,.5)",
             "clr-gray": "#E2E2E2",
             "clr-white": "#fff",
