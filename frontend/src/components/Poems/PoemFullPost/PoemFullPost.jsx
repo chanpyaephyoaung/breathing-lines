@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import { TagIcon, HeartIcon, StarIcon } from "@heroicons/react/24/outline";
@@ -16,7 +15,11 @@ import LoaderSpinner from "../../UI/LoaderSpinner.jsx";
 import Message from "../../Typography/Message.jsx";
 import Rating from "react-rating";
 import { toast } from "react-toastify";
-import { useLikePoemMutation, useRatePoemMutation } from "../../../slices/poemsApiSlice.js";
+import {
+   useLikePoemMutation,
+   useRatePoemMutation,
+   useReviewPoemMutation,
+} from "../../../slices/poemsApiSlice.js";
 import { calculateAverage } from "../../../utils/math.js";
 
 const emptyStarIcon = (
@@ -42,9 +45,11 @@ const PoemFullPost = () => {
    const [isLiked, setIsLiked] = useState(false);
    const [initialRating, setInitialRating] = useState(0);
    const [averageRating, setAverageRating] = useState(0);
+   const [reviewInput, setReviewInput] = useState("");
 
    const [likePoem] = useLikePoemMutation();
    const [ratePoem] = useRatePoemMutation();
+   const [reviewPoem] = useReviewPoemMutation();
    const { data: poem, isLoading, error, refetch } = useGetSinglePoemByIdQuery(poemId);
 
    // Like a poem
@@ -67,6 +72,21 @@ const PoemFullPost = () => {
          await ratePoem({ poemId, rating: value });
          refetch();
       } catch (err) {
+         toast(err?.data?.errMessage || err.error);
+      }
+   };
+
+   // Review a poem
+   const createReviewSubmitHandler = async (e) => {
+      e.preventDefault();
+      try {
+         const res = await reviewPoem({ poemId, review: reviewInput }).unwrap();
+         console.log(res);
+         toast(res.message);
+         refetch();
+         setReviewInput("");
+      } catch (err) {
+         setReviewInput("");
          toast(err?.data?.errMessage || err.error);
       }
    };
@@ -202,7 +222,7 @@ const PoemFullPost = () => {
                            <p className="text-sm text-clr-black">Rate this poem</p>
                         </div>
                         <form
-                           action=""
+                           onSubmit={createReviewSubmitHandler}
                            className="w-full grid md:grid-cols-[3fr_2fr] gap-x-8 gap-y-4"
                         >
                            <label className="relative text-xs grid justify-items-start gap-y-2">
@@ -215,11 +235,13 @@ const PoemFullPost = () => {
                                     placeholder="Tell us what you think of this poem..."
                                     type="text"
                                     name="poemReview"
+                                    onChange={(e) => setReviewInput(e.target.value)}
+                                    value={reviewInput}
                                  />
                               </div>
                            </label>
                            <button
-                              type="button"
+                              type="submit"
                               className="justify-self-start text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
                            >
                               Write a review

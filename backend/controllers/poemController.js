@@ -2,6 +2,7 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import Poem from "../models/poemModel.js";
 import User from "../models/userModel.js";
 import PoemRating from "../models/poemRatingModel.js";
+import PoemReview from "../models/poemReviewModel.js";
 import { s3RetrieveV3 } from "../s3Service.js";
 
 // @desc    Fetch all poems
@@ -138,5 +139,38 @@ export const ratePoem = asyncHandler(async (req, res) => {
       currentRating.rating = rating;
       await currentRating.save();
       res.status(200).json(currentRating);
+   }
+});
+
+// @desc    Create a review for a poem
+// @route   POST /api/poems/:poemId/review
+// @access  Private
+export const createPoemReview = asyncHandler(async (req, res) => {
+   const poemId = req.params.poemId;
+   const { review } = req.body;
+
+   const poem = await Poem.findById(poemId);
+   const currentUser = req.currentUser._id;
+
+   const alreadyReviewed = await PoemReview.findOne({ reviewedBy: currentUser });
+
+   if (!alreadyReviewed) {
+      // Create and save new review
+      const newReview = new PoemReview({
+         review,
+         reviewedAt: new Date(),
+         reviewedBy: currentUser,
+         reviewedPoem: poemId,
+      });
+      const savedReview = await newReview.save();
+
+      // Add and save the review to the poem's ratings array
+      poem.reviews.push(savedReview._id);
+      await poem.save();
+
+      res.status(201).json({ message: "Review added successfully!" });
+   } else {
+      res.status(400);
+      throw new Error("You have already made a review on this poem!");
    }
 });
