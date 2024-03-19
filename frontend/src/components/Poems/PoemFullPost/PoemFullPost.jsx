@@ -17,6 +17,7 @@ import Message from "../../Typography/Message.jsx";
 import Rating from "react-rating";
 import { toast } from "react-toastify";
 import { useLikePoemMutation, useRatePoemMutation } from "../../../slices/poemsApiSlice.js";
+import { calculateAverage } from "../../../utils/math.js";
 
 const emptyStarIcon = (
    <StarIcon className="transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] cursor-pointe" />
@@ -40,6 +41,7 @@ const PoemFullPost = () => {
    const { poemId } = useParams();
    const [isLiked, setIsLiked] = useState(false);
    const [initialRating, setInitialRating] = useState(0);
+   const [averageRating, setAverageRating] = useState(0);
 
    const [likePoem] = useLikePoemMutation();
    const [ratePoem] = useRatePoemMutation();
@@ -60,6 +62,8 @@ const PoemFullPost = () => {
    const ratingChangeHandler = async (value) => {
       try {
          setInitialRating(value);
+         // Calculating average rating
+         setAverageRating(calculateAverage(poem.ratings.map((rating) => rating.rating)));
          await ratePoem({ poemId, rating: value });
          refetch();
       } catch (err) {
@@ -79,9 +83,8 @@ const PoemFullPost = () => {
          if (currentRating) {
             setInitialRating(currentRating?.rating);
          }
-         // if (poem.author === userAccInfo._id) {
-         //    setIsCurrentUserTheAuthor(true);
-         // }
+         // Calculating average rating
+         setAverageRating(calculateAverage(poem.ratings.map((rating) => rating.rating)));
       }
    }, [poem, userAccInfo?._id]);
 
@@ -177,7 +180,7 @@ const PoemFullPost = () => {
                         <SolidSparklesIcon className="transition-all w-[45px] md:w-[55px] text-clr-black-light stroke-[1.5] hover:text-clr-secondary" />
                         <div className="grid items-center">
                            <span className="inline-block text-xl md:text-3xl font-light leading-none">
-                              80
+                              {averageRating || 0}
                            </span>
                            <span className="text-sm md:text-base font-light -mt-1">ratings</span>
                         </div>
