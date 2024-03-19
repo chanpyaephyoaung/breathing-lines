@@ -93,13 +93,13 @@ const PoemFullPost = () => {
 
    useEffect(() => {
       if (poem) {
-         const alreadyLiked = poem.likes.find(
+         const alreadyLiked = poem?.likes.find(
             (user) => user.toString() === userAccInfo?._id.toString()
          );
          if (alreadyLiked) {
             setIsLiked(true);
          }
-         const currentRating = poem.ratings.find((rating) => rating.ratedBy === userAccInfo?._id);
+         const currentRating = poem?.ratings.find((rating) => rating.ratedBy === userAccInfo?._id);
          if (currentRating) {
             setInitialRating(currentRating?.rating);
          }
@@ -207,7 +207,7 @@ const PoemFullPost = () => {
                      </div>
                   </div>
 
-                  {userAccInfo._id !== poem.author._id && (
+                  {userAccInfo?._id !== poem.author._id && (
                      <div className="grid gap-y-6 border-t-[1px] border-clr-black-faded p-4 md:p-x-8 md:p-x-4 md:py-12">
                         <p className="flex gap-x-2 text-clr-black text-base md:text-2xl font-medium">
                            Ratings & Review
