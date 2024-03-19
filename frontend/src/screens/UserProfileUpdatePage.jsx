@@ -56,12 +56,16 @@ const UserProfileUpdatePage = () => {
       e.preventDefault();
 
       try {
-         await updateUserProfile({
+         const newProfileData = {
             name: username,
             profileDesc,
             profileImg,
+         };
+         await updateUserProfile({
+            newProfileData,
+            userId,
          }).unwrap();
-         navigate("/account-profile");
+         navigate(`/user-profile/${userId}`);
          dispatch(setSignInDetails({ ...userAccInfo, name: username }));
          refetch();
       } catch (err) {

@@ -115,9 +115,9 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
    const currentUser = await User.findById(req.currentUser._id);
 
    if (currentUser) {
-      currentUser.name = req.body.name || currentUser.name;
-      currentUser.profileImg = req.body.profileImg || currentUser.profileImg;
-      currentUser.profileDesc = req.body.profileDesc || currentUser.profileDesc;
+      currentUser.name = req.body.newProfileData.name || currentUser.name;
+      currentUser.profileImg = req.body.newProfileData.profileImg || currentUser.profileImg;
+      currentUser.profileDesc = req.body.newProfileData.profileDesc || currentUser.profileDesc;
 
       const updatedCurrentUser = await currentUser.save();
 
