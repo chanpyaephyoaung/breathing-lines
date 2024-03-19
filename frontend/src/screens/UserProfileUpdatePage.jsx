@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { UserCircleIcon, PhotoIcon } from "@heroicons/react/24/outline";
 import FormContainer from "../components/UI/FormContainer.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
@@ -14,6 +14,7 @@ import { setSignInDetails } from "../slices/authSlice.js";
 import { toast } from "react-toastify";
 
 const UserProfileUpdatePage = () => {
+   const { userId } = useParams();
    const navigate = useNavigate();
    const dispatch = useDispatch();
 
@@ -28,7 +29,7 @@ const UserProfileUpdatePage = () => {
       error: loadingFetchingUserProfileError,
       isLoading: loadingFetchingUserProfile,
       refetch,
-   } = useGetUserProfileQuery();
+   } = useGetUserProfileQuery(userId);
 
    const [uploadUserProfileImage, { isLoading: loadingUserProfileUpload }] =
       useUploadUserProfileImageMutation();
@@ -38,14 +39,14 @@ const UserProfileUpdatePage = () => {
 
    useEffect(() => {
       if (userProfileDetails) {
-         setUsername(userProfileDetails?.currentUser?.name);
+         setUsername(userProfileDetails?.targetUser?.name);
 
-         if (userProfileDetails?.currentUser?.profileDesc) {
-            setProfileDesc(userProfileDetails?.currentUser?.profileDesc);
+         if (userProfileDetails?.targetUser?.profileDesc) {
+            setProfileDesc(userProfileDetails?.targetUser?.profileDesc);
          }
 
-         if (userProfileDetails?.currentUser?.profileImg) {
-            setProfileImg(userProfileDetails?.currentUser?.profileImg.split("uploads/")[1]);
+         if (userProfileDetails?.targetUser?.profileImg) {
+            setProfileImg(userProfileDetails?.targetUser?.profileImg.split("uploads/")[1]);
          }
       }
    }, [userProfileDetails]);
