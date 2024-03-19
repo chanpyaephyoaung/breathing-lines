@@ -157,12 +157,14 @@ const PoemFullPost = () => {
                            {poem?.genres.join(", ")}
                         </p>
                      </div>
-                     <button
-                        type="button"
-                        className="justify-self-start text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
-                     >
-                        &#43; Add to collection
-                     </button>
+                     {userAccInfo && (
+                        <button
+                           type="button"
+                           className="justify-self-start text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
+                        >
+                           &#43; Add to collection
+                        </button>
+                     )}
                   </div>
 
                   <div className="grid grid-cols-2 md:flex md:flex-row md:justify-between gap-y-4 border-t-[1px] border-clr-black-faded p-4 md:p-x-8 md:p-x-4 md:py-12">
