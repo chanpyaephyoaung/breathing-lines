@@ -72,6 +72,7 @@ const PoemFullPost = () => {
          await ratePoem({ poemId, rating: value });
          refetch();
       } catch (err) {
+         console.log("ERROR ", err);
          toast(err?.data?.errMessage || err.error);
       }
    };
@@ -81,7 +82,6 @@ const PoemFullPost = () => {
       e.preventDefault();
       try {
          const res = await reviewPoem({ poemId, review: reviewInput }).unwrap();
-         console.log(res);
          toast(res.message);
          refetch();
          setReviewInput("");
@@ -206,49 +206,59 @@ const PoemFullPost = () => {
                         </div>
                      </div>
                   </div>
-
-                  {userAccInfo?._id !== poem.author._id && (
-                     <div className="grid gap-y-6 border-t-[1px] border-clr-black-faded p-4 md:p-x-8 md:p-x-4 md:py-12">
-                        <p className="flex gap-x-2 text-clr-black text-base md:text-2xl font-medium">
-                           Ratings & Review
-                        </p>
-                        <div className="grid justify-start text-center gap-x-6">
-                           <Rating
-                              initialRating={initialRating}
-                              onChange={ratingChangeHandler}
-                              emptySymbol={emptyStarIcon}
-                              fullSymbol={fullStarIcon}
-                           />
-                           <p className="text-sm text-clr-black">Rate this poem</p>
-                        </div>
-                        <form
-                           onSubmit={createReviewSubmitHandler}
-                           className="w-full grid md:grid-cols-[3fr_2fr] gap-x-8 gap-y-4"
-                        >
-                           <label className="relative text-xs grid justify-items-start gap-y-2">
-                              <span className="sr-only">write a review</span>
-                              <div className="justify-self-stretch relative">
-                                 <span className="absolute inset-y-0 left-0 flex items-center pl-2"></span>
-
-                                 <input
-                                    className={`w-4/5 md:w-full placeholder:text-clr-black-faded text-sm md:text-base py-3 md:py-3 pl-4 md:pl-4 pr-3 block bg-clr-bg border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
-                                    placeholder="Tell us what you think of this poem..."
-                                    type="text"
-                                    name="poemReview"
-                                    onChange={(e) => setReviewInput(e.target.value)}
-                                    value={reviewInput}
-                                 />
-                              </div>
-                           </label>
-                           <button
-                              type="submit"
-                              className="justify-self-start text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
+                  <div className="grid gap-y-6 border-t-[1px] border-clr-black-faded p-4 md:p-x-8 md:p-x-4 md:py-12">
+                     <p className="flex gap-x-2 text-clr-black text-base md:text-2xl font-medium">
+                        Ratings & Review
+                     </p>
+                     {!userAccInfo ? (
+                        // Render content when userAccInfo is not available
+                        <Message type="danger">
+                           Please sign in to rate and review this poem.
+                        </Message>
+                     ) : userAccInfo._id !== poem.author._id ? (
+                        // Render content when userAccInfo is available but user is not the author of the poem
+                        <>
+                           <div className="grid justify-start text-center gap-x-6">
+                              <Rating
+                                 initialRating={initialRating}
+                                 onChange={ratingChangeHandler}
+                                 emptySymbol={emptyStarIcon}
+                                 fullSymbol={fullStarIcon}
+                              />
+                              <p className="text-sm text-clr-black">Rate this poem</p>
+                           </div>
+                           <form
+                              onSubmit={createReviewSubmitHandler}
+                              className="w-full grid md:grid-cols-[3fr_2fr] gap-x-8 gap-y-4"
                            >
-                              Write a review
-                           </button>
-                        </form>
-                     </div>
-                  )}
+                              <label className="relative text-xs grid justify-items-start gap-y-2">
+                                 <span className="sr-only">write a review</span>
+                                 <div className="justify-self-stretch relative">
+                                    <span className="absolute inset-y-0 left-0 flex items-center pl-2"></span>
+
+                                    <input
+                                       className={`w-4/5 md:w-full placeholder:text-clr-black-faded text-sm md:text-base py-3 md:py-3 pl-4 md:pl-4 pr-3 block bg-clr-bg border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
+                                       placeholder="Tell us what you think of this poem..."
+                                       type="text"
+                                       name="poemReview"
+                                       onChange={(e) => setReviewInput(e.target.value)}
+                                       value={reviewInput}
+                                    />
+                                 </div>
+                              </label>
+                              <button
+                                 type="submit"
+                                 className="justify-self-start text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
+                              >
+                                 Write a review
+                              </button>
+                           </form>
+                        </>
+                     ) : (
+                        // Render content when userAccInfo is available and user is the author of the poem
+                        <Message type="danger">You cannot rate or review your own poem.</Message>
+                     )}
+                  </div>
 
                   <div className="grid gap-y-6 border-t-[1px] border-clr-black-faded p-4 md:p-x-8 md:p-x-4 md:py-8">
                      <p className="flex gap-x-2 text-clr-black text-base md:text-2xl font-medium">
