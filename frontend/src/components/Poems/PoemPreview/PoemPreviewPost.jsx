@@ -11,7 +11,6 @@ const PoemPreviewPost = ({
    content,
    encodedCoverImg,
 }) => {
-   console.log(encodedCoverImg);
    return (
       <div className="grid gap-2 p-3 md:p-5 border border-clr-black">
          <div className="text-2xs md:text-xs w-full flex justify-between">
@@ -56,10 +55,10 @@ const PoemPreviewPost = ({
                {title}
             </Link>
             <a
-               href=" "
+               href={`user-profile/${author._id}`}
                className="transition-all text-xs md:text-sm text-clr-black-faded font-light hover:text-clr-primary"
             >
-               By {author}
+               By {author.name}
             </a>
          </div>
 

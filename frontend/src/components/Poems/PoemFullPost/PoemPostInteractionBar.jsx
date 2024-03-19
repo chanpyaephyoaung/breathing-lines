@@ -1,7 +1,6 @@
 import {
    HeartIcon,
    ChatBubbleBottomCenterTextIcon,
-   ArrowUturnRightIcon,
    PlusIcon,
    StarIcon,
 } from "@heroicons/react/24/outline";

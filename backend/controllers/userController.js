@@ -74,20 +74,20 @@ export const signOutUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get user account profile details
-// @route   GET /api/users/account-profile
+// @route   GET /api/users/user-profile/:userId
 // @access  Private
 export const getUserAccProfile = asyncHandler(async (req, res) => {
-   const currentUser = await User.findById(req?.currentUser?._id);
+   const targetUser = await User.findById(req.params.userId);
 
    let image = "";
 
-   // if (currentUser?.profileImg) {
-   //    const result = await s3RetrieveV3(currentUser.profileImg);
+   // if (targetUser?.profileImg) {
+   //    const result = await s3RetrieveV3(targetUser.profileImg);
    //    image = await result.Body?.transformToString("base64");
    // }
 
-   if (currentUser && currentUser.profileReviews.length > 0) {
-      const currentUserWithProfileReviews = await currentUser.populate({
+   if (targetUser && targetUser.profileReviews.length > 0) {
+      const targetUserWithProfileReviews = await targetUser.populate({
          path: "profileReviews",
          select: "review reviewedAt reviewedBy",
          populate: {
@@ -97,11 +97,11 @@ export const getUserAccProfile = asyncHandler(async (req, res) => {
       });
 
       res.status(200).json({
-         currentUser: currentUserWithProfileReviews,
+         targetUser: targetUserWithProfileReviews,
          encodedProfileImage: image,
       });
-   } else if (currentUser && currentUser.profileReviews.length === 0) {
-      res.status(200).json({ currentUser, encodedProfileImage: image });
+   } else if (targetUser && targetUser.profileReviews.length === 0) {
+      res.status(200).json({ targetUser, encodedProfileImage: image });
    } else {
       res.status(404);
       throw new Error("Current user not found!");

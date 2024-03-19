@@ -26,7 +26,7 @@ const PoemPreviewPosts = () => {
                      viewsCount={poem.viewsCount}
                      coverImg={poem.coverImg}
                      title={poem.title}
-                     author={poem.author.name}
+                     author={poem.author}
                      content={poem.content}
                      encodedCoverImg={poems.encodedCoverImg || ""}
                   />

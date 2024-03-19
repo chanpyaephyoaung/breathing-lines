@@ -30,12 +30,11 @@ const router = createBrowserRouter(
          <Route path="write" element={<WritePoemPage />} />
          <Route path="signin" element={<SignInPage />} />
          <Route path="signup" element={<SignUpPage />} />
-         <Route path="profile" element={<SignUpPage />} />
+         <Route path="/user-profile/:userId" element={<UserProfilePage />} />
 
          <Route path="" element={<ProtectedComponent />}>
-            <Route path="/account-profile" element={<UserProfilePage />} />
-            <Route path="/account-profile/update" element={<UserProfileUpdatePage />} />
-            <Route path="/account-profile/account/update" element={<AccountUpdatePage />} />
+            <Route path="/user-profile/:userId/update" element={<UserProfileUpdatePage />} />
+            <Route path="/user-profile/:userId/account/update" element={<AccountUpdatePage />} />
          </Route>
       </Route>
    )

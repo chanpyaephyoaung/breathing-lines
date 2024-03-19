@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Container from "../components/UI/Container";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { useGetUserProfileQuery } from "../slices/usersApiSlice.js";
@@ -12,10 +12,11 @@ import Message from "../components/Typography/Message.jsx";
 import { generateLineBreakBtwSentences } from "../utils/text.jsx";
 
 const UserProfilePage = () => {
+   const { userId } = useParams();
    const { userAccInfo } = useSelector((state) => state.authUser);
    const { activeNavIdentifier } = USER_PROFILE_SUB_MENU_LINKS[0];
 
-   const { data: userProfileDetails, error, isLoading } = useGetUserProfileQuery();
+   const { data: userProfileDetails, error, isLoading } = useGetUserProfileQuery(userId);
 
    return (
       <Container>
@@ -40,34 +41,34 @@ const UserProfilePage = () => {
                      )}
                      <div>
                         <h2 className="text-lg md:text-2xl font-bold text-clr-black">
-                           {userAccInfo.name}
+                           {userProfileDetails?.targetUser.name}
                         </h2>
                         <p className="flex gap-x-2 text-xs md:text-sm font-light text-clr-black">
                            <Link className="transition-all hover:text-clr-primary">
-                              {userProfileDetails?.currentUser?.followers.length} followers
+                              {userProfileDetails?.targetUser?.followers.length} followers
                            </Link>
                            /
                            <Link className="transition-all hover:text-clr-primary">
-                              {userProfileDetails?.currentUser?.followings.length} followings
+                              {userProfileDetails?.targetUser?.followings.length} followings
                            </Link>
                         </p>
                      </div>
                   </div>
                   <p className="text-sm md:text-base font-light text-clr-black mt-6">
-                     {userProfileDetails?.currentUser?.profileDesc
-                        ? generateLineBreakBtwSentences(
-                             userProfileDetails?.currentUser?.profileDesc
-                          )
-                        : userAccInfo._id === userProfileDetails?.currentUser._id
+                     {userProfileDetails?.targetUser?.profileDesc
+                        ? generateLineBreakBtwSentences(userProfileDetails?.targetUser?.profileDesc)
+                        : userAccInfo._id === userProfileDetails?.targetUser._id
                         ? "Add your description..."
                         : ""}
                   </p>
-                  <Link
-                     to="/account-profile/update"
-                     className="inline-block text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none mt-6"
-                  >
-                     Edit Profile
-                  </Link>
+                  {userAccInfo._id === userProfileDetails?.targetUser._id && (
+                     <Link
+                        to={`/user-profile/${userAccInfo._id}/update`}
+                        className="inline-block text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none mt-6"
+                     >
+                        Edit Profile
+                     </Link>
+                  )}
                </div>
 
                <div className="grid justify-items-center mb-8">
@@ -81,11 +82,11 @@ const UserProfilePage = () => {
                            <p className="text-clr-black text-sm md:text-lg font-regular underline">
                               Views
                            </p>
-                           {userProfileDetails?.currentUser?.profileViewsCount === 0 ? (
+                           {userProfileDetails?.targetUser?.profileViewsCount === 0 ? (
                               <Message type="success">You have not yet been discovered!</Message>
                            ) : (
                               <Message type="success">
-                                 `${userProfileDetails?.currentUser?.profileViewsCount} people have
+                                 `${userProfileDetails?.targetUser?.profileViewsCount} people have
                                  viewed your profile!`
                               </Message>
                            )}
@@ -100,10 +101,10 @@ const UserProfilePage = () => {
                               Reviews
                            </p>
 
-                           {userProfileDetails?.currentUser.profileReviews &&
-                           userProfileDetails?.currentUser.profileReviews.length > 0 ? (
+                           {userProfileDetails?.targetUser.profileReviews &&
+                           userProfileDetails?.targetUser.profileReviews.length > 0 ? (
                               <>
-                                 {userProfileDetails?.currentUser.profileReviews.map((comment) => (
+                                 {userProfileDetails?.targetUser.profileReviews.map((comment) => (
                                     <CommentBox key={comment._id} review={comment} />
                                  ))}
                                  <button
