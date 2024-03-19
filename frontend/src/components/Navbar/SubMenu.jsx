@@ -10,11 +10,16 @@ const SubMenu = () => {
             <ul className="flex list-none font-light text-xs md:text-base [&>li:not(:first-child)]:border-l [&>li:not(:first-child)]:border-clr-black [&>li:not(:first-child)]:px-1.5 md:[&>li:not(:first-child)]:px-2.5">
                <li className="pr-1.5 md:pr-2.5">
                   <Link to="/" className="transition-all hover:text-clr-primary">
-                     For You
+                     Home
                   </Link>
                </li>
                {userAccInfo && (
                   <>
+                     <li className="pr-1.5 md:pr-2.5">
+                        <Link to="/" className="transition-all hover:text-clr-primary">
+                           For You
+                        </Link>
+                     </li>
                      <li>
                         <Link to="/latest" className="transition-all hover:text-clr-primary">
                            Latest

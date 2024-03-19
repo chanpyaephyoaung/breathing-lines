@@ -129,14 +129,16 @@ const PoemFullPost = () => {
                            </h2>
                            <p className="text-xs md:text-sm font-regular">By {poem?.author.name}</p>
                         </div>
-                        <div className="grid-start-2">
-                           <HeartIcon
-                              onClick={likePoemHandler}
-                              className={`transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] ${
-                                 isLiked ? "fill-clr-primary text-clr-black stroke-0" : ""
-                              } cursor-pointer hover:stroke-clr-primary hover:fill-clr-primary`}
-                           />
-                        </div>
+                        {userAccInfo && (
+                           <div className="grid-start-2">
+                              <HeartIcon
+                                 onClick={likePoemHandler}
+                                 className={`transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] ${
+                                    isLiked ? "fill-clr-primary text-clr-black stroke-0" : ""
+                                 } cursor-pointer hover:stroke-clr-primary hover:fill-clr-primary`}
+                              />
+                           </div>
+                        )}
                      </div>
                      {poem.coverImg && (
                         <img
