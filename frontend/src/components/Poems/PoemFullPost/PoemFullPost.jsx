@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import { TagIcon, HeartIcon, StarIcon } from "@heroicons/react/24/outline";
@@ -128,7 +129,12 @@ const PoemFullPost = () => {
                            <h2 className="text-lg md:text-2xl font-semibold break-words leading-7">
                               {poem?.title}
                            </h2>
-                           <p className="text-xs md:text-sm font-regular">By {poem?.author.name}</p>
+                           <Link
+                              to={`/user-profile/${poem.author._id}`}
+                              className="transition-all text-clr-black text-xs md:text-sm font-regular hover:text-clr-primary"
+                           >
+                              By {poem?.author.name}
+                           </Link>
                         </div>
                         {userAccInfo && (
                            <div className="grid-start-2">
