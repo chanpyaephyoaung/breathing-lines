@@ -57,6 +57,13 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             body: { review },
          }),
       }),
+      increaseProfileViewCount: builder.mutation({
+         query: (userId) => ({
+            url: `${USERS_URL}/${userId}/view`,
+            method: "PUT",
+            body: { userId },
+         }),
+      }),
    }),
 });
 
@@ -69,4 +76,5 @@ export const {
    useUploadUserProfileImageMutation,
    useUpdateUserProfileMutation,
    useCreateAuthorProfileReviewMutation,
+   useIncreaseProfileViewCountMutation,
 } = usersApiSlice;

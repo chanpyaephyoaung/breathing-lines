@@ -7,6 +7,7 @@ import {
    updateUserAccProfile,
    updateUserProfile,
    createAuthorProfileReview,
+   increaseViewCount,
 } from "../controllers/userController.js";
 import { protectRoutes } from "../middleware/authMiddleware.js";
 
@@ -21,5 +22,6 @@ router
    .put(protectRoutes, updateUserProfile);
 router.post("/:userId/profile-review", protectRoutes, createAuthorProfileReview);
 router.put("/user-profile/account/update", protectRoutes, updateUserAccProfile);
+router.put("/:userId/view", protectRoutes, increaseViewCount);
 
 export default router;

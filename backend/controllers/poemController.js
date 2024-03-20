@@ -183,9 +183,9 @@ export const createPoemReview = asyncHandler(async (req, res) => {
    const poem = await Poem.findById(poemId);
    const currentUser = req.currentUser._id;
 
-   const poemReview = await PoemReview.findOne({ reviewedBy: currentUser });
+   const poemReview = await PoemReview.findOne({ reviewedBy: currentUser, reviewedPoem: poemId });
    const alreadyReviewed = poem.reviews.find(
-      (review) => review?.reviewedBy?.toString() === poemReview?.reviewedBy?.toString()
+      (review) => review?._id?.toString() === poemReview?._id?.toString()
    );
 
    if (!alreadyReviewed) {

@@ -105,7 +105,7 @@ const UserProfilePage = () => {
                               <Message type="success">You have not yet been discovered!</Message>
                            ) : (
                               <Message type="success">
-                                 `${userProfileDetails?.targetUser?.profileViewsCount} people have
+                                 `{userProfileDetails?.targetUser?.profileViewsCount} people have
                                  viewed your profile!`
                               </Message>
                            )}

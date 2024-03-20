@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import { TagIcon, HeartIcon, StarIcon } from "@heroicons/react/24/outline";
@@ -21,6 +21,7 @@ import {
    useRatePoemMutation,
    useReviewPoemMutation,
 } from "../../../slices/poemsApiSlice.js";
+import { useIncreaseProfileViewCountMutation } from "../../../slices/usersApiSlice.js";
 import { calculateAverage } from "../../../utils/math.js";
 
 const emptyStarIcon = (
@@ -33,13 +34,14 @@ const fullStarIcon = (
 
 const dummyReview = {
    reviewedBy: {
-      name: "Bastita",
+      name: "You-Know-Who",
    },
    review: "This is a great poem. I love it.",
    reviewedAt: new Date(),
 };
 
 const PoemFullPost = () => {
+   const navigate = useNavigate();
    const { userAccInfo } = useSelector((state) => state.authUser);
 
    const { poemId } = useParams();
@@ -51,8 +53,8 @@ const PoemFullPost = () => {
    const [likePoem] = useLikePoemMutation();
    const [ratePoem] = useRatePoemMutation();
    const [reviewPoem] = useReviewPoemMutation();
+   const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
    const { data: poem, isLoading, error, refetch } = useGetSinglePoemByIdQuery(poemId);
-   console.log(poem);
 
    // Like a poem
    const likePoemHandler = async () => {
@@ -89,6 +91,16 @@ const PoemFullPost = () => {
          setReviewInput("");
       } catch (err) {
          setReviewInput("");
+         toast(err?.data?.errMessage || err.error);
+      }
+   };
+
+   // Increase a profile view count
+   const increaseProfileViewsCountHandler = async () => {
+      try {
+         await increaseProfileViewCount(poem.author._id);
+         navigate(`/user-profile/${poem.author._id}`);
+      } catch (err) {
          toast(err?.data?.errMessage || err.error);
       }
    };
@@ -131,6 +143,7 @@ const PoemFullPost = () => {
                            </h2>
                            <Link
                               to={`/user-profile/${poem.author._id}`}
+                              onClick={increaseProfileViewsCountHandler}
                               className="text-clr-black text-xs md:text-sm font-regular"
                            >
                               By{" "}

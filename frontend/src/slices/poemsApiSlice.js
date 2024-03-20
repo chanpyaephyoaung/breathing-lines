@@ -55,7 +55,6 @@ export const poemsApiSlice = apiSlice.injectEndpoints({
             method: "PUT",
             body: { poemId },
          }),
-         keepUnusedDataFor: 5,
       }),
    }),
 });
