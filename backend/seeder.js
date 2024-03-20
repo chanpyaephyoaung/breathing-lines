@@ -7,6 +7,7 @@ import User from "./models/userModel.js";
 import Poem from "./models/poemModel.js";
 import AuthorProfileReview from "./models/authorProfileReviewModel.js";
 import PoemRating from "./models/poemRatingModel.js";
+import PoemReview from "./models/poemReviewModel.js";
 import UserNotification from "./models/userNotificationModel.js";
 import dummyProfileReviews from "./dummyData/profileReviews.js";
 
@@ -21,6 +22,7 @@ export const seedDummyData = async () => {
       await Poem.deleteMany();
       await AuthorProfileReview.deleteMany();
       await PoemRating.deleteMany();
+      await PoemReview.deleteMany();
       await UserNotification.deleteMany();
 
       // Seed sample data
@@ -72,6 +74,7 @@ const removeDummyData = async () => {
       await Poem.deleteMany();
       await AuthorProfileReview.deleteMany();
       await PoemRating.deleteMany();
+      await PoemReview.deleteMany();
       await UserNotification.deleteMany();
 
       console.log("Dummy Data Has Been Successfully REMOVED!");
