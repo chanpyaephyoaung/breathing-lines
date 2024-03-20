@@ -81,10 +81,10 @@ export const getUserAccProfile = asyncHandler(async (req, res) => {
 
    let image = "";
 
-   if (targetUser?.profileImg) {
-      const result = await s3RetrieveV3(targetUser.profileImg);
-      image = await result.Body?.transformToString("base64");
-   }
+   // if (targetUser?.profileImg) {
+   //    const result = await s3RetrieveV3(targetUser.profileImg);
+   //    image = await result.Body?.transformToString("base64");
+   // }
 
    if (targetUser && targetUser.profileReviews.length > 0) {
       const targetUserWithProfileReviews = await targetUser.populate({
@@ -152,5 +152,38 @@ export const updateUserAccProfile = asyncHandler(async (req, res) => {
    } else {
       res.status(404);
       throw new Error("Account update unsuccessful. User not found.");
+   }
+});
+
+// @desc    Leave a profile review on other author's profile
+// @route   POST /api/users/:userId/profile-review
+// @access  Private
+export const createAuthorProfileReview = asyncHandler(async (req, res) => {
+   const userId = req.params.userId;
+   const { review } = req.body;
+
+   const targetUser = await User.findById(userId);
+   const currentUser = req.currentUser._id;
+
+   const alreadyReviewed = await AuthorProfileReview.findOne({ reviewedBy: currentUser });
+
+   if (!alreadyReviewed) {
+      // Create and save new review
+      const newReview = new AuthorProfileReview({
+         review,
+         reviewedAt: new Date(),
+         reviewedBy: currentUser,
+         reviewedFor: userId,
+      });
+      const savedReview = await newReview.save();
+
+      // Add and save the review to the author's profileReviews array
+      targetUser.profileReviews.push(savedReview._id);
+      await targetUser.save();
+
+      res.status(201).json({ message: "Profile Review added successfully!" });
+   } else {
+      res.status(400);
+      throw new Error("You have already made a review on this poem!");
    }
 });

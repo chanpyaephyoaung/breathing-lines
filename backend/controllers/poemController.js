@@ -44,20 +44,20 @@ export const getSinglePoemById = asyncHandler(async (req, res) => {
          },
       });
 
-   const poemWithUserProfileImgs = await Promise.all(
-      targetPoem.reviews.map(async (review) => {
-         let image = "";
-         if (review.reviewedBy.profileImg) {
-            const result = await s3RetrieveV3(review.reviewedBy.profileImg);
-            image = await result.Body?.transformToString("base64");
-         }
-         return { ...review._doc, encodedProfileImg: image };
-      })
-   );
+   // const poemWithUserProfileImgs = await Promise.all(
+   //    targetPoem.reviews.map(async (review) => {
+   //       let image = "";
+   //       if (review.reviewedBy.profileImg) {
+   //          const result = await s3RetrieveV3(review.reviewedBy.profileImg);
+   //          image = await result.Body?.transformToString("base64");
+   //       }
+   //       return { ...review._doc, encodedProfileImg: image };
+   //    })
+   // );
 
    if (targetPoem) {
-      // return res.json(targetPoem);
-      return res.json({ ...targetPoem._doc, reviews: poemWithUserProfileImgs });
+      return res.json(targetPoem);
+      // return res.json({ ...targetPoem._doc, reviews: poemWithUserProfileImgs });
    } else {
       res.status(404);
       throw new Error("Poem not found!");

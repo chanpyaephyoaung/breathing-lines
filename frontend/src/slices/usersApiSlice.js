@@ -50,6 +50,13 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             body: { newProfileData },
          }),
       }),
+      createAuthorProfileReview: builder.mutation({
+         query: ({ userId, review }) => ({
+            url: `${USERS_URL}/${userId}/profile-review`,
+            method: "POST",
+            body: { review },
+         }),
+      }),
    }),
 });
 
@@ -61,4 +68,5 @@ export const {
    useUpdateAccDetailsMutation,
    useUploadUserProfileImageMutation,
    useUpdateUserProfileMutation,
+   useCreateAuthorProfileReviewMutation,
 } = usersApiSlice;
