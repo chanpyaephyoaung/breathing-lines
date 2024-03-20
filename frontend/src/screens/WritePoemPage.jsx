@@ -43,7 +43,7 @@ const WritePoemPage = () => {
       e.preventDefault();
 
       if (status === POEM_WRITE_STATUS_DISCARD) {
-         navigate("/account-profile");
+         navigate("/");
          return;
       }
 

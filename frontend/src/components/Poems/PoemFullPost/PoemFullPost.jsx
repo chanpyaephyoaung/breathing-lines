@@ -29,7 +29,7 @@ const emptyStarIcon = (
 );
 
 const fullStarIcon = (
-   <StarIcon className="transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] cursor-pointer fill-clr-secondary" />
+   <StarIcon className="transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] cursor-pointer fill-clr-primary" />
 );
 
 const dummyReview = {
