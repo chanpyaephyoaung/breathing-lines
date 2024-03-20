@@ -131,9 +131,12 @@ const PoemFullPost = () => {
                            </h2>
                            <Link
                               to={`/user-profile/${poem.author._id}`}
-                              className="transition-all text-clr-black text-xs md:text-sm font-regular hover:text-clr-primary"
+                              className="text-clr-black text-xs md:text-sm font-regular"
                            >
-                              By {poem?.author.name}
+                              By{" "}
+                              <span className="transition-all hover:text-clr-primary">
+                                 {poem?.author.name}
+                              </span>
                            </Link>
                         </div>
                         {userAccInfo && (
@@ -149,8 +152,12 @@ const PoemFullPost = () => {
                      </div>
                      {poem.coverImg && (
                         <img
-                           className="max-h-[350px] h-65 object-cover border border-1 border-clr-black"
-                           src={poem?.coverImg}
+                           className="w-full max-h-[350px] h-65 object-cover border border-1 border-clr-black"
+                           src={
+                              poem.encodedCoverImg
+                                 ? `data:image/jpeg;base64,${poem.encodedCoverImg}`
+                                 : poem?.coverImg
+                           }
                            alt=""
                         />
                      )}
@@ -274,7 +281,7 @@ const PoemFullPost = () => {
                   <div className="grid gap-y-6 border-t-[1px] border-clr-black-faded p-4 md:p-x-8 md:p-x-4 md:py-8">
                      <p className="flex gap-x-2 text-clr-black text-base md:text-2xl font-medium">
                         Community Reviews
-                        <span>(4)</span>
+                        <span>({poem.reviews.length})</span>
                      </p>
                      <div className="grid gap-y-4">
                         {poem.reviews.map((review) => (

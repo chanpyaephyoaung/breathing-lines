@@ -11,21 +11,21 @@ import { s3RetrieveV3 } from "../s3Service.js";
 export const getAllPoems = asyncHandler(async (req, res) => {
    const poems = await Poem.find({}).populate("author", "name");
 
-   res.json({ poems });
+   // res.json({ poems });
 
-   // const poemsWithEncodedCoverImg = await Promise.all(
-   //    poems.map(async (poem, i) => {
-   //       let image = "";
-   //       if (poem?.coverImg && i === 3) {
-   //          // Just for testing purpose. Remove the second condition in production
-   //          const result = await s3RetrieveV3(poem.coverImg);
-   //          image = await result.Body?.transformToString("base64");
-   //       }
-   //       return { poem, encodedCoverImg: image };
-   //    })
-   // );
+   const poemsWithEncodedCoverImg = await Promise.all(
+      poems.map(async (poem, i) => {
+         let image = "";
+         if (poem?.coverImg && i === 3) {
+            // Just for testing purpose. Remove the second condition in production
+            const result = await s3RetrieveV3(poem.coverImg);
+            image = await result.Body?.transformToString("base64");
+         }
+         return { poem, encodedCoverImg: image };
+      })
+   );
 
-   // res.json(poemsWithEncodedCoverImg);
+   res.json(poemsWithEncodedCoverImg);
 });
 
 // @desc    Fetch a single poem by ID
@@ -44,20 +44,31 @@ export const getSinglePoemById = asyncHandler(async (req, res) => {
          },
       });
 
-   // const poemWithUserProfileImgs = await Promise.all(
-   //    targetPoem.reviews.map(async (review) => {
-   //       let image = "";
-   //       if (review.reviewedBy.profileImg) {
-   //          const result = await s3RetrieveV3(review.reviewedBy.profileImg);
-   //          image = await result.Body?.transformToString("base64");
-   //       }
-   //       return { ...review._doc, encodedProfileImg: image };
-   //    })
-   // );
+   let image = "";
+
+   if (targetPoem?.coverImg && targetPoem.coverImg.startsWith("uploads/")) {
+      const result = await s3RetrieveV3(targetPoem.coverImg);
+      image = await result.Body?.transformToString("base64");
+   }
+
+   const poemWithUserProfileImgs = await Promise.all(
+      targetPoem.reviews.map(async (review) => {
+         let profileImg = "";
+         if (review.reviewedBy.profileImg) {
+            const result = await s3RetrieveV3(review.reviewedBy.profileImg);
+            profileImg = await result.Body?.transformToString("base64");
+         }
+         return { ...review._doc, encodedProfileImg: profileImg };
+      })
+   );
 
    if (targetPoem) {
-      return res.json(targetPoem);
-      // return res.json({ ...targetPoem._doc, reviews: poemWithUserProfileImgs });
+      // return res.json(targetPoem);
+      return res.json({
+         ...targetPoem._doc,
+         encodedCoverImg: image,
+         reviews: poemWithUserProfileImgs,
+      });
    } else {
       res.status(404);
       throw new Error("Poem not found!");
