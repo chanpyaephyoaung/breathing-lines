@@ -51,6 +51,7 @@ const PoemFullPost = () => {
    const [ratePoem] = useRatePoemMutation();
    const [reviewPoem] = useReviewPoemMutation();
    const { data: poem, isLoading, error, refetch } = useGetSinglePoemByIdQuery(poemId);
+   console.log(poem);
 
    // Like a poem
    const likePoemHandler = async () => {
@@ -270,15 +271,17 @@ const PoemFullPost = () => {
                         <span>(4)</span>
                      </p>
                      <div className="grid gap-y-4">
-                        <CommentBox review={dummyReview} type="large"></CommentBox>
+                        {poem.reviews.map((review) => (
+                           <CommentBox key={review._id} review={review} type="large"></CommentBox>
+                        ))}
                         <CommentBox review={dummyReview} type="large"></CommentBox>
                      </div>
-                     <button
+                     {/* <button
                         type="button"
                         className="justify-self-center text-xs py-3 px-5 md:text-sm text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
                      >
                         View all comments
-                     </button>
+                     </button> */}
                   </div>
                </Container>
             </>

@@ -17,7 +17,7 @@ router.post("/signout", signOutUser);
 router
    .route("/user-profile/:userId")
    .get(protectRoutes, getUserAccProfile)
-   .put(protectRoutes, updateUserAccProfile);
-router.put("/user-profile", protectRoutes, updateUserProfile);
+   .put(protectRoutes, updateUserProfile);
+router.put("/user-profile", protectRoutes, updateUserAccProfile);
 
 export default router;

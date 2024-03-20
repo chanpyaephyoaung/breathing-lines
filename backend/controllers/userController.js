@@ -81,10 +81,10 @@ export const getUserAccProfile = asyncHandler(async (req, res) => {
 
    let image = "";
 
-   // if (targetUser?.profileImg) {
-   //    const result = await s3RetrieveV3(targetUser.profileImg);
-   //    image = await result.Body?.transformToString("base64");
-   // }
+   if (targetUser?.profileImg) {
+      const result = await s3RetrieveV3(targetUser.profileImg);
+      image = await result.Body?.transformToString("base64");
+   }
 
    if (targetUser && targetUser.profileReviews.length > 0) {
       const targetUserWithProfileReviews = await targetUser.populate({

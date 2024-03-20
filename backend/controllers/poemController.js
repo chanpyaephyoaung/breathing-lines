@@ -34,10 +34,30 @@ export const getAllPoems = asyncHandler(async (req, res) => {
 export const getSinglePoemById = asyncHandler(async (req, res) => {
    const targetPoem = await Poem.findById(req.params.poemId)
       .populate("author", "name")
-      .populate("ratings", "ratedBy rating");
+      .populate("ratings", "ratedBy rating")
+      .populate({
+         path: "reviews",
+         select: "review reviewedBy reviewedAt",
+         populate: {
+            path: "reviewedBy",
+            select: "name profileImg",
+         },
+      });
+
+   // const poemWithUserProfileImgs = await Promise.all(
+   //    targetPoem.reviews.map(async (review) => {
+   //       let image = "";
+   //       if (review.reviewedBy.profileImg) {
+   //          const result = await s3RetrieveV3(review.reviewedBy.profileImg);
+   //          image = await result.Body?.transformToString("base64");
+   //       }
+   //       return { ...review._doc, encodedProfileImg: image };
+   //    })
+   // );
 
    if (targetPoem) {
       return res.json(targetPoem);
+      // return res.json({ ...targetPoem._doc, reviews: poemWithUserProfileImgs });
    } else {
       res.status(404);
       throw new Error("Poem not found!");
