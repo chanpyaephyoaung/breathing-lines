@@ -109,7 +109,7 @@ export const getUserAccProfile = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update user profile details
-// @route   PUT /api/users/account-profile
+// @route   PUT /api/users/user-profile/:userId
 // @access  Private
 export const updateUserProfile = asyncHandler(async (req, res) => {
    const currentUser = await User.findById(req.currentUser._id);
@@ -129,7 +129,7 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update user account profile details
-// @route   PUT /api/users/account-profile
+// @route   PUT /api//user-profile/account/update
 // @access  Private
 export const updateUserAccProfile = asyncHandler(async (req, res) => {
    const currentUser = await User.findById(req.currentUser._id);

@@ -63,6 +63,7 @@ const WritePoemPage = () => {
             toast.success(`Poem ${status.toLowerCase()}ed successfully!`);
 
             // Add navigation to poems list page
+            navigate("/");
          } catch (err) {
             toast(err?.data?.errMessage || err.error);
          }

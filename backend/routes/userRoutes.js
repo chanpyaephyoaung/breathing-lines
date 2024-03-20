@@ -20,6 +20,6 @@ router
    .get(protectRoutes, getUserAccProfile)
    .put(protectRoutes, updateUserProfile);
 router.post("/:userId/profile-review", protectRoutes, createAuthorProfileReview);
-router.put("/user-profile", protectRoutes, updateUserAccProfile);
+router.put("/user-profile/account/update", protectRoutes, updateUserAccProfile);
 
 export default router;

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { EnvelopeIcon, LockClosedIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import FormContainer from "../components/UI/FormContainer.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
@@ -11,6 +11,7 @@ import Message from "../components/Typography/Message.jsx";
 const AccountUpdatePage = () => {
    const dispatch = useDispatch();
    const navigate = useNavigate();
+   const { userAccInfo } = useSelector((state) => state.authUser);
 
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
@@ -30,7 +31,7 @@ const AccountUpdatePage = () => {
                password,
             }).unwrap();
             dispatch(setSignInDetails({ ...res }));
-            navigate("/account-profile");
+            navigate(`/user-profile/${userAccInfo._id}`);
          } catch (err) {
             setError(err?.data?.errMessage || err.error);
          }
