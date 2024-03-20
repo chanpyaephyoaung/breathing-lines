@@ -208,7 +208,7 @@ const PoemFullPost = () => {
                         <SolidChatBubbleLeftRightIcon className="transition-all w-[45px] md:w-[55px] text-clr-black-light stroke-[1.5] hover:text-clr-tertiary" />
                         <div className="grid items-center">
                            <span className="inline-block text-xl md:text-3xl font-light leading-none">
-                              10
+                              {poem?.reviews.length}
                            </span>
                            <span className="text-sm md:text-base font-light -mt-1">comments</span>
                         </div>
