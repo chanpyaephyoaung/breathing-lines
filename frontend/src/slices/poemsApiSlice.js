@@ -49,6 +49,14 @@ export const poemsApiSlice = apiSlice.injectEndpoints({
             body: { review },
          }),
       }),
+      increasePoemViewCount: builder.mutation({
+         query: (poemId) => ({
+            url: `${POEMS_URL}/${poemId}/view`,
+            method: "PUT",
+            body: { poemId },
+         }),
+         keepUnusedDataFor: 5,
+      }),
    }),
 });
 
@@ -60,4 +68,5 @@ export const {
    useLikePoemMutation,
    useRatePoemMutation,
    useReviewPoemMutation,
+   useIncreasePoemViewCountMutation,
 } = poemsApiSlice;

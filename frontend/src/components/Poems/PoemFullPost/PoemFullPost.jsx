@@ -23,7 +23,7 @@ import {
 import { calculateAverage } from "../../../utils/math.js";
 
 const emptyStarIcon = (
-   <StarIcon className="transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] cursor-pointe" />
+   <StarIcon className="transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] cursor-pointer" />
 );
 
 const fullStarIcon = (
@@ -174,7 +174,7 @@ const PoemFullPost = () => {
                         <SolidEyeIcon className="transition-all w-[45px] md:w-[55px] text-clr-black-light stroke-[1.5] hover:text-clr-black" />
                         <div className="grid items-center">
                            <span className="inline-block text-xl md:text-3xl font-light leading-none">
-                              40
+                              {poem?.viewsCount}
                            </span>
                            <span className="text-sm md:text-base font-light -mt-1">views</span>
                         </div>

@@ -174,3 +174,25 @@ export const createPoemReview = asyncHandler(async (req, res) => {
       throw new Error("You have already made a review on this poem!");
    }
 });
+
+// @desc    Increase a poem's views count
+// @route   PUT /api/poems/:poemId/view
+// @access  Private
+export const increaseViewCount = asyncHandler(async (req, res) => {
+   const { poemId } = req.body;
+   const poem = await Poem.findById(poemId);
+   const currentUser = req.currentUser._id;
+   if (poem) {
+      // Increase the view count only if the user is anonymous(not signed-in) or not the author of the poem
+      if (!currentUser || currentUser !== poem.author) {
+         poem.viewsCount += 1;
+         await poem.save();
+         res.status(200).json({ message: "View count increased!" });
+      } else {
+         res.status(200).json({ message: "View count not increased!" });
+      }
+   } else {
+      res.status(404);
+      throw new Error("Poem not found!");
+   }
+});

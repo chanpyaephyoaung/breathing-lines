@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { generateLineBreakBtwSentences } from "../../../utils/text.jsx";
+import { useIncreasePoemViewCountMutation } from "../../../slices/poemsApiSlice.js";
+import { toast } from "react-toastify";
 
 const PoemPreviewPost = ({
-   id,
+   poemId,
    datePosted,
    viewsCount,
    coverImg,
@@ -11,6 +13,18 @@ const PoemPreviewPost = ({
    content,
    encodedCoverImg,
 }) => {
+   const [increasePoemViewCount] = useIncreasePoemViewCountMutation();
+   const navigate = useNavigate();
+
+   const viewMoreHandler = async () => {
+      try {
+         await increasePoemViewCount(poemId);
+         navigate(`/poem/${poemId}`);
+      } catch (err) {
+         toast(err?.data?.errMessage || err.error);
+      }
+   };
+
    return (
       <div className="grid gap-2 p-3 md:p-5 border border-clr-black">
          <div className="text-2xs md:text-xs w-full flex justify-between">
@@ -49,7 +63,7 @@ const PoemPreviewPost = ({
 
          <div className="grid -gap-1">
             <Link
-               to={`poem/${id}`}
+               to={`poem/${poemId}`}
                className="transition-all block text-base md:text-xl font-medium hover:text-clr-primary"
             >
                {title}
@@ -69,7 +83,8 @@ const PoemPreviewPost = ({
          </div>
 
          <Link
-            to={`poem/${id}`}
+            onClick={viewMoreHandler}
+            // to={`poem/${poemId}`}
             preventScrollReset={true}
             className="transition-all justify-self-start text-xs font-light md:text-base text-clr-black-faded hover:text-clr-primary inline-block underline"
          >

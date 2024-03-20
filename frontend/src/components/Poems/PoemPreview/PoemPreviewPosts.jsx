@@ -21,7 +21,7 @@ const PoemPreviewPosts = () => {
                {poems?.poems.map((poem) => (
                   <PoemPreviewPost
                      key={poem._id}
-                     id={poem._id}
+                     poemId={poem._id}
                      datePosted={poem.datePosted}
                      viewsCount={poem.viewsCount}
                      coverImg={poem.coverImg}
