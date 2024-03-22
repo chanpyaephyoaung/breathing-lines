@@ -102,11 +102,20 @@ const UserProfilePage = () => {
                               Views
                            </p>
                            {userProfileDetails?.targetUser?.profileViewsCount === 0 ? (
-                              <Message type="success">You have not yet been discovered!</Message>
+                              <Message type="success">
+                                 {userAccInfo._id === userProfileDetails.targetUser._id
+                                    ? "You "
+                                    : userProfileDetails.targetUser.name}{" "}
+                                 have not yet been discovered!
+                              </Message>
                            ) : (
                               <Message type="success">
                                  `{userProfileDetails?.targetUser?.profileViewsCount} people have
-                                 viewed your profile!`
+                                 viewed{" "}
+                                 {userAccInfo._id === userProfileDetails.targetUser._id
+                                    ? "your "
+                                    : userProfileDetails.targetUser.name.split(" ")[0] + "'s "}
+                                 profile!`
                               </Message>
                            )}
                         </div>
