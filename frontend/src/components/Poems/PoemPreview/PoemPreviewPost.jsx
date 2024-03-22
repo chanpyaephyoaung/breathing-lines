@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { generateLineBreakBtwSentences } from "../../../utils/text.jsx";
 import { useIncreasePoemViewCountMutation } from "../../../slices/poemsApiSlice.js";
+import { useIncreaseProfileViewCountMutation } from "../../../slices/usersApiSlice.js";
 import { toast } from "react-toastify";
 
 const PoemPreviewPost = ({
@@ -14,7 +15,18 @@ const PoemPreviewPost = ({
    encodedCoverImg,
 }) => {
    const [increasePoemViewCount] = useIncreasePoemViewCountMutation();
+   const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
+
    const navigate = useNavigate();
+
+   const viewAuthorProfileHandler = async () => {
+      try {
+         await increaseProfileViewCount(author._id);
+         navigate(`/user-profile/${author._id}`);
+      } catch (err) {
+         toast(err?.data?.errMessage || err.error);
+      }
+   };
 
    const viewMoreHandler = async () => {
       try {
@@ -68,12 +80,16 @@ const PoemPreviewPost = ({
             >
                {title}
             </Link>
-            <a
-               href={`user-profile/${author._id}`}
-               className="transition-all text-xs md:text-sm text-clr-black-faded font-light hover:text-clr-primary"
-            >
-               By {author.name}
-            </a>
+            <p className="text-xs md:text-sm text-clr-black-faded font-light">
+               By{" "}
+               <Link
+                  onClick={viewAuthorProfileHandler}
+                  href={`user-profile/${author._id}`}
+                  className="transition-all text-xs md:text-sm text-clr-black-faded font-light hover:text-clr-primary"
+               >
+                  {author.name}
+               </Link>
+            </p>
          </div>
 
          <div className="line-clamp-4">
@@ -84,7 +100,6 @@ const PoemPreviewPost = ({
 
          <Link
             onClick={viewMoreHandler}
-            // to={`poem/${poemId}`}
             preventScrollReset={true}
             className="transition-all justify-self-start text-xs font-light md:text-base text-clr-black-faded hover:text-clr-primary inline-block underline"
          >

@@ -14,5 +14,11 @@ services:
       build: ./backend
       ports:
          - 3001:3001
+      environment:
+         PORT: ${PORT}
+         NODE_ENV: ${NODE_ENV}
+         MONGOATLAS_URI: ${MONGOATLAS_URI}
+         MONGOATLAS_URI_TEST: ${MONGOATLAS_URI_TEST}
+         JWT_SECRET: ${JWT_SECRET}
       volumes:
          - ./backend:/app

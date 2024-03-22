@@ -50,6 +50,8 @@ const PoemFullPost = () => {
    const [averageRating, setAverageRating] = useState(0);
    const [reviewInput, setReviewInput] = useState("");
 
+   console.log("Hello");
+
    const [likePoem] = useLikePoemMutation();
    const [ratePoem] = useRatePoemMutation();
    const [reviewPoem] = useReviewPoemMutation();
