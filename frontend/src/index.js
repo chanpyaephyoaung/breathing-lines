@@ -21,6 +21,7 @@ import ProtectedComponent from "./components/UI/ProtectedComponent.jsx";
 import UserProfilePage from "./screens/UserProfilePage.jsx";
 import AccountUpdatePage from "./screens/AccountUpdatePage.jsx";
 import UserProfileUpdatePage from "./screens/UserProfileUpdatePage.jsx";
+import UserPoemsPage from "./screens/UserPoemsPage.jsx";
 
 const router = createBrowserRouter(
    createRoutesFromElements(
@@ -35,7 +36,7 @@ const router = createBrowserRouter(
          <Route path="" element={<ProtectedComponent />}>
             <Route path="/user-profile/:userId/update" element={<UserProfileUpdatePage />} />
             <Route path="/user-profile/account/update" element={<AccountUpdatePage />} />
-            <Route path="/user-profile/:userId/mypoems" element={<AccountUpdatePage />} />
+            <Route path="/user-profile/:userId/poems" element={<UserPoemsPage />} />
          </Route>
       </Route>
    )

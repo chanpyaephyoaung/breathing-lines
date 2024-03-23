@@ -1,20 +1,17 @@
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import Container from "../../components/UI/Container";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { useGetUserProfileQuery } from "../../slices/usersApiSlice.js";
 import UserProfileSubMenu from "../../components/Navbar/UserProfileSubMenu.jsx";
-import { USER_PROFILE_SUB_MENU_LINKS } from "../../constants.js";
 import LoaderSpinner from "../../components/UI/LoaderSpinner.jsx";
 import Message from "../../components/Typography/Message.jsx";
 import { toast } from "react-toastify";
 import { generateLineBreakBtwSentences } from "../../utils/text.jsx";
 import { useSubscribeUserMutation } from "../../slices/usersApiSlice.js";
 
-const UserProfileHeader = () => {
+const UserProfileHeader = ({ activeNav }) => {
    const { userId } = useParams();
    const { userAccInfo } = useSelector((state) => state.authUser);
-   const { activeNavIdentifier } = USER_PROFILE_SUB_MENU_LINKS[0];
 
    const { data: userProfileDetails, error, isLoading, refetch } = useGetUserProfileQuery(userId);
    const [subscribeUser] = useSubscribeUserMutation();
@@ -98,7 +95,7 @@ const UserProfileHeader = () => {
                )}
 
                <div className="grid justify-items-center mb-8">
-                  <UserProfileSubMenu activeNav={activeNavIdentifier} userId={userId} />
+                  <UserProfileSubMenu activeNav={activeNav} userId={userId} />
                </div>
             </>
          )}

@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Container from "../components/UI/Container";
 import UserProfileHeader from "../components/User/UserProfileHeader.jsx";
+import { USER_PROFILE_SUB_MENU_LINKS } from "../constants.js";
 import { useGetUserProfileQuery } from "../slices/usersApiSlice.js";
 import BorderBox from "../components/UI/BorderBox.jsx";
 import CommentBox from "../components/User/CommentBox.jsx";
@@ -13,6 +14,7 @@ import { useCreateAuthorProfileReviewMutation } from "../slices/usersApiSlice.js
 
 const UserProfilePage = () => {
    const { userId } = useParams();
+   const activeNav = USER_PROFILE_SUB_MENU_LINKS[0].activeNavPathIdentifier;
    const { userAccInfo } = useSelector((state) => state.authUser);
    const [review, setReview] = useState("");
 
@@ -40,7 +42,7 @@ const UserProfilePage = () => {
             <Message type="danger">{error?.data?.errMessage || error.error}</Message>
          ) : (
             <>
-               <UserProfileHeader />
+               <UserProfileHeader activeNav={activeNav} />
                <div className="grid gap-6 lg:grid-cols-2 lg:gap-x-10">
                   <div>
                      <BorderBox>

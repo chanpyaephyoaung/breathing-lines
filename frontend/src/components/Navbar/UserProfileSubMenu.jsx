@@ -7,9 +7,9 @@ const UserProfileSubMenu = ({ activeNav, userId }) => {
          {USER_PROFILE_SUB_MENU_LINKS.map((nav) => (
             <li key={nav.activeNavIdentifier} className="px-2 md:px-4">
                <Link
-                  to={`${nav.activeNavPath}/${userId}`}
+                  to={`/user-profile/${userId}${nav.activeNavPathIdentifier}`}
                   className={
-                     activeNav === nav.activeNavIdentifier
+                     activeNav === nav.activeNavPathIdentifier
                         ? "text-clr-primary underline"
                         : "transition-all hover:text-clr-primary hover:underline"
                   }

@@ -7,22 +7,22 @@ export const UPLOAD_URL = "/api/upload";
 export const USER_PROFILE_SUB_MENU_LINKS = [
    {
       activeNavIdentifier: "account-profile",
-      activeNavPath: "/user-profile",
+      activeNavPathIdentifier: "",
       activeNavLabel: "Overview",
    },
    {
       activeNavIdentifier: "poems",
-      activeNavPath: "/user-profile/poems",
+      activeNavPathIdentifier: "/poems",
       activeNavLabel: "Poems",
    },
    {
       activeNavIdentifier: "collections",
-      activeNavPath: "/user-profile/collections",
+      activeNavPathIdentifier: "/collections",
       activeNavLabel: "Collections",
    },
    {
       activeNavIdentifier: "favorites",
-      activeNavPath: "/user-profile/favorites",
+      activeNavPathIdentifier: "/favorites",
       activeNavLabel: "Favorites",
    },
 ];
