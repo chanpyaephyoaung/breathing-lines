@@ -35,6 +35,7 @@ const router = createBrowserRouter(
          <Route path="" element={<ProtectedComponent />}>
             <Route path="/user-profile/:userId/update" element={<UserProfileUpdatePage />} />
             <Route path="/user-profile/account/update" element={<AccountUpdatePage />} />
+            <Route path="/user-profile/:userId/mypoems" element={<AccountUpdatePage />} />
          </Route>
       </Route>
    )

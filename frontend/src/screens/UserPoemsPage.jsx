@@ -11,7 +11,7 @@ import Message from "../components/Typography/Message.jsx";
 import { toast } from "react-toastify";
 import { useCreateAuthorProfileReviewMutation } from "../slices/usersApiSlice.js";
 
-const UserProfilePage = () => {
+const UserPoemsPage = () => {
    const { userId } = useParams();
    const { userAccInfo } = useSelector((state) => state.authUser);
    const [review, setReview] = useState("");
@@ -131,4 +131,4 @@ const UserProfilePage = () => {
       </Container>
    );
 };
-export default UserProfilePage;
+export default UserPoemsPage;
