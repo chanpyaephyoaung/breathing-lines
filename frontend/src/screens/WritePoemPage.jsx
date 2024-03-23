@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import FormContainer from "../components/UI/FormContainer.jsx";

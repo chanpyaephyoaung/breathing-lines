@@ -64,6 +64,12 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             body: { userId },
          }),
       }),
+      subscribeUser: builder.mutation({
+         query: (userId) => ({
+            url: `${USERS_URL}/${userId}/subscribe`,
+            method: "PUT",
+         }),
+      }),
    }),
 });
 
@@ -77,4 +83,5 @@ export const {
    useUpdateUserProfileMutation,
    useCreateAuthorProfileReviewMutation,
    useIncreaseProfileViewCountMutation,
+   useSubscribeUserMutation,
 } = usersApiSlice;

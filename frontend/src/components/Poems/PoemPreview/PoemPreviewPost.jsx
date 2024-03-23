@@ -21,8 +21,8 @@ const PoemPreviewPost = ({
 
    const viewAuthorProfileHandler = async () => {
       try {
-         await increaseProfileViewCount(author._id);
          navigate(`/user-profile/${author._id}`);
+         await increaseProfileViewCount(author._id);
       } catch (err) {
          toast(err?.data?.errMessage || err.error);
       }
@@ -30,8 +30,8 @@ const PoemPreviewPost = ({
 
    const viewMoreHandler = async () => {
       try {
-         await increasePoemViewCount(poemId);
          navigate(`/poem/${poemId}`);
+         await increasePoemViewCount(poemId);
       } catch (err) {
          toast(err?.data?.errMessage || err.error);
       }
@@ -75,7 +75,7 @@ const PoemPreviewPost = ({
 
          <div className="grid -gap-1">
             <Link
-               to={`poem/${poemId}`}
+               onClick={viewMoreHandler}
                className="transition-all block text-base md:text-xl font-medium hover:text-clr-primary"
             >
                {title}

@@ -209,3 +209,38 @@ export const increaseViewCount = asyncHandler(async (req, res) => {
       throw new Error("User not found!");
    }
 });
+
+// @desc    Increase a user views count
+// @route   PUT /api/users/:userId/view
+// @access  Private
+export const subscribeUser = asyncHandler(async (req, res) => {
+   const targetUserId = req.params.userId;
+   const currentUserId = req.currentUser._id;
+
+   if (targetUserId === currentUserId) {
+      res.status(400);
+      throw new Error("You cannot subscribe to yourself!");
+   }
+
+   const targetUser = await User.findById(targetUserId);
+
+   if (targetUser) {
+      if (targetUser.followers.includes(currentUserId)) {
+         // Remove the current user from the target user's followers array
+         const newTargetUserFollowers = targetUser.followers.filter(
+            (user) => user.toString() !== currentUserId.toString()
+         );
+         targetUser.followers = newTargetUserFollowers;
+         await targetUser.save();
+         res.status(200).json({ message: `You have now unfollowed ${targetUser.name}.` });
+      } else {
+         // Add the current user to the target user's followers array
+         targetUser.followers.push(currentUserId);
+         await targetUser.save();
+         res.status(200).json({ message: `You have now followed ${targetUser.name}.` });
+      }
+   } else {
+      res.status(404);
+      throw new Error("User not found!");
+   }
+});
