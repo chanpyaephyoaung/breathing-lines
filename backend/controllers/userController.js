@@ -223,6 +223,7 @@ export const subscribeUser = asyncHandler(async (req, res) => {
    }
 
    const targetUser = await User.findById(targetUserId);
+   const currentUser = await User.findById(currentUserId);
 
    if (targetUser) {
       if (targetUser.followers.includes(currentUserId)) {
@@ -231,12 +232,24 @@ export const subscribeUser = asyncHandler(async (req, res) => {
             (user) => user.toString() !== currentUserId.toString()
          );
          targetUser.followers = newTargetUserFollowers;
+
+         // Remove the target user from the current user's following array
+         const newCurrentUserFollowing = currentUser.followings.filter(
+            (user) => user.toString() !== targetUserId.toString()
+         );
+         currentUser.followings = newCurrentUserFollowing;
+
          await targetUser.save();
+         await currentUser.save();
          res.status(200).json({ message: `You have now unfollowed ${targetUser.name}.` });
       } else {
          // Add the current user to the target user's followers array
          targetUser.followers.push(currentUserId);
+         // Add the target user to the current user's followings array
+         currentUser.followings.push(targetUserId);
+
          await targetUser.save();
+         await currentUser.save();
          res.status(200).json({ message: `You have now followed ${targetUser.name}.` });
       }
    } else {
