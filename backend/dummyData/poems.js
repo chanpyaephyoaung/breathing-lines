@@ -16,7 +16,7 @@ const dummyPoems = [
       publishedAt: new Date(),
       viewsCount: 0,
       likesCount: 0,
-      status: "Published",
+      status: "published",
    },
    {
       title: "Tears from heaven",
@@ -35,7 +35,7 @@ const dummyPoems = [
       publishedAt: new Date(),
       viewsCount: 0,
       likesCount: 0,
-      status: "Published",
+      status: "published",
    },
    {
       title: "Imagine",
@@ -53,7 +53,59 @@ const dummyPoems = [
       publishedAt: new Date(),
       viewsCount: 0,
       likesCount: 0,
-      status: "Published",
+      status: "published",
+   },
+   {
+      title: "Love Wins All",
+      content: `Love is patient, love is kind
+                  It does not envy, it does not boast
+                  It is not proud, it is not rude
+                  It is not self-seeking, it is not easily angered
+                  It keeps no record of wrongs
+                  
+                  Love does not delight in evil
+                  But rejoices with the truth
+                  It always protects, always trusts
+                  Always hopes, always perseveres
+                  
+                  Love never fails
+                  But where there are prophecies
+                  They will cease
+                  Where there are tongues
+                  They will be stilled
+                  Where there is knowledge
+                  It will pass away
+      `,
+      genres: ["Humanity", "Love", "Peace"],
+      coverImg: "/images/img-4.jpg",
+      publishedAt: new Date(),
+      viewsCount: 0,
+      likesCount: 0,
+      status: "drafted",
+   },
+   {
+      title: "More than words",
+      content: `Saying I love you
+                  Is not the words I want to hear from you
+                  It's not that I want you
+                  Not to say, but if you only knew
+                  
+                  How easy it would be to show me how you feel
+                  More than words is all you have to do to make it real
+                  Then you wouldn't have to say that you love me
+                  'Cause I'd already know
+
+                  What would you do if my heart was torn in two?
+                  More than words to show you feel
+                  That your love for me is real
+                  
+      `,
+      genres: ["Love", "Romance"],
+      coverImg: "/images/img-5.jpg",
+      publishedAt: new Date(),
+      viewsCount: 0,
+      likesCount: 0,
+      status: "drafted",
    },
 ];
 

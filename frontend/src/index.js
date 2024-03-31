@@ -22,6 +22,7 @@ import UserProfilePage from "./screens/UserProfilePage.jsx";
 import AccountUpdatePage from "./screens/AccountUpdatePage.jsx";
 import UserProfileUpdatePage from "./screens/UserProfileUpdatePage.jsx";
 import UserPoemsPage from "./screens/UserPoemsPage.jsx";
+import UserPoemsDraftPage from "./screens/UserPoemsDraftPage.jsx";
 
 const router = createBrowserRouter(
    createRoutesFromElements(
@@ -32,11 +33,12 @@ const router = createBrowserRouter(
          <Route path="signin" element={<SignInPage />} />
          <Route path="signup" element={<SignUpPage />} />
          <Route path="/user-profile/:userId" element={<UserProfilePage />} />
+         <Route path="/user-profile/:userId/poems" element={<UserPoemsPage />} />
 
          <Route path="" element={<ProtectedComponent />}>
             <Route path="/user-profile/:userId/update" element={<UserProfileUpdatePage />} />
             <Route path="/user-profile/account/update" element={<AccountUpdatePage />} />
-            <Route path="/user-profile/:userId/poems" element={<UserPoemsPage />} />
+            <Route path="/user-profile/:userId/poems/:status" element={<UserPoemsDraftPage />} />
          </Route>
       </Route>
    )

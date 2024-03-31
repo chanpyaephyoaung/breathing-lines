@@ -1,5 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
+import Poem from "../models/poemModel.js";
 import AuthorProfileReview from "../models/authorProfileReviewModel.js";
 import generateJwtToken from "../helpers/generateJwtToken.js";
 import { s3RetrieveV3 } from "../s3Service.js";
@@ -256,4 +257,26 @@ export const subscribeUser = asyncHandler(async (req, res) => {
       res.status(404);
       throw new Error("User not found!");
    }
+});
+
+// @desc    Fetch all poems of a specific user
+// @route   GET /api/user-profile/:userId/poems/:status
+// @access  Public
+export const getAllPoemsOfUser = asyncHandler(async (req, res) => {
+   const currentUserId = req.currentUser._id;
+   const { status } = req.params;
+   let poems = [];
+   if (status === "drafted") {
+      poems = await Poem.find({ author: currentUserId, status: "drafted" }).populate(
+         "author",
+         "name"
+      );
+   } else if (status === "published") {
+      poems = await Poem.find({ author: currentUserId, status: "published" }).populate(
+         "author",
+         "name"
+      );
+   }
+   console.log(poems);
+   res.json(poems);
 });

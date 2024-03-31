@@ -58,7 +58,7 @@ const UserDropdown = () => {
                   <Menu.Item as={Fragment}>
                      {({ active }) => (
                         <Link
-                           to="/users/:userId/poems"
+                           to={`/user-profile/${userAccInfo._id}/poems`}
                            className={`${
                               active ? "bg-clr-primary text-white" : "text-gray-900"
                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
@@ -71,7 +71,7 @@ const UserDropdown = () => {
                   <Menu.Item as={Fragment}>
                      {({ active }) => (
                         <Link
-                           to="/users/:userId/collections"
+                           to={`/user-profile/${userAccInfo._id}/collections`}
                            className={`${
                               active ? "bg-clr-primary text-white" : "text-gray-900"
                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}

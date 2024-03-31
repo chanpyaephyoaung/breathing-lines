@@ -70,6 +70,11 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             method: "PUT",
          }),
       }),
+      getPoemsOfUser: builder.query({
+         query: ({ userId, status }) => ({
+            url: `${USERS_URL}/user-profile/${userId}/poems/${status}`,
+         }),
+      }),
    }),
 });
 
@@ -84,4 +89,5 @@ export const {
    useCreateAuthorProfileReviewMutation,
    useIncreaseProfileViewCountMutation,
    useSubscribeUserMutation,
+   useGetPoemsOfUserQuery,
 } = usersApiSlice;

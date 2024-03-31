@@ -5,7 +5,6 @@ import LoaderSpinner from "../../UI/LoaderSpinner.jsx";
 
 const PoemPreviewPosts = () => {
    const { data: poems, isLoading, error } = useGetAllPoemsQuery();
-   console.log(poems);
 
    return (
       <>

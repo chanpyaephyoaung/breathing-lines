@@ -88,7 +88,7 @@ const UserProfileHeader = ({ activeNav }) => {
                {userAccInfo._id === userProfileDetails?.targetUser._id && (
                   <Link
                      to={`/user-profile/${userAccInfo._id}/update`}
-                     className="inline-block text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none my-6"
+                     className="inline-block text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none mb-6"
                   >
                      Edit Profile
                   </Link>

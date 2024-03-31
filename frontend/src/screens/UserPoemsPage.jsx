@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Container from "../components/UI/Container";
 import UserProfileHeader from "../components/User/UserProfileHeader.jsx";
@@ -19,12 +20,12 @@ const UserPoemsPage = () => {
                         <p className="text-clr-black text-sm md:text-lg font-regular underline">
                            Drafts
                         </p>
-                        <button
-                           type="button"
+                        <Link
+                           to={`/user-profile/${userId}/poems/drafted`}
                            className="text-xs py-3 px-5 md:text-sm text-clr-tertiary font-medium border border-clr-tertiary rounded-full hover:bg-clr-tertiary hover:text-clr-white focus:outline-none focus:border-clr-tertiary focus:ring-clr-tertiary focus:ring-1 transition duration-300 leading-none"
                         >
                            View all
-                        </button>
+                        </Link>
                      </div>
                   </BorderBox>
                </div>

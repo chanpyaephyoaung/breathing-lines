@@ -1,10 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
-import { generateLineBreakBtwSentences } from "../../../utils/text.jsx";
-import { useIncreasePoemViewCountMutation } from "../../../slices/poemsApiSlice.js";
-import { useIncreaseProfileViewCountMutation } from "../../../slices/usersApiSlice.js";
+import { generateLineBreakBtwSentences } from "../../../../utils/text.jsx";
 import { toast } from "react-toastify";
 
-const PoemPreviewPost = ({
+const PoemPreviewPostDrafted = ({
    poemId,
    datePosted,
    viewsCount,
@@ -13,25 +11,13 @@ const PoemPreviewPost = ({
    author,
    content,
    encodedCoverImg,
+   statusType,
 }) => {
-   const [increasePoemViewCount] = useIncreasePoemViewCountMutation();
-   const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
-
    const navigate = useNavigate();
 
-   const viewAuthorProfileHandler = async () => {
-      try {
-         navigate(`/user-profile/${author._id}`);
-         await increaseProfileViewCount(author._id);
-      } catch (err) {
-         toast(err?.data?.errMessage || err.error);
-      }
-   };
-
-   const viewMoreHandler = async () => {
+   const editHandler = async () => {
       try {
          navigate(`/poem/${poemId}`);
-         await increasePoemViewCount(poemId);
       } catch (err) {
          toast(err?.data?.errMessage || err.error);
       }
@@ -74,17 +60,13 @@ const PoemPreviewPost = ({
          )}
 
          <div className="grid -gap-1">
-            <Link
-               onClick={viewMoreHandler}
-               className="transition-all block text-base md:text-xl font-medium hover:text-clr-primary"
-            >
+            <Link className="transition-all block text-base md:text-xl font-medium hover:text-clr-primary">
                {title}
             </Link>
             <p className="text-xs md:text-sm text-clr-black-faded font-light">
                By{" "}
                <Link
-                  onClick={viewAuthorProfileHandler}
-                  to={`user-profile/${author._id}`}
+                  to={`/user-profile/${author._id}`}
                   className="transition-all text-xs md:text-sm text-clr-black-faded font-light hover:text-clr-primary"
                >
                   {author.name}
@@ -99,13 +81,13 @@ const PoemPreviewPost = ({
          </div>
 
          <Link
-            onClick={viewMoreHandler}
+            onClick={editHandler}
             preventScrollReset={true}
             className="transition-all justify-self-start text-xs font-light md:text-base text-clr-black-faded hover:text-clr-primary inline-block underline"
          >
-            Breathe more
+            Edit
          </Link>
       </div>
    );
 };
-export default PoemPreviewPost;
+export default PoemPreviewPostDrafted;
