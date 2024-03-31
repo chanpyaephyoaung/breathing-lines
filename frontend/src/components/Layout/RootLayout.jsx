@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Outlet } from "react-router";
 import MainNav from "../Navbar/MainNav.jsx";
+import Modal from "../UI/Modal.jsx";
 
 const RootLayout = () => {
    const [showMainNav, setShowMainNav] = useState(false);
