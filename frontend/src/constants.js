@@ -27,6 +27,6 @@ export const USER_PROFILE_SUB_MENU_LINKS = [
    },
 ];
 
-export const POEM_WRITE_STATUS_DISCARD = "Discard";
-export const POEM_WRITE_STATUS_DRAFT = "Draft";
-export const POEM_WRITE_STATUS_PUBLISH = "Publish";
+export const POEM_WRITE_STATUS_DISCARD = "discarded";
+export const POEM_WRITE_STATUS_DRAFT = "drafted";
+export const POEM_WRITE_STATUS_PUBLISH = "published";

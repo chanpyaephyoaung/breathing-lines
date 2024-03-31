@@ -101,6 +101,27 @@ export const writePoem = asyncHandler(async (req, res) => {
    res.status(201).json(savedPoem);
 });
 
+// @desc    Update poem
+// @route   PUT /api/poems/:poemId/edit
+// @access  Private
+export const editPoem = asyncHandler(async (req, res) => {
+   const currentPoem = await User.findById(req.params.poemId);
+
+   if (currentPoem) {
+      currentPoem.title = req.body.newPoemData.title || currentPoem.title;
+      currentPoem.content = req.body.newPoemData.content || currentPoem.content;
+      currentPoem.coverImg = req.body.newPoemData.coverImg || currentPoem.coverImg;
+      currentPoem.genres = req.body.newPoemData.genres || currentPoem.genres;
+
+      const updatedCurrentPoem = await currentUser.save();
+
+      res.status(200).json(updatedCurrentPoem);
+   } else {
+      res.status(404);
+      throw new Error("Poem update unsuccessful. Poem not found.");
+   }
+});
+
 // @desc    Like a poem
 // @route   PUT /api/poems/:poemId/like
 // @access  Private

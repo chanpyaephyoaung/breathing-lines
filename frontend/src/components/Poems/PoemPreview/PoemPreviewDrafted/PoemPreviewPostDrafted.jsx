@@ -1,6 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { generateLineBreakBtwSentences } from "../../../../utils/text.jsx";
-import { toast } from "react-toastify";
 
 const PoemPreviewPostDrafted = ({
    poemId,
@@ -13,16 +12,6 @@ const PoemPreviewPostDrafted = ({
    encodedCoverImg,
    statusType,
 }) => {
-   const navigate = useNavigate();
-
-   const editHandler = async () => {
-      try {
-         navigate(`/poem/${poemId}`);
-      } catch (err) {
-         toast(err?.data?.errMessage || err.error);
-      }
-   };
-
    return (
       <div className="grid gap-2 p-3 md:p-5 border border-clr-black">
          <div className="text-2xs md:text-xs w-full flex justify-between">
@@ -81,8 +70,8 @@ const PoemPreviewPostDrafted = ({
          </div>
 
          <Link
-            onClick={editHandler}
             preventScrollReset={true}
+            to={`/poem/${poemId}/edit`}
             className="transition-all justify-self-start text-xs font-light md:text-base text-clr-black-faded hover:text-clr-primary inline-block underline"
          >
             Edit
