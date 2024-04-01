@@ -11,6 +11,7 @@ import {
 import { toast } from "react-toastify";
 import Message from "../components/Typography/Message.jsx";
 import Modal from "../components/UI/Modal.jsx";
+import { set } from "mongoose";
 
 const PoemEditPage = () => {
    const { poemId } = useParams();
@@ -21,6 +22,8 @@ const PoemEditPage = () => {
    const [coverImg, setCoverImg] = useState("");
    const [genres, setGenres] = useState("");
    const [isModalOpen, setIsModalOpen] = useState(false);
+   const [ctaType, setCtaType] = useState("");
+   const [modalDesc, setModalDesc] = useState("");
 
    const closeModal = () => {
       setIsModalOpen(false);
@@ -30,21 +33,37 @@ const PoemEditPage = () => {
       setIsModalOpen(true);
    };
 
-   const saveChangesHandler = async () => {
+   const discardHandler = () => {
+      setCtaType("discard");
+      setModalDesc("Do you really wish to discard the changes?");
+      openModal();
+   };
+
+   const saveChangesHandler = () => {
+      setCtaType("saveChanges");
+      setModalDesc("Do you really wish to save the changes?");
+      openModal();
+   };
+
+   const ctaHandler = async () => {
       try {
-         const newPoemData = {
-            title,
-            content,
-            coverImg,
-            genres,
-         };
-         await editPoem({
-            poemId,
-            newPoemData,
-         }).unwrap();
-         refetch();
-         toast.success("Poem updated successfully!");
-         closeModal();
+         if (ctaType === "discard") {
+            refetch();
+         } else if (ctaType === "saveChanges") {
+            const newPoemData = {
+               title,
+               content,
+               coverImg,
+               genres,
+            };
+            await editPoem({
+               poemId,
+               newPoemData,
+            }).unwrap();
+            refetch();
+            toast.success("Poem updated successfully!");
+            closeModal();
+         }
          navigate(`/poem/${poemId}`);
       } catch (err) {
          toast.error(err?.data?.errMessage || err.error);
@@ -89,9 +108,9 @@ const PoemEditPage = () => {
          <Modal
             isOpen={isModalOpen}
             closeModal={closeModal}
-            desc="Do you really wish to save the changes?"
+            desc={modalDesc}
             confirmBtnText="Confirm"
-            successFunc={saveChangesHandler}
+            successFunc={ctaHandler}
          />
          <FormContainer>
             {isLoadingFetchingPoemData ? (
@@ -102,7 +121,7 @@ const PoemEditPage = () => {
                </Message>
             ) : (
                <>
-                  <h2 className="text-lg md:text-2xl font-bold text-clr-black">Upload a Poem!</h2>
+                  <h2 className="text-lg md:text-2xl font-bold text-clr-black">Edit a Poem!</h2>
 
                   <form onSubmit={(e) => e.preventDefault} className="grid gap-6">
                      <label className="relative text-xs grid justify-items-start gap-y-2">
@@ -185,7 +204,8 @@ const PoemEditPage = () => {
 
                      <div className="w-full justify-center flex gap-x-4">
                         <button
-                           type="submit"
+                           type="button"
+                           onClick={discardHandler}
                            className="text-xs py-2 px-5 md:text-base md:py-3 md:px-5 text-clr-black font-medium border border-clr-black rounded-lg hover:bg-clr-black hover:text-clr-white focus:outline-none focus:border-clr-black focus:ring-clr-black focus:ring-1 transition duration-300 leading-none"
                         >
                            Discard
@@ -193,7 +213,7 @@ const PoemEditPage = () => {
 
                         <button
                            type="button"
-                           onClick={openModal}
+                           onClick={saveChangesHandler}
                            className="text-xs py-2 px-5 md:text-base md:py-3 md:px-5 text-clr-primary font-medium border border-clr-primary rounded-lg hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
                         >
                            Save changes

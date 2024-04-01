@@ -49,7 +49,7 @@ const Modal = ({ isOpen, closeModal, desc, confirmBtnText, successFunc }) => {
                                     className="text-xs py-2 px-5 md:text-sm md:py-3 md:px-5 text-clr-black font-medium border border-clr-black rounded-lg hover:bg-clr-black hover:text-clr-white focus:outline-none focus:border-clr-black focus:ring-clr-black focus:ring-1 transition duration-300 leading-none"
                                     onClick={closeModal}
                                  >
-                                    Discard
+                                    No
                                  </button>
                                  <button
                                     type="button"
