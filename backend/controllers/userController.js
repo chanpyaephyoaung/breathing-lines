@@ -277,6 +277,5 @@ export const getAllPoemsOfUser = asyncHandler(async (req, res) => {
          "name"
       );
    }
-   console.log(poems);
    res.json(poems);
 });

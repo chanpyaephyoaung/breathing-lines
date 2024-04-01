@@ -21,7 +21,7 @@ export const getAllPoems = asyncHandler(async (req, res) => {
             const result = await s3RetrieveV3(poem.coverImg);
             image = await result.Body?.transformToString("base64");
          }
-         return { poem, encodedCoverImg: image };
+         return { ...poem._doc, encodedCoverImg: image };
       })
    );
 
@@ -116,6 +116,21 @@ export const editPoem = asyncHandler(async (req, res) => {
       const updatedCurrentPoem = await currentPoem.save();
 
       res.status(200).json(updatedCurrentPoem);
+   } else {
+      res.status(404);
+      throw new Error("Poem update unsuccessful. Poem not found.");
+   }
+});
+
+// @desc    Delete poem
+// @route   DELETE /api/poems/:poemId
+// @access  Private
+export const deletePoem = asyncHandler(async (req, res) => {
+   const currentPoem = await Poem.findById(req.params.poemId);
+
+   if (currentPoem) {
+      await Poem.deleteOne({ _id: currentPoem._id });
+      res.status(200).json({ message: "Poem deleted successfully." });
    } else {
       res.status(404);
       throw new Error("Poem update unsuccessful. Poem not found.");

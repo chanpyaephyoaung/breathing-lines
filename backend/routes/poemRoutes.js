@@ -8,6 +8,7 @@ import {
    createPoemReview,
    increaseViewCount,
    editPoem,
+   deletePoem,
 } from "../controllers/poemController.js";
 import { protectRoutes } from "../middleware/authMiddleware.js";
 
@@ -15,7 +16,7 @@ const router = express.Router();
 
 router.route("/").get(getAllPoems);
 
-router.route("/:poemId").get(getSinglePoemById);
+router.route("/:poemId").get(getSinglePoemById).delete(protectRoutes, deletePoem);
 router.route("/:poemId/edit").put(protectRoutes, editPoem);
 router.route("/:poemId/like").put(protectRoutes, likePoem);
 router.route("/:poemId/rate").put(protectRoutes, ratePoem);
