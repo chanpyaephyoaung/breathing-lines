@@ -18,6 +18,7 @@ import SignInPage from "./screens/SignInPage.jsx";
 import SignUpPage from "./screens/SignUpPage.jsx";
 import PoemFullPost from "./components/Poems/PoemFullPost/PoemFullPost.jsx";
 import ProtectedComponent from "./components/UI/ProtectedComponent.jsx";
+import PrivateComponent from "./components/UI/PrivateComponent.jsx";
 import UserProfilePage from "./screens/UserProfilePage.jsx";
 import AccountUpdatePage from "./screens/AccountUpdatePage.jsx";
 import UserProfileUpdatePage from "./screens/UserProfileUpdatePage.jsx";
@@ -37,10 +38,12 @@ const router = createBrowserRouter(
          <Route path="/user-profile/:userId/poems" element={<UserPoemsPage />} />
 
          <Route path="" element={<ProtectedComponent />}>
-            <Route path="/user-profile/:userId/update" element={<UserProfileUpdatePage />} />
             <Route path="/user-profile/account/update" element={<AccountUpdatePage />} />
-            <Route path="/user-profile/:userId/poems/:status" element={<UserPoemsDraftPage />} />
-            <Route path="/poem/:poemId/edit" element={<PoemEditPage />} />
+            <Route path="" element={<PrivateComponent />}>
+               <Route path="/user-profile/:userId/update" element={<UserProfileUpdatePage />} />
+               <Route path="/user-profile/:userId/poems/:status" element={<UserPoemsDraftPage />} />
+               <Route path="/user/:userId/poem/:poemId/edit" element={<PoemEditPage />} />
+            </Route>
          </Route>
       </Route>
    )

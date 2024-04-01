@@ -2,7 +2,13 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
-import { TagIcon, HeartIcon, StarIcon } from "@heroicons/react/24/outline";
+import {
+   TagIcon,
+   HeartIcon,
+   StarIcon,
+   PencilSquareIcon,
+   TrashIcon,
+} from "@heroicons/react/24/outline";
 import {
    EyeIcon as SolidEyeIcon,
    HeartIcon as SolidHeartIcon,
@@ -49,14 +55,15 @@ const PoemFullPost = () => {
    const [initialRating, setInitialRating] = useState(0);
    const [averageRating, setAverageRating] = useState(0);
    const [reviewInput, setReviewInput] = useState("");
-
-   console.log("Hello");
+   const [isModalOpen, setIsModalOpen] = useState(false);
 
    const [likePoem] = useLikePoemMutation();
    const [ratePoem] = useRatePoemMutation();
    const [reviewPoem] = useReviewPoemMutation();
    const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
    const { data: poem, isLoading, error, refetch } = useGetSinglePoemByIdQuery(poemId);
+
+   const isCurrentUserTheAuthor = userAccInfo?._id.toString() === poem?.author._id.toString();
 
    // Like a poem
    const likePoemHandler = async () => {
@@ -138,6 +145,31 @@ const PoemFullPost = () => {
             <>
                <Container>
                   <div className="w-4/5 max-w-[450px] grid justify-items-start mx-auto gap-y-6 text-clr-black mb-8">
+                     {isCurrentUserTheAuthor && (
+                        <>
+                           <div className="w-full flex justify-between">
+                              <div className="transition-all text-clr-black cursor-pointer hover:text-clr-primary hover:stroke-clr-primary">
+                                 <Link
+                                    to={`/user/${poem.author._id}/poem/${poemId}/edit`}
+                                    className="flex items-center gap-x-2 text-xs md:text-sm font-regular"
+                                 >
+                                    <PencilSquareIcon
+                                       className={`w-[15px] md:w-[20px] stroke-[1]`}
+                                    />
+                                    Edit
+                                 </Link>
+                              </div>
+
+                              <div className="transition-all text-clr-black cursor-pointer hover:text-clr-primary hover:stroke-clr-primary">
+                                 <Link className="flex items-center gap-x-2 text-xs md:text-sm font-regular">
+                                    <TrashIcon className={`w-[15px] md:w-[20px] stroke-[1]`} />
+                                    Delete
+                                 </Link>
+                              </div>
+                           </div>
+                           <div className="w-full border-t border-clr-black-light -mt-2"></div>
+                        </>
+                     )}
                      <div className="w-full grid grid-cols-[1fr_35px] md:grid-cols-[1fr_45px]">
                         <div className="grid gap-y-1 text-left grid-start-1">
                            <h2 className="text-lg md:text-2xl font-semibold break-words leading-7">

@@ -71,7 +71,7 @@ const PoemPreviewPostDrafted = ({
 
          <Link
             preventScrollReset={true}
-            to={`/poem/${poemId}/edit`}
+            to={`/user/${author._id}/poem/${poemId}/edit`}
             className="transition-all justify-self-start text-xs font-light md:text-base text-clr-black-faded hover:text-clr-primary inline-block underline"
          >
             Edit

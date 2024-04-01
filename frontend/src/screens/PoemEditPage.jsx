@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import FormContainer from "../components/UI/FormContainer.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
@@ -14,6 +14,7 @@ import Modal from "../components/UI/Modal.jsx";
 
 const PoemEditPage = () => {
    const { poemId } = useParams();
+   const navigate = useNavigate();
 
    const [title, setTitle] = useState("");
    const [content, setContent] = useState("");
@@ -21,27 +22,46 @@ const PoemEditPage = () => {
    const [genres, setGenres] = useState("");
    const [isModalOpen, setIsModalOpen] = useState(false);
 
-   function closeModal() {
+   const closeModal = () => {
       setIsModalOpen(false);
-   }
+   };
 
-   function openModal() {
+   const openModal = () => {
       setIsModalOpen(true);
-   }
+   };
 
    const saveChangesHandler = async () => {
-      console.log("SUCCESS!!!");
-      closeModal();
+      try {
+         const newPoemData = {
+            title,
+            content,
+            coverImg,
+            genres,
+         };
+         await editPoem({
+            poemId,
+            newPoemData,
+         }).unwrap();
+         refetch();
+         toast.success("Poem updated successfully!");
+         closeModal();
+         navigate(`/poem/${poemId}`);
+      } catch (err) {
+         toast.error(err?.data?.errMessage || err.error);
+      }
    };
 
    const [uploadPoemCoverImage, { isLoading: loadingUploadPoemCoverImage }] =
       useUploadPoemCoverImageMutation();
+
    const {
       data: poem,
       isLoading: isLoadingFetchingPoemData,
       error: errorFetchingPoemData,
       refetch,
    } = useGetSinglePoemByIdQuery(poemId);
+
+   const [editPoem, { isLoading: loadingEditPoem }] = useEditPoemMutation();
 
    useEffect(() => {
       if (poem) {
@@ -181,6 +201,7 @@ const PoemEditPage = () => {
                      </div>
 
                      {loadingUploadPoemCoverImage && <LoaderSpinner />}
+                     {loadingEditPoem && <LoaderSpinner />}
                   </form>
                </>
             )}

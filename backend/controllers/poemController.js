@@ -105,7 +105,7 @@ export const writePoem = asyncHandler(async (req, res) => {
 // @route   PUT /api/poems/:poemId/edit
 // @access  Private
 export const editPoem = asyncHandler(async (req, res) => {
-   const currentPoem = await User.findById(req.params.poemId);
+   const currentPoem = await Poem.findById(req.params.poemId);
 
    if (currentPoem) {
       currentPoem.title = req.body.newPoemData.title || currentPoem.title;
@@ -113,7 +113,7 @@ export const editPoem = asyncHandler(async (req, res) => {
       currentPoem.coverImg = req.body.newPoemData.coverImg || currentPoem.coverImg;
       currentPoem.genres = req.body.newPoemData.genres || currentPoem.genres;
 
-      const updatedCurrentPoem = await currentUser.save();
+      const updatedCurrentPoem = await currentPoem.save();
 
       res.status(200).json(updatedCurrentPoem);
    } else {
