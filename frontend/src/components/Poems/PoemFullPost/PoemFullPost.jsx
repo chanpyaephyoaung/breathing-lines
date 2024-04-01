@@ -29,6 +29,7 @@ import {
 } from "../../../slices/poemsApiSlice.js";
 import { useIncreaseProfileViewCountMutation } from "../../../slices/usersApiSlice.js";
 import { calculateAverage } from "../../../utils/math.js";
+import { POEM_WRITE_STATUS_DRAFT } from "../../../constants.js";
 
 const emptyStarIcon = (
    <StarIcon className="transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] cursor-pointer" />
@@ -55,13 +56,14 @@ const PoemFullPost = () => {
    const [initialRating, setInitialRating] = useState(0);
    const [averageRating, setAverageRating] = useState(0);
    const [reviewInput, setReviewInput] = useState("");
-   const [isModalOpen, setIsModalOpen] = useState(false);
 
    const [likePoem] = useLikePoemMutation();
    const [ratePoem] = useRatePoemMutation();
    const [reviewPoem] = useReviewPoemMutation();
    const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
    const { data: poem, isLoading, error, refetch } = useGetSinglePoemByIdQuery(poemId);
+
+   console.log(poem?.status, POEM_WRITE_STATUS_DRAFT);
 
    const isCurrentUserTheAuthor = userAccInfo?._id.toString() === poem?.author._id.toString();
 
@@ -161,7 +163,10 @@ const PoemFullPost = () => {
                               </div>
 
                               <div className="transition-all text-clr-black cursor-pointer hover:text-clr-primary hover:stroke-clr-primary">
-                                 <Link className="flex items-center gap-x-2 text-xs md:text-sm font-regular">
+                                 <Link
+                                    onClick={() => {}}
+                                    className="flex items-center gap-x-2 text-xs md:text-sm font-regular"
+                                 >
                                     <TrashIcon className={`w-[15px] md:w-[20px] stroke-[1]`} />
                                     Delete
                                  </Link>
@@ -186,7 +191,7 @@ const PoemFullPost = () => {
                               </span>
                            </Link>
                         </div>
-                        {userAccInfo && (
+                        {userAccInfo && poem?.status !== POEM_WRITE_STATUS_DRAFT && (
                            <div className="grid-start-2">
                               <HeartIcon
                                  onClick={likePoemHandler}
@@ -220,7 +225,7 @@ const PoemFullPost = () => {
                            {poem?.genres.join(", ")}
                         </p>
                      </div>
-                     {userAccInfo && (
+                     {userAccInfo && poem?.status !== POEM_WRITE_STATUS_DRAFT && (
                         <button
                            type="button"
                            className="justify-self-start text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
@@ -230,119 +235,137 @@ const PoemFullPost = () => {
                      )}
                   </div>
 
-                  <div className="grid grid-cols-2 md:flex md:flex-row md:justify-between gap-y-4 border-t-[1px] border-clr-black-faded p-4 md:p-x-8 md:p-x-4 md:py-12">
-                     <div className="flex gap-x-4">
-                        <SolidEyeIcon className="transition-all w-[45px] md:w-[55px] text-clr-black-light stroke-[1.5] hover:text-clr-black" />
-                        <div className="grid items-center">
-                           <span className="inline-block text-xl md:text-3xl font-light leading-none">
-                              {poem?.viewsCount}
-                           </span>
-                           <span className="text-sm md:text-base font-light -mt-1">views</span>
-                        </div>
-                     </div>
-
-                     <div className="flex gap-x-4">
-                        <SolidHeartIcon className="transition-all w-[45px] md:w-[55px] text-clr-black-light stroke-[1.5] hover:text-clr-primary" />
-                        <div className="grid items-center">
-                           <span className="inline-block text-xl md:text-3xl font-light leading-none">
-                              {poem?.likesCount}
-                           </span>
-                           <span className="text-sm md:text-base font-light -mt-1">loves</span>
-                        </div>
-                     </div>
-
-                     <div className="flex gap-x-4">
-                        <SolidChatBubbleLeftRightIcon className="transition-all w-[45px] md:w-[55px] text-clr-black-light stroke-[1.5] hover:text-clr-tertiary" />
-                        <div className="grid items-center">
-                           <span className="inline-block text-xl md:text-3xl font-light leading-none">
-                              {poem?.reviews.length}
-                           </span>
-                           <span className="text-sm md:text-base font-light -mt-1">comments</span>
-                        </div>
-                     </div>
-
-                     <div className="flex gap-x-4">
-                        <SolidSparklesIcon className="transition-all w-[45px] md:w-[55px] text-clr-black-light stroke-[1.5] hover:text-clr-secondary" />
-                        <div className="grid items-center">
-                           <span className="inline-block text-xl md:text-3xl font-light leading-none">
-                              {averageRating || 0}
-                           </span>
-                           <span className="text-sm md:text-base font-light -mt-1">ratings</span>
-                        </div>
-                     </div>
-                  </div>
-                  <div className="grid gap-y-6 border-t-[1px] border-clr-black-faded p-4 md:p-x-8 md:p-x-4 md:py-12">
-                     <p className="flex gap-x-2 text-clr-black text-base md:text-2xl font-medium">
-                        Ratings & Review
-                     </p>
-                     {!userAccInfo ? (
-                        // Render content when userAccInfo is not available
-                        <Message type="danger">
-                           Please sign in to rate and review this poem.
-                        </Message>
-                     ) : userAccInfo._id !== poem.author._id ? (
-                        // Render content when userAccInfo is available but user is not the author of the poem
-                        <>
-                           <div className="grid justify-start text-center gap-x-6">
-                              <Rating
-                                 initialRating={initialRating}
-                                 onChange={ratingChangeHandler}
-                                 emptySymbol={emptyStarIcon}
-                                 fullSymbol={fullStarIcon}
-                              />
-                              <p className="text-sm text-clr-black">Rate this poem</p>
+                  {poem?.status !== POEM_WRITE_STATUS_DRAFT && (
+                     <>
+                        <div className="grid grid-cols-2 md:flex md:flex-row md:justify-between gap-y-4 border-t-[1px] border-clr-black-faded p-4 md:p-x-8 md:p-x-4 md:py-12">
+                           <div className="flex gap-x-4">
+                              <SolidEyeIcon className="transition-all w-[45px] md:w-[55px] text-clr-black-light stroke-[1.5] hover:text-clr-black" />
+                              <div className="grid items-center">
+                                 <span className="inline-block text-xl md:text-3xl font-light leading-none">
+                                    {poem?.viewsCount}
+                                 </span>
+                                 <span className="text-sm md:text-base font-light -mt-1">
+                                    views
+                                 </span>
+                              </div>
                            </div>
-                           <form
-                              onSubmit={createReviewSubmitHandler}
-                              className="w-full grid md:grid-cols-[3fr_2fr] gap-x-8 gap-y-4"
-                           >
-                              <label className="relative text-xs grid justify-items-start gap-y-2">
-                                 <span className="sr-only">write a review</span>
-                                 <div className="justify-self-stretch relative">
-                                    <span className="absolute inset-y-0 left-0 flex items-center pl-2"></span>
 
-                                    <input
-                                       className={`w-4/5 md:w-full placeholder:text-clr-black-faded text-sm md:text-base py-3 md:py-3 pl-4 md:pl-4 pr-3 block bg-clr-bg border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
-                                       placeholder="Tell us what you think of this poem..."
-                                       type="text"
-                                       name="poemReview"
-                                       onChange={(e) => setReviewInput(e.target.value)}
-                                       value={reviewInput}
+                           <div className="flex gap-x-4">
+                              <SolidHeartIcon className="transition-all w-[45px] md:w-[55px] text-clr-black-light stroke-[1.5] hover:text-clr-primary" />
+                              <div className="grid items-center">
+                                 <span className="inline-block text-xl md:text-3xl font-light leading-none">
+                                    {poem?.likesCount}
+                                 </span>
+                                 <span className="text-sm md:text-base font-light -mt-1">
+                                    loves
+                                 </span>
+                              </div>
+                           </div>
+
+                           <div className="flex gap-x-4">
+                              <SolidChatBubbleLeftRightIcon className="transition-all w-[45px] md:w-[55px] text-clr-black-light stroke-[1.5] hover:text-clr-tertiary" />
+                              <div className="grid items-center">
+                                 <span className="inline-block text-xl md:text-3xl font-light leading-none">
+                                    {poem?.reviews.length}
+                                 </span>
+                                 <span className="text-sm md:text-base font-light -mt-1">
+                                    comments
+                                 </span>
+                              </div>
+                           </div>
+
+                           <div className="flex gap-x-4">
+                              <SolidSparklesIcon className="transition-all w-[45px] md:w-[55px] text-clr-black-light stroke-[1.5] hover:text-clr-secondary" />
+                              <div className="grid items-center">
+                                 <span className="inline-block text-xl md:text-3xl font-light leading-none">
+                                    {averageRating || 0}
+                                 </span>
+                                 <span className="text-sm md:text-base font-light -mt-1">
+                                    ratings
+                                 </span>
+                              </div>
+                           </div>
+                        </div>
+                        <div className="grid gap-y-6 border-t-[1px] border-clr-black-faded p-4 md:p-x-8 md:p-x-4 md:py-12">
+                           <p className="flex gap-x-2 text-clr-black text-base md:text-2xl font-medium">
+                              Ratings & Review
+                           </p>
+                           {!userAccInfo ? (
+                              // Render content when userAccInfo is not available
+                              <Message type="danger">
+                                 Please sign in to rate and review this poem.
+                              </Message>
+                           ) : userAccInfo._id !== poem.author._id ? (
+                              // Render content when userAccInfo is available but user is not the author of the poem
+                              <>
+                                 <div className="grid justify-start text-center gap-x-6">
+                                    <Rating
+                                       initialRating={initialRating}
+                                       onChange={ratingChangeHandler}
+                                       emptySymbol={emptyStarIcon}
+                                       fullSymbol={fullStarIcon}
                                     />
+                                    <p className="text-sm text-clr-black">Rate this poem</p>
                                  </div>
-                              </label>
-                              <button
-                                 type="submit"
-                                 className="justify-self-start text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
-                              >
-                                 Write a review
-                              </button>
-                           </form>
-                        </>
-                     ) : (
-                        // Render content when userAccInfo is available and user is the author of the poem
-                        <Message type="danger">You cannot rate or review your own poem.</Message>
-                     )}
-                  </div>
+                                 <form
+                                    onSubmit={createReviewSubmitHandler}
+                                    className="w-full grid md:grid-cols-[3fr_2fr] gap-x-8 gap-y-4"
+                                 >
+                                    <label className="relative text-xs grid justify-items-start gap-y-2">
+                                       <span className="sr-only">write a review</span>
+                                       <div className="justify-self-stretch relative">
+                                          <span className="absolute inset-y-0 left-0 flex items-center pl-2"></span>
 
-                  <div className="grid gap-y-6 border-t-[1px] border-clr-black-faded p-4 md:p-x-8 md:p-x-4 md:py-8">
-                     <p className="flex gap-x-2 text-clr-black text-base md:text-2xl font-medium">
-                        Community Reviews
-                        <span>({poem.reviews.length})</span>
-                     </p>
-                     <div className="grid gap-y-4">
-                        {poem.reviews.map((review) => (
-                           <CommentBox key={review._id} review={review} type="large"></CommentBox>
-                        ))}
-                        <CommentBox review={dummyReview} type="large"></CommentBox>
-                     </div>
-                     {/* <button
+                                          <input
+                                             className={`w-4/5 md:w-full placeholder:text-clr-black-faded text-sm md:text-base py-3 md:py-3 pl-4 md:pl-4 pr-3 block bg-clr-bg border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
+                                             placeholder="Tell us what you think of this poem..."
+                                             type="text"
+                                             name="poemReview"
+                                             onChange={(e) => setReviewInput(e.target.value)}
+                                             value={reviewInput}
+                                          />
+                                       </div>
+                                    </label>
+                                    <button
+                                       type="submit"
+                                       className="justify-self-start text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
+                                    >
+                                       Write a review
+                                    </button>
+                                 </form>
+                              </>
+                           ) : (
+                              // Render content when userAccInfo is available and user is the author of the poem
+                              <Message type="danger">
+                                 You cannot rate or review your own poem.
+                              </Message>
+                           )}
+                        </div>
+
+                        <div className="grid gap-y-6 border-t-[1px] border-clr-black-faded p-4 md:p-x-8 md:p-x-4 md:py-8">
+                           <p className="flex gap-x-2 text-clr-black text-base md:text-2xl font-medium">
+                              Community Reviews
+                              <span>({poem.reviews.length})</span>
+                           </p>
+                           <div className="grid gap-y-4">
+                              {poem.reviews.map((review) => (
+                                 <CommentBox
+                                    key={review._id}
+                                    review={review}
+                                    type="large"
+                                 ></CommentBox>
+                              ))}
+                              <CommentBox review={dummyReview} type="large"></CommentBox>
+                           </div>
+                           {/* <button
                         type="button"
                         className="justify-self-center text-xs py-3 px-5 md:text-sm text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
                      >
                         View all comments
                      </button> */}
-                  </div>
+                        </div>
+                     </>
+                  )}
                </Container>
             </>
          )}
