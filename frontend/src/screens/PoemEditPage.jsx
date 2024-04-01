@@ -104,15 +104,18 @@ const PoemEditPage = () => {
 
    return (
       <>
-         <Modal
-            isOpen={isModalOpen}
-            closeModal={closeModal}
-            desc={modalDesc}
-            confirmBtnText="Confirm"
-            successFunc={ctaHandler}
-         />
+         {!loadingEditPoem && (
+            <Modal
+               isOpen={isModalOpen}
+               closeModal={closeModal}
+               desc={modalDesc}
+               confirmBtnText="Confirm"
+               successFunc={ctaHandler}
+            />
+         )}
+
          <FormContainer>
-            {isLoadingFetchingPoemData ? (
+            {isLoadingFetchingPoemData || loadingEditPoem ? (
                <LoaderSpinner />
             ) : errorFetchingPoemData ? (
                <Message type="danger">
@@ -220,7 +223,6 @@ const PoemEditPage = () => {
                      </div>
 
                      {loadingUploadPoemCoverImage && <LoaderSpinner />}
-                     {loadingEditPoem && <LoaderSpinner />}
                   </form>
                </>
             )}

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ArrowLongLeftIcon } from "@heroicons/react/24/outline";
 import Container from "../components/UI/Container";
@@ -9,7 +10,11 @@ import { useGetPoemsOfUserQuery } from "../slices/usersApiSlice.js";
 const UserPoemsDraftPage = () => {
    const { userId, status } = useParams();
 
-   const { data: poems, isLoading, error } = useGetPoemsOfUserQuery({ userId, status });
+   const { data: poems, isLoading, error, refetch } = useGetPoemsOfUserQuery({ userId, status });
+
+   useEffect(() => {
+      refetch();
+   }, [refetch]);
 
    return (
       <Container>

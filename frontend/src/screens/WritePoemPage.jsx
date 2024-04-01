@@ -60,7 +60,7 @@ const WritePoemPage = () => {
                status,
             };
             await writeNewPoem(newPoem).unwrap();
-            toast.success(`Poem ${status.toLowerCase()}ed successfully!`);
+            toast.success(`Poem ${status.toLowerCase()} successfully!`);
 
             // Add navigation to poems list page
             navigate("/");

@@ -21,11 +21,13 @@ import CommentBox from "../../User/CommentBox.jsx";
 import LoaderSpinner from "../../UI/LoaderSpinner.jsx";
 import Message from "../../Typography/Message.jsx";
 import Rating from "react-rating";
+import Modal from "../../UI/Modal.jsx";
 import { toast } from "react-toastify";
 import {
    useLikePoemMutation,
    useRatePoemMutation,
    useReviewPoemMutation,
+   useDeletePoemMutation,
 } from "../../../slices/poemsApiSlice.js";
 import { useIncreaseProfileViewCountMutation } from "../../../slices/usersApiSlice.js";
 import { calculateAverage } from "../../../utils/math.js";
@@ -56,16 +58,42 @@ const PoemFullPost = () => {
    const [initialRating, setInitialRating] = useState(0);
    const [averageRating, setAverageRating] = useState(0);
    const [reviewInput, setReviewInput] = useState("");
+   const [isModalOpen, setIsModalOpen] = useState(false);
 
    const [likePoem] = useLikePoemMutation();
    const [ratePoem] = useRatePoemMutation();
    const [reviewPoem] = useReviewPoemMutation();
    const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
-   const { data: poem, isLoading, error, refetch } = useGetSinglePoemByIdQuery(poemId);
 
-   console.log(poem?.status, POEM_WRITE_STATUS_DRAFT);
+   const { data: poem, isLoading, error, refetch } = useGetSinglePoemByIdQuery(poemId);
+   const [deletePoem, { isLoading: loadingDeletePoem }] = useDeletePoemMutation();
 
    const isCurrentUserTheAuthor = userAccInfo?._id.toString() === poem?.author._id.toString();
+
+   const closeModal = () => {
+      setIsModalOpen(false);
+   };
+
+   const openModal = () => {
+      setIsModalOpen(true);
+   };
+
+   const deleteBtnHandler = () => {
+      openModal();
+   };
+
+   // Delete a poem
+   const deletePoemHandler = async () => {
+      try {
+         await deletePoem(poemId);
+         refetch();
+         toast.success("Poem deleted successfully!");
+         closeModal();
+         navigate(`/user-profile/${userAccInfo._id}/poems`);
+      } catch (err) {
+         toast.error(err?.data?.errMessage || err.error);
+      }
+   };
 
    // Like a poem
    const likePoemHandler = async () => {
@@ -135,7 +163,16 @@ const PoemFullPost = () => {
 
    return (
       <>
-         {isLoading ? (
+         {!loadingDeletePoem && (
+            <Modal
+               isOpen={isModalOpen}
+               closeModal={closeModal}
+               desc="Are you sure you want to delete this poem? This action cannot be undone."
+               confirmBtnText="Confirm"
+               successFunc={deletePoemHandler}
+            />
+         )}
+         {isLoading || loadingDeletePoem ? (
             <Container>
                <LoaderSpinner />
             </Container>
@@ -164,7 +201,7 @@ const PoemFullPost = () => {
 
                               <div className="transition-all text-clr-black cursor-pointer hover:text-clr-primary hover:stroke-clr-primary">
                                  <Link
-                                    onClick={() => {}}
+                                    onClick={deleteBtnHandler}
                                     className="flex items-center gap-x-2 text-xs md:text-sm font-regular"
                                  >
                                     <TrashIcon className={`w-[15px] md:w-[20px] stroke-[1]`} />
