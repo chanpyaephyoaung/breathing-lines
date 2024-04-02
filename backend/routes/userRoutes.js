@@ -11,6 +11,7 @@ import {
    subscribeUser,
    getAllPoemsOfUser,
    createNewCollection,
+   getCollectionsOfUser,
 } from "../controllers/userController.js";
 import { protectRoutes } from "../middleware/authMiddleware.js";
 
@@ -28,6 +29,9 @@ router.put("/user-profile/account/update", protectRoutes, updateUserAccProfile);
 router.put("/:userId/view", protectRoutes, increaseViewCount);
 router.put("/:userId/subscribe", protectRoutes, subscribeUser);
 router.get("/user-profile/:userId/poems/:status", protectRoutes, getAllPoemsOfUser);
-router.post("/user-profile/:userId/collections", protectRoutes, createNewCollection);
+router
+   .route("/user-profile/:userId/collections")
+   .get(protectRoutes, getCollectionsOfUser)
+   .post(protectRoutes, createNewCollection);
 
 export default router;

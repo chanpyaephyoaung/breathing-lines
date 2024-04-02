@@ -304,3 +304,14 @@ export const createNewCollection = asyncHandler(async (req, res) => {
 
    res.status(201).json(savedCollection);
 });
+
+// @desc    Retrieve all collections of a specific user
+// @route   GET /api/user-profile/:userId/collections
+// @access  Private
+export const getCollectionsOfUser = asyncHandler(async (req, res) => {
+   const currentUserId = req.currentUser._id;
+
+   const collections = await Collection.find({ createdBy: currentUserId });
+
+   res.status(200).json(collections);
+});
