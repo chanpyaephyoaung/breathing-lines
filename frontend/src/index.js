@@ -23,7 +23,7 @@ import UserProfilePage from "./screens/UserProfilePage.jsx";
 import AccountUpdatePage from "./screens/AccountUpdatePage.jsx";
 import UserProfileUpdatePage from "./screens/UserProfileUpdatePage.jsx";
 import UserPoemsPage from "./screens/UserPoemsPage.jsx";
-import UserPoemsDraftPage from "./screens/UserPoemsDraftPage.jsx";
+import UserPoemsListPage from "./screens/UserPoemsListPage.jsx";
 import PoemEditPage from "./screens/PoemEditPage.jsx";
 
 const router = createBrowserRouter(
@@ -41,7 +41,7 @@ const router = createBrowserRouter(
             <Route path="/user-profile/account/update" element={<AccountUpdatePage />} />
             <Route path="" element={<PrivateComponent />}>
                <Route path="/user-profile/:userId/update" element={<UserProfileUpdatePage />} />
-               <Route path="/user-profile/:userId/poems/:status" element={<UserPoemsDraftPage />} />
+               <Route path="/user-profile/:userId/poems/:status" element={<UserPoemsListPage />} />
                <Route path="/user/:userId/poem/:poemId/edit" element={<PoemEditPage />} />
             </Route>
          </Route>

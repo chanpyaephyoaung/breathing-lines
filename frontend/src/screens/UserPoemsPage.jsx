@@ -36,12 +36,12 @@ const UserPoemsPage = () => {
                         <p className="text-clr-black text-sm md:text-lg font-regular underline">
                            Published
                         </p>
-                        <button
-                           type="button"
+                        <Link
+                           to={`/user-profile/${userId}/poems/published`}
                            className="text-xs py-3 px-5 md:text-sm text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
                         >
                            View all
-                        </button>
+                        </Link>
                      </div>
                   </BorderBox>
                </div>
