@@ -12,6 +12,7 @@ import {
    getAllPoemsOfUser,
    createNewCollection,
    getCollectionsOfUser,
+   getOneCollectionOfUser,
 } from "../controllers/userController.js";
 import { protectRoutes } from "../middleware/authMiddleware.js";
 
@@ -33,5 +34,10 @@ router
    .route("/user-profile/:userId/collections")
    .get(protectRoutes, getCollectionsOfUser)
    .post(protectRoutes, createNewCollection);
+router.get(
+   "/user-profile/:userId/collections/:collectionId",
+   protectRoutes,
+   getOneCollectionOfUser
+);
 
 export default router;

@@ -315,3 +315,23 @@ export const getCollectionsOfUser = asyncHandler(async (req, res) => {
 
    res.status(200).json(collections);
 });
+
+// @desc    Retrieve one specific collection of a user
+// @route   GET /api/user-profile/:userId/collections/:collectionId
+// @access  Private
+export const getOneCollectionOfUser = asyncHandler(async (req, res) => {
+   const { collectionId } = req.params;
+
+   const collection = await Collection.findById({ _id: collectionId })
+      .populate({
+         path: "poems",
+         select: "title author content coverImg encodedCoverImg viewsCount publishedAt",
+         populate: {
+            path: "author",
+            select: "name",
+         },
+      })
+      .populate("createdBy", "name");
+
+   res.status(200).json(collection);
+});

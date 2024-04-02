@@ -41,11 +41,11 @@ const UserCollectionsPage = () => {
    const createNewCollectionHandler = async () => {
       try {
          if (!collectionName) {
-            toast.error("Collection name is required");
+            toast.error("Collection name is required!");
             return;
          }
          await createNewCollection({ userId, collectionName });
-         toast.success("Collection created successfully");
+         toast.success("Collection created successfully!");
          refetch();
          setCollectionName("");
          closeModal();

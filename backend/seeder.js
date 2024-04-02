@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/database.js";
 import dummyUsers from "./dummyData/users.js";
 import dummyPoems from "./dummyData/poems.js";
+import dummyCollections from "./dummyData/collections.js";
 import User from "./models/userModel.js";
 import Poem from "./models/poemModel.js";
 import AuthorProfileReview from "./models/authorProfileReviewModel.js";
@@ -51,8 +52,19 @@ export const seedDummyData = async () => {
          reviewedBy: user2Doc._id,
       }));
 
-      const profileReviewsRes = await AuthorProfileReview.insertMany(sampleProfileReview);
+      // Sample collection
+      const sampleCollections = dummyCollections.map((collection) => ({
+         ...collection,
+         createdBy: user,
+         poems: user1Doc.poems,
+      }));
+
+      // Insert sample collection to user1
+      const collectionRes = await Collection.insertMany(sampleCollections);
+      user1Doc.collections = collectionRes.map((collection) => collection._id);
+
       // Insert profile reviews to profileReviews field of the user
+      const profileReviewsRes = await AuthorProfileReview.insertMany(sampleProfileReview);
       user1Doc.profileReviews = profileReviewsRes.map((review) => review._id);
 
       // Save the document
