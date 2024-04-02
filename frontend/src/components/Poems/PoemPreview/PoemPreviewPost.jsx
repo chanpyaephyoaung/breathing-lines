@@ -84,7 +84,7 @@ const PoemPreviewPost = ({
                By{" "}
                <Link
                   onClick={viewAuthorProfileHandler}
-                  to={`user-profile/${author._id}`}
+                  to={`/user-profile/${author._id}`}
                   className="transition-all text-xs md:text-sm text-clr-black-faded font-light hover:text-clr-primary"
                >
                   {author.name}

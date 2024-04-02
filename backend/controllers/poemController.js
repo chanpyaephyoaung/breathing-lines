@@ -122,6 +122,24 @@ export const editPoem = asyncHandler(async (req, res) => {
    }
 });
 
+// @desc    Update poem
+// @route   PUT /api/poems/:poemId/change-status
+// @access  Private
+export const changePoemStatus = asyncHandler(async (req, res) => {
+   const currentPoem = await Poem.findById(req.params.poemId);
+
+   if (currentPoem) {
+      currentPoem.status = req.body.newPoemStatus;
+
+      const updatedCurrentPoem = await currentPoem.save();
+
+      res.status(200).json({ message: `Poem ${updatedCurrentPoem.status} successfully.` });
+   } else {
+      res.status(404);
+      throw new Error("Poem status update unsuccessful. Poem not found.");
+   }
+});
+
 // @desc    Delete poem
 // @route   DELETE /api/poems/:poemId
 // @access  Private

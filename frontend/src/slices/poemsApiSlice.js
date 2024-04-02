@@ -42,6 +42,13 @@ export const poemsApiSlice = apiSlice.injectEndpoints({
             method: "DELETE",
          }),
       }),
+      changePoemStatus: builder.mutation({
+         query: ({ poemId, newPoemStatus }) => ({
+            url: `${POEMS_URL}/${poemId}/change-status`,
+            method: "PUT",
+            body: { newPoemStatus },
+         }),
+      }),
       likePoem: builder.mutation({
          query: (poemId) => ({
             url: `${POEMS_URL}/${poemId}/like`,
@@ -78,6 +85,7 @@ export const {
    useWriteNewPoemMutation,
    useEditPoemMutation,
    useDeletePoemMutation,
+   useChangePoemStatusMutation,
    useUploadPoemCoverImageMutation,
    useLikePoemMutation,
    useRatePoemMutation,
