@@ -25,6 +25,7 @@ import UserProfileUpdatePage from "./screens/UserProfileUpdatePage.jsx";
 import UserPoemsPage from "./screens/UserPoemsPage.jsx";
 import UserPoemsListPage from "./screens/UserPoemsListPage.jsx";
 import PoemEditPage from "./screens/PoemEditPage.jsx";
+import UserCollectionsPage from "./screens/UserCollectionsPage.jsx";
 
 const router = createBrowserRouter(
    createRoutesFromElements(
@@ -42,6 +43,7 @@ const router = createBrowserRouter(
             <Route path="" element={<PrivateComponent />}>
                <Route path="/user-profile/:userId/update" element={<UserProfileUpdatePage />} />
                <Route path="/user-profile/:userId/poems/:status" element={<UserPoemsListPage />} />
+               <Route path="/user-profile/:userId/collections" element={<UserCollectionsPage />} />
                <Route path="/user/:userId/poem/:poemId/edit" element={<PoemEditPage />} />
             </Route>
          </Route>

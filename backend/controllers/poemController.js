@@ -122,7 +122,7 @@ export const editPoem = asyncHandler(async (req, res) => {
    }
 });
 
-// @desc    Update poem
+// @desc    Update poem status
 // @route   PUT /api/poems/:poemId/change-status
 // @access  Private
 export const changePoemStatus = asyncHandler(async (req, res) => {

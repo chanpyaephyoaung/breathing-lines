@@ -1,6 +1,7 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
 import Poem from "../models/poemModel.js";
+import Collection from "../models/collectionModel.js";
 import AuthorProfileReview from "../models/authorProfileReviewModel.js";
 import generateJwtToken from "../helpers/generateJwtToken.js";
 import { s3RetrieveV3 } from "../s3Service.js";
@@ -261,7 +262,7 @@ export const subscribeUser = asyncHandler(async (req, res) => {
 
 // @desc    Fetch all poems of a specific user
 // @route   GET /api/user-profile/:userId/poems/:status
-// @access  Public
+// @access  Private
 export const getAllPoemsOfUser = asyncHandler(async (req, res) => {
    const currentUserId = req.currentUser._id;
    const { status } = req.params;
@@ -278,4 +279,28 @@ export const getAllPoemsOfUser = asyncHandler(async (req, res) => {
       );
    }
    res.json(poems);
+});
+
+// @desc    Create a new collection
+// @route   POST /api/user-profile/:userId/collections
+// @access  Private
+export const createNewCollection = asyncHandler(async (req, res) => {
+   const { collectionName } = req.body;
+   const currentUserId = req.currentUser._id;
+
+   const newCollection = new Collection({
+      name: collectionName,
+      createdBy: currentUserId,
+      poems: [],
+   });
+
+   const savedCollection = await newCollection.save();
+
+   // Add the collection to the user's collections field
+   const currentUser = await User.findById(req.currentUser._id);
+   currentUser.collections.push(savedCollection._id);
+
+   await currentUser.save();
+
+   res.status(201).json(savedCollection);
 });

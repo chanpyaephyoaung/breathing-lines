@@ -10,6 +10,7 @@ import {
    increaseViewCount,
    subscribeUser,
    getAllPoemsOfUser,
+   createNewCollection,
 } from "../controllers/userController.js";
 import { protectRoutes } from "../middleware/authMiddleware.js";
 
@@ -27,5 +28,6 @@ router.put("/user-profile/account/update", protectRoutes, updateUserAccProfile);
 router.put("/:userId/view", protectRoutes, increaseViewCount);
 router.put("/:userId/subscribe", protectRoutes, subscribeUser);
 router.get("/user-profile/:userId/poems/:status", protectRoutes, getAllPoemsOfUser);
+router.post("/user-profile/:userId/collections", protectRoutes, createNewCollection);
 
 export default router;
