@@ -9,6 +9,7 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import poemRoutes from "./routes/poemRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import collectionRoutes from "./routes/collectionRoutes.js";
 import adminUserRoutes from "./routes/adminUserRoutes.js";
 import { s3UploadV3 } from "./s3Service.js";
 
@@ -39,6 +40,7 @@ app.use("/api/poems", poemRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/users/admin", adminUserRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/users/user-profile/:userId/collections", collectionRoutes);
 
 // Middleware
 app.use(notFound);
