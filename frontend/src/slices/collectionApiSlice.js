@@ -20,6 +20,12 @@ export const collectionsApiSlice = apiSlice.injectEndpoints({
             body: { collectionName },
          }),
       }),
+      addPoemToCollection: builder.mutation({
+         query: ({ userId, collectionId, poemId }) => ({
+            url: `${USERS_URL}/user-profile/${userId}/collections/${collectionId}/add/poem/${poemId}`,
+            method: "POST",
+         }),
+      }),
    }),
 });
 
@@ -27,4 +33,5 @@ export const {
    useGetCollectionsOfUserQuery,
    useGetOneCollectionOfUserQuery,
    useCreateNewCollectionMutation,
+   useAddPoemToCollectionMutation,
 } = collectionsApiSlice;

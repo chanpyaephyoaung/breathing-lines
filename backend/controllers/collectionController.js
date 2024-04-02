@@ -58,3 +58,28 @@ export const getOneCollectionOfUser = asyncHandler(async (req, res) => {
 
    res.status(200).json(collection);
 });
+
+// @desc    Add a poem to a collection
+// @route   POST /api/user-profile/:userId/collections/:collectionId/add/poem/:poemId
+// @access  Private
+export const addPoemToCollection = asyncHandler(async (req, res) => {
+   const { collectionId, poemId } = req.params;
+
+   const targetCollection = await Collection.findById(collectionId);
+   const targetPoem = await Poem.findById(poemId);
+   const alreadyAdded = targetCollection.poems.includes(targetPoem._id);
+   console.log(alreadyAdded);
+
+   if (!alreadyAdded) {
+      // Add and save the review to the author's profileReviews array
+      targetCollection.poems.push(targetPoem._id);
+      await targetCollection.save();
+
+      res.status(201).json({
+         message: `Poem added to collection - ${targetCollection.name} successfully.`,
+      });
+   } else {
+      res.status(400);
+      throw new Error("Poem already exists in this collection.");
+   }
+});

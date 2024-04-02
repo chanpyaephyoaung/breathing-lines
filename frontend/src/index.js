@@ -45,10 +45,10 @@ const router = createBrowserRouter(
                path="/user-profile/:userId/collections/:collectionId"
                element={<CollectionPage />}
             />
+            <Route path="/user-profile/:userId/collections" element={<UserCollectionsPage />} />
             <Route path="" element={<PrivateComponent />}>
                <Route path="/user-profile/:userId/update" element={<UserProfileUpdatePage />} />
                <Route path="/user-profile/:userId/poems/:status" element={<UserPoemsListPage />} />
-               <Route path="/user-profile/:userId/collections" element={<UserCollectionsPage />} />
                <Route path="/user/:userId/poem/:poemId/edit" element={<PoemEditPage />} />
             </Route>
          </Route>

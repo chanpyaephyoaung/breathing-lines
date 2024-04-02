@@ -31,9 +31,14 @@ import {
    useDeletePoemMutation,
    useChangePoemStatusMutation,
 } from "../../../slices/poemsApiSlice.js";
+import {
+   useGetCollectionsOfUserQuery,
+   useAddPoemToCollectionMutation,
+} from "../../../slices/collectionApiSlice.js";
 import { useIncreaseProfileViewCountMutation } from "../../../slices/usersApiSlice.js";
 import { calculateAverage } from "../../../utils/math.js";
 import { POEM_WRITE_STATUS_DRAFT, POEM_WRITE_STATUS_PUBLISH } from "../../../constants.js";
+import AddToCollectionComboBox from "../../Collection/AddToCollectionComboBox.jsx";
 
 const emptyStarIcon = (
    <StarIcon className="transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] cursor-pointer" />
@@ -63,6 +68,9 @@ const PoemFullPost = () => {
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [modalCtaType, setModalCtaType] = useState("");
    const [modalDesc, setModalDesc] = useState("");
+   const [confirmBtnText, setConfirmBtnText] = useState("Confirm");
+   const [discardBtnText, setDiscardBtnText] = useState("No");
+   const [selectedCollection, setSelectedCollection] = useState(null);
 
    const [likePoem] = useLikePoemMutation();
    const [ratePoem] = useRatePoemMutation();
@@ -71,10 +79,17 @@ const PoemFullPost = () => {
 
    const { data: poem, isLoading, error, refetch } = useGetSinglePoemByIdQuery(poemId);
    const [deletePoem, { isLoading: loadingDeletePoem }] = useDeletePoemMutation();
+   const [addPoemToCollection, { isLoading: loadingAddPoemToCollection }] =
+      useAddPoemToCollectionMutation();
    const [changePoemStatus, { isLoading: loadingChangePoemStatus }] = useChangePoemStatusMutation();
+   const { data: collections } = useGetCollectionsOfUserQuery(userAccInfo._id);
 
    const isCurrentUserTheAuthor = userAccInfo?._id.toString() === poem?.author._id.toString();
    const [poemStatusSwitchEnabled, setPoemStatusSwitchEnabled] = useState(false);
+
+   const changeSelectedCollectionHandler = (collection) => {
+      setSelectedCollection(collection);
+   };
 
    const closeModal = () => {
       setIsModalOpen(false);
@@ -90,14 +105,23 @@ const PoemFullPost = () => {
       openModal();
    };
 
-   const changePoemStatusBtnHandler = async () => {
+   const changePoemStatusBtnHandler = () => {
       setModalCtaType("changePoemStatus");
       setModalDesc("Are you sure you want to change the status of this poem?");
       openModal();
    };
 
+   const addPoemToCollectionBtnHandler = () => {
+      setSelectedCollection(collections[0]);
+      setModalCtaType("addPoemToCollection");
+      setModalDesc("Add this poem to your collection.");
+      setConfirmBtnText("Add");
+      setDiscardBtnText("Discard");
+      openModal();
+   };
+
    // Modal Handler Funcs
-   const deletePoemHandler = async () => {
+   const modalSuccessFuncHandler = async () => {
       try {
          // Delete a poem on confirmation
          if (modalCtaType === "delete") {
@@ -116,6 +140,13 @@ const PoemFullPost = () => {
             });
             setPoemStatusSwitchEnabled((prevState) => !prevState);
             toast.success("Poem status updated successfully!");
+         } else if (modalCtaType === "addPoemToCollection") {
+            const res = await addPoemToCollection({
+               userId: userAccInfo._id,
+               poemId,
+               collectionId: selectedCollection._id,
+            }).unwrap();
+            toast.success(res.message);
          }
          closeModal();
          refetch();
@@ -144,7 +175,6 @@ const PoemFullPost = () => {
          await ratePoem({ poemId, rating: value });
          refetch();
       } catch (err) {
-         console.log("ERROR ", err);
          toast(err?.data?.errMessage || err.error);
       }
    };
@@ -194,16 +224,27 @@ const PoemFullPost = () => {
 
    return (
       <>
-         {!loadingDeletePoem && !loadingChangePoemStatus && (
+         {!loadingDeletePoem && !loadingChangePoemStatus && !loadingAddPoemToCollection && (
             <Modal
                isOpen={isModalOpen}
                closeModal={closeModal}
                desc={modalDesc}
-               confirmBtnText="Confirm"
-               successFunc={deletePoemHandler}
-            />
+               confirmBtnText={confirmBtnText}
+               discardBtnText={discardBtnText}
+               successFunc={modalSuccessFuncHandler}
+            >
+               {modalCtaType === "addPoemToCollection" && (
+                  <AddToCollectionComboBox
+                     collections={collections}
+                     onChangeSelectedCollection={changeSelectedCollectionHandler}
+                  />
+               )}
+            </Modal>
          )}
-         {isLoading || loadingDeletePoem || loadingChangePoemStatus ? (
+         {isLoading ||
+         loadingDeletePoem ||
+         loadingChangePoemStatus ||
+         loadingAddPoemToCollection ? (
             <Container>
                <LoaderSpinner />
             </Container>
@@ -292,12 +333,15 @@ const PoemFullPost = () => {
                   </div>
                   <div className="w-full flex flex-col items-start gap-y-4 md:flex-row md:items-center md:justify-between">
                      {userAccInfo && poem?.status !== POEM_WRITE_STATUS_DRAFT && (
-                        <button
-                           type="button"
-                           className="justify-self-start text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
-                        >
-                           &#43; Add to collection
-                        </button>
+                        <div className="flex">
+                           <button
+                              type="button"
+                              onClick={addPoemToCollectionBtnHandler}
+                              className="justify-self-start text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
+                           >
+                              &#43; Add to collection
+                           </button>
+                        </div>
                      )}
                      {isCurrentUserTheAuthor && (
                         <div
