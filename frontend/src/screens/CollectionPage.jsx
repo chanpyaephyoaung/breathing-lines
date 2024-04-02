@@ -54,7 +54,16 @@ const CollectionPage = () => {
                      </Link>
                   </p>
                </div>
-               <PoemPreviewPosts poems={collection.poems} />
+               {collection.poems.length === 0 ? (
+                  <div className="text-center mt-8">
+                     <Message type="danger">
+                        This collection is empty. Start collecting poems you resonate this
+                        collection with!
+                     </Message>
+                  </div>
+               ) : (
+                  <PoemPreviewPosts poems={collection.poems} />
+               )}
             </>
          )}
       </Container>
