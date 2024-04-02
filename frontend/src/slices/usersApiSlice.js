@@ -75,23 +75,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             url: `${USERS_URL}/user-profile/${userId}/poems/${status}`,
          }),
       }),
-      getCollectionsOfUser: builder.query({
-         query: (userId) => ({
-            url: `${USERS_URL}/user-profile/${userId}/collections`,
-         }),
-      }),
-      getOneCollectionOfUser: builder.query({
-         query: ({ userId, collectionId }) => ({
-            url: `${USERS_URL}/user-profile/${userId}/collections/${collectionId}`,
-         }),
-      }),
-      createNewCollection: builder.mutation({
-         query: ({ userId, collectionName }) => ({
-            url: `${USERS_URL}/user-profile/${userId}/collections`,
-            method: "POST",
-            body: { collectionName },
-         }),
-      }),
    }),
 });
 
@@ -107,7 +90,4 @@ export const {
    useIncreaseProfileViewCountMutation,
    useSubscribeUserMutation,
    useGetPoemsOfUserQuery,
-   useGetCollectionsOfUserQuery,
-   useGetOneCollectionOfUserQuery,
-   useCreateNewCollectionMutation,
 } = usersApiSlice;

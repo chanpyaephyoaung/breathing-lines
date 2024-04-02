@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { ArrowLongLeftIcon } from "@heroicons/react/24/outline";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 import UserProfileHeader from "../components/User/UserProfileHeader.jsx";
-import BorderBox from "../components/UI/BorderBox.jsx";
 import Container from "../components/UI/Container.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
 import Message from "../components/Typography/Message.jsx";
@@ -11,7 +9,7 @@ import { USER_PROFILE_SUB_MENU_LINKS } from "../constants.js";
 import {
    useGetCollectionsOfUserQuery,
    useCreateNewCollectionMutation,
-} from "../slices/usersApiSlice.js";
+} from "../slices/collectionApiSlice.js";
 import { toast } from "react-toastify";
 import CollectionBox from "../components/Collection/CollectionBox.jsx";
 

@@ -3,10 +3,8 @@ import Container from "../components/UI/Container.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
 import Message from "../components/Typography/Message.jsx";
 import PoemPreviewPosts from "../components/Poems/PoemPreview/PoemPreviewPosts.jsx";
-import {
-   useGetOneCollectionOfUserQuery,
-   useIncreaseProfileViewCountMutation,
-} from "../slices/usersApiSlice.js";
+import { useGetOneCollectionOfUserQuery } from "../slices/collectionApiSlice.js";
+import { useIncreaseProfileViewCountMutation } from "../slices/usersApiSlice.js";
 import { toast } from "react-toastify";
 
 const CollectionPage = () => {
@@ -18,7 +16,6 @@ const CollectionPage = () => {
       error,
       refetch,
    } = useGetOneCollectionOfUserQuery({ userId, collectionId });
-   console.log(collection);
 
    const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
 
