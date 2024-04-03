@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { generateLineBreakBtwSentences } from "../../../utils/text.jsx";
 import { useIncreasePoemViewCountMutation } from "../../../slices/poemsApiSlice.js";
 import { useIncreaseProfileViewCountMutation } from "../../../slices/usersApiSlice.js";
+import { MinusCircleIcon } from "@heroicons/react/24/outline";
+import Modal from "../../UI/Modal.jsx";
 import { toast } from "react-toastify";
 
 const PoemPreviewPost = ({
@@ -13,7 +16,13 @@ const PoemPreviewPost = ({
    author,
    content,
    encodedCoverImg,
+   onRemovePoemFromCollection,
+   loadingRemovePoemFromCollection,
+   isCurrentUserTheCollectionOwner,
 }) => {
+   console.log(isCurrentUserTheCollectionOwner);
+   const [isModalOpen, setIsModalOpen] = useState(false);
+
    const [increasePoemViewCount] = useIncreasePoemViewCountMutation();
    const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
 
@@ -37,75 +46,105 @@ const PoemPreviewPost = ({
       }
    };
 
-   return (
-      <div className="grid gap-2 p-3 md:p-5 border border-clr-black">
-         <div className="text-2xs md:text-xs w-full flex justify-between">
-            <span>{datePosted}</span>
-            <span className="flex gap-1">
-               <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-3 md:w-4"
-               >
-                  <path
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                     d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                  />
-                  <path
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-               </svg>
-               <span>{viewsCount} views</span>
-            </span>
-         </div>
+   const closeModal = () => {
+      setIsModalOpen(false);
+   };
 
-         {coverImg && (
-            <img
-               className="w-full h-32 md:h-40 lg:h-60 object-cover"
-               src={encodedCoverImg ? `data:image/jpeg;base64,${encodedCoverImg}` : coverImg}
-               alt=""
+   const openModal = () => {
+      setIsModalOpen(true);
+   };
+
+   const ctaHandler = () => {
+      onRemovePoemFromCollection(poemId);
+      closeModal();
+   };
+
+   return (
+      <>
+         {!loadingRemovePoemFromCollection && (
+            <Modal
+               isOpen={isModalOpen}
+               closeModal={closeModal}
+               desc="Are you sure you want to remove this poem from this collection?"
+               confirmBtnText="Confirm"
+               successFunc={ctaHandler}
             />
          )}
+         <div className="relative grid gap-2 p-3 md:p-5 border border-clr-black">
+            {isCurrentUserTheCollectionOwner && (
+               <MinusCircleIcon
+                  onClick={openModal}
+                  className={`absolute -right-6 md:-right-10 w-[17px] md:w-[25px] stroke-[2] text-clr-primary cursor-pointer`}
+               />
+            )}
+            <div className="text-2xs md:text-xs w-full flex justify-between">
+               <span>{datePosted}</span>
+               <span className="flex gap-1">
+                  <svg
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     strokeWidth={1.5}
+                     stroke="currentColor"
+                     className="w-3 md:w-4"
+                  >
+                     <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                     />
+                     <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                     />
+                  </svg>
+                  <span>{viewsCount} views</span>
+               </span>
+            </div>
 
-         <div className="grid -gap-1">
+            {coverImg && (
+               <img
+                  className="w-full h-32 md:h-40 lg:h-60 object-cover"
+                  src={encodedCoverImg ? `data:image/jpeg;base64,${encodedCoverImg}` : coverImg}
+                  alt=""
+               />
+            )}
+
+            <div className="grid -gap-1">
+               <Link
+                  onClick={viewMoreHandler}
+                  className="transition-all block text-base md:text-xl font-medium hover:text-clr-primary"
+               >
+                  {title}
+               </Link>
+               <p className="text-xs md:text-sm text-clr-black-faded font-light">
+                  By{" "}
+                  <Link
+                     onClick={viewAuthorProfileHandler}
+                     to={`/user-profile/${author._id}`}
+                     className="transition-all text-xs md:text-sm text-clr-black-faded font-light hover:text-clr-primary"
+                  >
+                     {author.name}
+                  </Link>
+               </p>
+            </div>
+
+            <div className="line-clamp-4">
+               <p className="text-xs md:text-base font-light">
+                  {generateLineBreakBtwSentences(content)}
+               </p>
+            </div>
+
             <Link
                onClick={viewMoreHandler}
-               className="transition-all block text-base md:text-xl font-medium hover:text-clr-primary"
+               preventScrollReset={true}
+               className="transition-all justify-self-start text-xs font-light md:text-base text-clr-black-faded hover:text-clr-primary inline-block underline"
             >
-               {title}
+               Breathe more
             </Link>
-            <p className="text-xs md:text-sm text-clr-black-faded font-light">
-               By{" "}
-               <Link
-                  onClick={viewAuthorProfileHandler}
-                  to={`/user-profile/${author._id}`}
-                  className="transition-all text-xs md:text-sm text-clr-black-faded font-light hover:text-clr-primary"
-               >
-                  {author.name}
-               </Link>
-            </p>
          </div>
-
-         <div className="line-clamp-4">
-            <p className="text-xs md:text-base font-light">
-               {generateLineBreakBtwSentences(content)}
-            </p>
-         </div>
-
-         <Link
-            onClick={viewMoreHandler}
-            preventScrollReset={true}
-            className="transition-all justify-self-start text-xs font-light md:text-base text-clr-black-faded hover:text-clr-primary inline-block underline"
-         >
-            Breathe more
-         </Link>
-      </div>
+      </>
    );
 };
 export default PoemPreviewPost;

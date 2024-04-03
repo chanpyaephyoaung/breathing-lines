@@ -13,7 +13,7 @@ const Navbar = ({ onShowMainNav }) => {
    };
 
    return (
-      <nav className="bg-clr-bg border-b border-clr-black border-1 p-6 relative">
+      <nav className="bg-clr-bg border-b border-clr-black border-1 p-6 relative z-100">
          <div className="grid grid-cols-3 items-center after:content-[''] after:w-full after:h-px after:bg-clr-black after:absolute after:-bottom-1.5 after:left-0">
             <Bars3Icon
                onClick={handleMainNavClick}

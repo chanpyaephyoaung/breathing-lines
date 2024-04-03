@@ -1,15 +1,22 @@
+import { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import Container from "../components/UI/Container.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
 import Message from "../components/Typography/Message.jsx";
 import PoemPreviewPosts from "../components/Poems/PoemPreview/PoemPreviewPosts.jsx";
-import { useGetOneCollectionOfUserQuery } from "../slices/collectionApiSlice.js";
+import {
+   useGetOneCollectionOfUserQuery,
+   useRemovePoemFromCollectionMutation,
+} from "../slices/collectionApiSlice.js";
 import { useIncreaseProfileViewCountMutation } from "../slices/usersApiSlice.js";
 import { toast } from "react-toastify";
 
 const CollectionPage = () => {
    const navigate = useNavigate();
    const { userId, collectionId } = useParams();
+   const { userAccInfo } = useSelector((state) => state.authUser);
+
    const {
       data: collection,
       isLoading,
@@ -18,6 +25,25 @@ const CollectionPage = () => {
    } = useGetOneCollectionOfUserQuery({ userId, collectionId });
 
    const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
+   const [removePoemFromCollection, { isLoading: loadingRemovePoemFromCollection }] =
+      useRemovePoemFromCollectionMutation();
+
+   useEffect(() => {
+      refetch();
+   }, [refetch]);
+
+   const isCurrentUserTheCollectionOwner =
+      collection?.createdBy?._id.toString() === userAccInfo._id.toString();
+
+   const removePoemFromCollectionHandler = async (poemId) => {
+      try {
+         const res = await removePoemFromCollection({ userId, collectionId, poemId }).unwrap();
+         refetch();
+         toast.success(res.message);
+      } catch (err) {
+         toast.error(err?.data?.errMessage || err.error);
+      }
+   };
 
    const viewAuthorProfileHandler = async () => {
       try {
@@ -30,7 +56,7 @@ const CollectionPage = () => {
 
    return (
       <Container>
-         {isLoading ? (
+         {isLoading || loadingRemovePoemFromCollection ? (
             <LoaderSpinner />
          ) : error ? (
             <Message type="danger">{error?.data?.errMessage || error.error}</Message>
@@ -59,7 +85,12 @@ const CollectionPage = () => {
                      </Message>
                   </div>
                ) : (
-                  <PoemPreviewPosts poems={collection.poems} />
+                  <PoemPreviewPosts
+                     poems={collection.poems}
+                     removePoemFromCollectionHandler={removePoemFromCollectionHandler}
+                     loadingRemovePoemFromCollection={loadingRemovePoemFromCollection}
+                     isCurrentUserTheCollectionOwner={isCurrentUserTheCollectionOwner}
+                  />
                )}
             </>
          )}

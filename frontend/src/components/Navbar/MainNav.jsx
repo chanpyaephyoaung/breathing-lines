@@ -4,7 +4,7 @@ import ToggleNavBar from "./ToggleNavBar.jsx";
 
 const MainNav = ({ onShowMainNav, onHideMainNav, showMainNav }) => {
    return (
-      <div className="sticky top-0">
+      <div className="sticky top-0 z-10">
          <ToggleNavBar onHideMainNav={onHideMainNav} showMainNav={showMainNav} />
          <Navbar onShowMainNav={onShowMainNav} />
          <SubMenu />

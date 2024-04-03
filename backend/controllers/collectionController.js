@@ -68,7 +68,6 @@ export const addPoemToCollection = asyncHandler(async (req, res) => {
    const targetCollection = await Collection.findById(collectionId);
    const targetPoem = await Poem.findById(poemId);
    const alreadyAdded = targetCollection.poems.includes(targetPoem._id);
-   console.log(alreadyAdded);
 
    if (!alreadyAdded) {
       // Add and save the review to the author's profileReviews array
@@ -81,5 +80,39 @@ export const addPoemToCollection = asyncHandler(async (req, res) => {
    } else {
       res.status(400);
       throw new Error("Poem already exists in this collection.");
+   }
+});
+
+// @desc    Delete a poem from the collection
+// @route   DELETE /api/user-profile/:userId/collections/:collectionId/delete/poem/:poemId
+// @access  Private
+export const removePoemFromCollection = asyncHandler(async (req, res) => {
+   const { collectionId, poemId } = req.params;
+
+   const targetCollection = await Collection.findById(collectionId);
+   const targetPoem = await Poem.findById(poemId);
+   const poemExistsInCollection = targetCollection.poems.includes(targetPoem._id);
+
+   const isCurrentUserTheCollectionOwner =
+      targetCollection.createdBy.toString() === req.currentUser._id.toString();
+
+   if (!isCurrentUserTheCollectionOwner) {
+      res.status(401);
+      throw new Error("You are not authorized to remove poems from this collection.");
+   }
+
+   if (poemExistsInCollection) {
+      // Remove the poem from the collection
+      targetCollection.poems = targetCollection.poems.filter(
+         (poem) => poem.toString() !== targetPoem._id.toString()
+      );
+      await targetCollection.save();
+
+      res.status(201).json({
+         message: `Poem (${targetPoem.title}) removed from your collection - ${targetCollection.name} successfully.`,
+      });
+   } else {
+      res.status(400);
+      throw new Error("Poem does not exist in this collection.");
    }
 });
