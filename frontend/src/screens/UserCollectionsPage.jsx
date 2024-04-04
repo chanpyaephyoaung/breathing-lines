@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UserProfileHeader from "../components/User/UserProfileHeader.jsx";
@@ -29,6 +29,10 @@ const UserCollectionsPage = () => {
    } = useGetCollectionsOfUserQuery(userId);
    const [createNewCollection, { isLoading: loadingCreateNewCollection }] =
       useCreateNewCollectionMutation();
+
+   useEffect(() => {
+      refetch();
+   }, [refetch]);
 
    const closeModal = () => {
       setIsModalOpen(false);
@@ -105,6 +109,13 @@ const UserCollectionsPage = () => {
                         >
                            &#43; Create new collection
                         </button>
+                     )}
+                     {collections?.length === 0 && (
+                        <div className="text-center">
+                           <Message type="danger">
+                              You have no collections yet. Create one now!
+                           </Message>
+                        </div>
                      )}
                      {collections?.map((collection) => (
                         <CollectionBox

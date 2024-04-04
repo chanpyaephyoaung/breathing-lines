@@ -32,6 +32,12 @@ export const collectionsApiSlice = apiSlice.injectEndpoints({
             method: "DELETE",
          }),
       }),
+      deleteOneCollectionOfUser: builder.mutation({
+         query: ({ userId, collectionId }) => ({
+            url: `${USERS_URL}/user-profile/${userId}/collections/${collectionId}`,
+            method: "DELETE",
+         }),
+      }),
    }),
 });
 
@@ -41,4 +47,5 @@ export const {
    useCreateNewCollectionMutation,
    useAddPoemToCollectionMutation,
    useRemovePoemFromCollectionMutation,
+   useDeleteOneCollectionOfUserMutation,
 } = collectionsApiSlice;

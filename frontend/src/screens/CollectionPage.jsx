@@ -1,13 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Container from "../components/UI/Container.jsx";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
 import Message from "../components/Typography/Message.jsx";
+import Modal from "../components/UI/Modal.jsx";
 import PoemPreviewPosts from "../components/Poems/PoemPreview/PoemPreviewPosts.jsx";
 import {
    useGetOneCollectionOfUserQuery,
    useRemovePoemFromCollectionMutation,
+   useDeleteOneCollectionOfUserMutation,
 } from "../slices/collectionApiSlice.js";
 import { useIncreaseProfileViewCountMutation } from "../slices/usersApiSlice.js";
 import { toast } from "react-toastify";
@@ -16,6 +19,7 @@ const CollectionPage = () => {
    const navigate = useNavigate();
    const { userId, collectionId } = useParams();
    const { userAccInfo } = useSelector((state) => state.authUser);
+   const [isModalOpen, setIsModalOpen] = useState(false);
 
    const {
       data: collection,
@@ -28,6 +32,17 @@ const CollectionPage = () => {
    const [removePoemFromCollection, { isLoading: loadingRemovePoemFromCollection }] =
       useRemovePoemFromCollectionMutation();
 
+   const [deleteOneCollectionOfUser, { isLoading: loadingDeleteCollection }] =
+      useDeleteOneCollectionOfUserMutation();
+
+   const closeModal = () => {
+      setIsModalOpen(false);
+   };
+
+   const openModal = () => {
+      setIsModalOpen(true);
+   };
+
    useEffect(() => {
       refetch();
    }, [refetch]);
@@ -39,6 +54,7 @@ const CollectionPage = () => {
       try {
          const res = await removePoemFromCollection({ userId, collectionId, poemId }).unwrap();
          refetch();
+
          toast.success(res.message);
       } catch (err) {
          toast.error(err?.data?.errMessage || err.error);
@@ -54,47 +70,75 @@ const CollectionPage = () => {
       }
    };
 
+   const ctaHandler = async () => {
+      try {
+         const res = await deleteOneCollectionOfUser({ userId, collectionId }).unwrap();
+         navigate(`/user-profile/${userId}/collections`);
+         toast.success(res.message);
+         refetch();
+         closeModal();
+      } catch (err) {
+         closeModal();
+         toast.error(err?.data?.errMessage || err.error);
+      }
+   };
+
    return (
-      <Container>
-         {isLoading || loadingRemovePoemFromCollection ? (
-            <LoaderSpinner />
-         ) : error ? (
-            <Message type="danger">{error?.data?.errMessage || error.error}</Message>
-         ) : (
-            <>
-               <div className="flex flex-col items-center gap-x-6">
-                  <h2 className="text-lg md:text-2xl mx-auto font-bold text-clr-black">
-                     Collection - <span className="text-clr-primary">{collection.name}</span>
-                  </h2>
-                  <p className="text-sm md:text-base text-clr-black-light font-light">
-                     By{" "}
-                     <Link
-                        onClick={viewAuthorProfileHandler}
-                        to={`/user-profile/${userId}`}
-                        className="transition-all text-sm md:text-base text-clr-black-light font-light hover:text-clr-primary"
-                     >
-                        {collection.createdBy.name}
-                     </Link>
-                  </p>
-               </div>
-               {collection.poems.length === 0 ? (
-                  <div className="text-center mt-8">
-                     <Message type="danger">
-                        This collection is empty. Start collecting poems you resonate this
-                        collection with!
-                     </Message>
-                  </div>
-               ) : (
-                  <PoemPreviewPosts
-                     poems={collection.poems}
-                     removePoemFromCollectionHandler={removePoemFromCollectionHandler}
-                     loadingRemovePoemFromCollection={loadingRemovePoemFromCollection}
-                     isCurrentUserTheCollectionOwner={isCurrentUserTheCollectionOwner}
-                  />
-               )}
-            </>
+      <>
+         {!loadingDeleteCollection && (
+            <Modal
+               isOpen={isModalOpen}
+               closeModal={closeModal}
+               desc="Are you sure you want to remove this collection? This action cannot be undone."
+               confirmBtnText="Confirm"
+               successFunc={ctaHandler}
+            />
          )}
-      </Container>
+         <Container>
+            {isLoading || loadingRemovePoemFromCollection || loadingDeleteCollection ? (
+               <LoaderSpinner />
+            ) : error ? (
+               <Message type="danger">{error?.data?.errMessage || error.error}</Message>
+            ) : (
+               <>
+                  <div className="relative flex flex-col items-center gap-x-6">
+                     <TrashIcon
+                        onClick={openModal}
+                        className={`transition-all absolute right-0 top-0 w-[17px] md:w-[25px] stroke-[2] text-clr-black hover:text-clr-primary cursor-pointer`}
+                     />
+                     <h2 className="text-lg md:text-2xl mx-auto font-bold text-clr-black">
+                        Collection - <span className="text-clr-primary">{collection?.name}</span>
+                     </h2>
+                     <p className="text-sm md:text-base text-clr-black-light font-light">
+                        By{" "}
+                        <Link
+                           onClick={viewAuthorProfileHandler}
+                           to={`/user-profile/${userId}`}
+                           className="transition-all text-sm md:text-base text-clr-black-light font-light hover:text-clr-primary"
+                        >
+                           {collection?.createdBy.name}
+                        </Link>
+                     </p>
+                  </div>
+                  {collection?.poems.length === 0 ? (
+                     <div className="text-center mt-8">
+                        <Message type="danger">
+                           This collection is empty. Start collecting poems you resonate this
+                           collection with!
+                        </Message>
+                     </div>
+                  ) : (
+                     <PoemPreviewPosts
+                        poems={collection?.poems}
+                        removePoemFromCollectionHandler={removePoemFromCollectionHandler}
+                        loadingRemovePoemFromCollection={loadingRemovePoemFromCollection}
+                        isCurrentUserTheCollectionOwner={isCurrentUserTheCollectionOwner}
+                     />
+                  )}
+               </>
+            )}
+         </Container>
+      </>
    );
 };
 export default CollectionPage;

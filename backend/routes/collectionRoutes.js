@@ -5,6 +5,7 @@ import {
    getOneCollectionOfUser,
    addPoemToCollection,
    removePoemFromCollection,
+   deleteCollection,
 } from "../controllers/collectionController.js";
 import { protectRoutes } from "../middleware/authMiddleware.js";
 
@@ -14,7 +15,10 @@ router
    .route("/:userId/collections")
    .get(protectRoutes, getCollectionsOfUser)
    .post(protectRoutes, createNewCollection);
-router.get("/:userId/collections/:collectionId", protectRoutes, getOneCollectionOfUser);
+router
+   .route("/:userId/collections/:collectionId")
+   .get(protectRoutes, getOneCollectionOfUser)
+   .delete(protectRoutes, deleteCollection);
 router.post(
    "/:userId/collections/:collectionId/add/poem/:poemId",
    protectRoutes,

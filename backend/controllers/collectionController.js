@@ -119,3 +119,18 @@ export const removePoemFromCollection = asyncHandler(async (req, res) => {
       throw new Error("Poem does not exist in this collection.");
    }
 });
+
+// @desc    Delete a collection
+// @route   DELETE /api/user-profile/:userId/collections/:collectionId/
+// @access  Private
+export const deleteCollection = asyncHandler(async (req, res) => {
+   const currentCollection = await Collection.findById(req.params.collectionId);
+
+   if (currentCollection) {
+      await Collection.deleteOne({ _id: currentCollection._id });
+      res.status(200).json({ message: "Collection deleted successfully." });
+   } else {
+      res.status(404);
+      throw new Error("Collection deletion unsuccessful. Collection not found.");
+   }
+});
