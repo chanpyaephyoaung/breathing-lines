@@ -102,10 +102,12 @@ const CollectionPage = () => {
             ) : (
                <>
                   <div className="relative flex flex-col items-center gap-x-6">
-                     <TrashIcon
-                        onClick={openModal}
-                        className={`transition-all absolute right-0 top-0 w-[17px] md:w-[25px] stroke-[2] text-clr-black hover:text-clr-primary cursor-pointer`}
-                     />
+                     {isCurrentUserTheCollectionOwner && (
+                        <TrashIcon
+                           onClick={openModal}
+                           className={`transition-all absolute right-0 top-0 w-[17px] md:w-[25px] stroke-[2] text-clr-black hover:text-clr-primary cursor-pointer`}
+                        />
+                     )}
                      <h2 className="text-lg md:text-2xl mx-auto font-bold text-clr-black">
                         Collection - <span className="text-clr-primary">{collection?.name}</span>
                      </h2>
