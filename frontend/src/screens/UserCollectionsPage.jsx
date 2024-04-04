@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import UserProfileHeader from "../components/User/UserProfileHeader.jsx";
 import Container from "../components/UI/Container.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
@@ -18,6 +19,7 @@ const UserCollectionsPage = () => {
    const activeNav = USER_PROFILE_SUB_MENU_LINKS[2].activeNavPathIdentifier;
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [collectionName, setCollectionName] = useState("");
+   const { userAccInfo } = useSelector((state) => state.authUser);
 
    const {
       data: collections,
@@ -53,7 +55,7 @@ const UserCollectionsPage = () => {
       }
    };
 
-   const isTargetUserTheCurrentUser = userId === localStorage.getItem("userId");
+   const isTargetUserTheCurrentUser = userId.toString() === userAccInfo._id.toString();
 
    return (
       <>
@@ -95,13 +97,15 @@ const UserCollectionsPage = () => {
                <>
                   <UserProfileHeader activeNav={activeNav} />
                   <div className="grid">
-                     <button
-                        type="button"
-                        onClick={openModal}
-                        className="justify-self-center mb-8 text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
-                     >
-                        &#43; Create new collection
-                     </button>
+                     {isTargetUserTheCurrentUser && (
+                        <button
+                           type="button"
+                           onClick={openModal}
+                           className="justify-self-center mb-8 text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
+                        >
+                           &#43; Create new collection
+                        </button>
+                     )}
                      {collections?.map((collection) => (
                         <CollectionBox
                            key={collection._id}
