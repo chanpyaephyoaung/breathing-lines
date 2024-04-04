@@ -44,14 +44,16 @@ const UserCollectionsPage = () => {
          }
          await createNewCollection({ userId, collectionName });
          toast.success("Collection created successfully!");
-         refetch();
          setCollectionName("");
          closeModal();
+         refetch();
       } catch (err) {
          setCollectionName("");
          toast.error(err?.data?.errMessage || err.error);
       }
    };
+
+   const isTargetUserTheCurrentUser = userId === localStorage.getItem("userId");
 
    return (
       <>

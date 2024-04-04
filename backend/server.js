@@ -40,7 +40,7 @@ app.use("/api/poems", poemRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/users/admin", adminUserRoutes);
 app.use("/api/upload", uploadRoutes);
-app.use("/api/users/user-profile/:userId/collections", collectionRoutes);
+app.use("/api/users/user-profile", collectionRoutes);
 
 // Middleware
 app.use(notFound);

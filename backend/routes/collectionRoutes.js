@@ -10,9 +10,20 @@ import { protectRoutes } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.route("/").get(protectRoutes, getCollectionsOfUser).post(protectRoutes, createNewCollection);
-router.get("/:collectionId", protectRoutes, getOneCollectionOfUser);
-router.post("/:collectionId/add/poem/:poemId", protectRoutes, addPoemToCollection);
-router.delete("/:collectionId/delete/poem/:poemId", protectRoutes, removePoemFromCollection);
+router
+   .route("/:userId/collections")
+   .get(protectRoutes, getCollectionsOfUser)
+   .post(protectRoutes, createNewCollection);
+router.get("/:userId/collections/:collectionId", protectRoutes, getOneCollectionOfUser);
+router.post(
+   "/:userId/collections/:collectionId/add/poem/:poemId",
+   protectRoutes,
+   addPoemToCollection
+);
+router.delete(
+   "/:userId/collections/:collectionId/delete/poem/:poemId",
+   protectRoutes,
+   removePoemFromCollection
+);
 
 export default router;

@@ -2,6 +2,7 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
 import Poem from "../models/poemModel.js";
 import Collection from "../models/collectionModel.js";
+import mongoose from "mongoose";
 import { s3RetrieveV3 } from "../s3Service.js";
 
 // @desc    Create a new collection
@@ -32,11 +33,13 @@ export const createNewCollection = asyncHandler(async (req, res) => {
 // @route   GET /api/user-profile/:userId/collections
 // @access  Private
 export const getCollectionsOfUser = asyncHandler(async (req, res) => {
-   const currentUserId = req.currentUser._id;
+   const targetUserId = req.params.userId;
+   console.log(req.params);
 
-   const collections = await Collection.find({ createdBy: currentUserId });
+   const targetUser = await User.findById(targetUserId).populate("collections", "name createdBy");
+   console.log(targetUser);
 
-   res.status(200).json(collections);
+   res.status(200).json(targetUser.collections);
 });
 
 // @desc    Retrieve one specific collection of a user
@@ -45,7 +48,7 @@ export const getCollectionsOfUser = asyncHandler(async (req, res) => {
 export const getOneCollectionOfUser = asyncHandler(async (req, res) => {
    const { collectionId } = req.params;
 
-   const collection = await Collection.findById({ _id: collectionId })
+   const collection = await Collection.findById(collectionId)
       .populate({
          path: "poems",
          select: "title author content coverImg encodedCoverImg viewsCount publishedAt",
