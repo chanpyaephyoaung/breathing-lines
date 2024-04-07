@@ -309,3 +309,32 @@ export const fetchFollowerList = asyncHandler(async (req, res) => {
       throw new Error("Current user not found!");
    }
 });
+
+// @desc    Get user's followers list
+// @route   GET /api/users/user-profile/:userId/followers
+// @access  Private
+export const fetchFollowingsList = asyncHandler(async (req, res) => {
+   const targetUser = await User.findById(req.params.userId).populate(
+      "followings",
+      "name profileImg"
+   );
+
+   if (targetUser) {
+      const targetUserFollowingsWithEncodedProfileImgs = await Promise.all(
+         targetUser.followings.map(async (following, i) => {
+            let image = "";
+            if (following?.profileImg && i === 6) {
+               // Just for testing purpose. Remove the second condition in production
+               const result = await s3RetrieveV3(following.profileImg);
+               image = await result.Body?.transformToString("base64");
+            }
+            return { ...following._doc, encodedProfileImg: image };
+         })
+      );
+
+      res.status(200).json(targetUserFollowingsWithEncodedProfileImgs);
+   } else {
+      res.status(404);
+      throw new Error("Current user not found!");
+   }
+});

@@ -8,14 +8,14 @@ const UserBox = ({
    img,
    onCloseModal,
    userProfileDetails,
-   refetch,
    isFollowerBtnClicked,
+   onRefetch,
 }) => {
    const [subscribeUser] = useSubscribeUserMutation();
    const subscribeUserHandler = async () => {
       try {
          const res = await subscribeUser(id).unwrap();
-         refetch();
+         onRefetch();
          toast(res.message);
       } catch (err) {
          toast(err?.data?.errMessage || err.error);

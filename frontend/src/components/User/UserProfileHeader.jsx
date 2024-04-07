@@ -12,6 +12,7 @@ import { generateLineBreakBtwSentences } from "../../utils/text.jsx";
 import {
    useSubscribeUserMutation,
    useGetFollowersOfUserQuery,
+   useGetFollowingsOfUserQuery,
 } from "../../slices/usersApiSlice.js";
 import UserBox from "./UserBox.jsx";
 
@@ -27,10 +28,27 @@ const UserProfileHeader = ({ activeNav }) => {
       data: userProfileDetails,
       error: fetchingUserProfileDetailsError,
       isLoading: loadingFetchUserProfileDetails,
-      refetch,
+      refetch: refetchFetchUserProfileDetails,
    } = useGetUserProfileQuery(userId);
-   const { data: userFollowersList, isLoading: loadingFetchFollowersList } =
-      useGetFollowersOfUserQuery(userId);
+   const {
+      data: userFollowersList,
+      isLoading: loadingFetchFollowersList,
+      refetch: refetchFollowersList,
+   } = useGetFollowersOfUserQuery(userId);
+
+   const {
+      data: userFollowingsList,
+      isLoading: loadingFetchFollowingsList,
+      refetch: refetchFollowingsList,
+   } = useGetFollowingsOfUserQuery(userId);
+
+   console.log(userFollowingsList);
+
+   const refetchAll = () => {
+      refetchFetchUserProfileDetails();
+      refetchFollowersList();
+      refetchFollowingsList();
+   };
 
    const closeModal = () => {
       setIsModalOpen(false);
@@ -47,13 +65,20 @@ const UserProfileHeader = ({ activeNav }) => {
       openModal();
    };
 
+   const viewFollowingsCtaHandler = () => {
+      setFollowerFollowingList(userFollowingsList);
+      setIsFollowerBtnClicked(false);
+      setModalDesc("Followings");
+      openModal();
+   };
+
    const [subscribeUser] = useSubscribeUserMutation();
 
    const subscribeUserHandler = async () => {
       try {
          const res = await subscribeUser(userId).unwrap();
          toast(res.message);
-         refetch();
+         refetchFetchUserProfileDetails();
       } catch (err) {
          toast(err?.data?.errMessage || err.error);
       }
@@ -76,12 +101,14 @@ const UserProfileHeader = ({ activeNav }) => {
                   img={follower.encodedProfileImg}
                   onCloseModal={closeModal}
                   userProfileDetails={userProfileDetails}
-                  refetch={refetch}
+                  onRefetch={refetchAll}
                   isFollowerBtnClicked={isFollowerBtnClicked}
                />
             ))}
          </Modal>
-         {loadingFetchUserProfileDetails || loadingFetchFollowersList ? (
+         {loadingFetchUserProfileDetails ||
+         loadingFetchFollowersList ||
+         loadingFetchFollowingsList ? (
             <LoaderSpinner />
          ) : fetchingUserProfileDetailsError ? (
             <Message type="danger">
@@ -119,7 +146,7 @@ const UserProfileHeader = ({ activeNav }) => {
                               </Link>
                               /
                               <Link
-                                 onClick={viewFollowersCtaHandler}
+                                 onClick={viewFollowingsCtaHandler}
                                  className="transition-all hover:text-clr-primary"
                               >
                                  {userProfileDetails?.targetUser?.followings.length} followings

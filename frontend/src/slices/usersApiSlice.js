@@ -80,6 +80,11 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             url: `${USERS_URL}/user-profile/${userId}/followers`,
          }),
       }),
+      getFollowingsOfUser: builder.query({
+         query: (userId) => ({
+            url: `${USERS_URL}/user-profile/${userId}/followings`,
+         }),
+      }),
    }),
 });
 
@@ -96,4 +101,5 @@ export const {
    useSubscribeUserMutation,
    useGetPoemsOfUserQuery,
    useGetFollowersOfUserQuery,
+   useGetFollowingsOfUserQuery,
 } = usersApiSlice;
