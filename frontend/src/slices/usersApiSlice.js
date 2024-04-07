@@ -85,6 +85,18 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             url: `${USERS_URL}/user-profile/${userId}/followings`,
          }),
       }),
+      getNotificationsOfUser: builder.query({
+         query: (userId) => ({
+            url: `${USERS_URL}/${userId}/notifications`,
+         }),
+      }),
+      createNewNotification: builder.mutation({
+         query: (userId, newNotiData) => ({
+            url: `${USERS_URL}/${userId}/notifications/new`,
+            method: "POST",
+            body: newNotiData,
+         }),
+      }),
    }),
 });
 

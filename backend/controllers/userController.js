@@ -1,7 +1,7 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
 import Poem from "../models/poemModel.js";
-import Collection from "../models/collectionModel.js";
+import UserNotification from "../models/userNotificationModel.js";
 import AuthorProfileReview from "../models/authorProfileReviewModel.js";
 import generateJwtToken from "../helpers/generateJwtToken.js";
 import { s3RetrieveV3 } from "../s3Service.js";
@@ -337,4 +337,61 @@ export const fetchFollowingsList = asyncHandler(async (req, res) => {
       res.status(404);
       throw new Error("Current user not found!");
    }
+});
+
+// @desc    Retrieve all notifications of a user
+// @route   GET /api/users/:userId/notifications
+// @access  Private
+export const getAllNotificationsOfAUser = asyncHandler(async (req, res) => {
+   const currentUserId = req.currentUser._id;
+   const currentUser = await User.findById(currentUserId).populate({
+      path: "notifications",
+      select: "createdBy notificationMessage payload notificationType",
+      populate: {
+         path: "createdBy",
+         select: "name profileImg",
+      },
+   });
+
+   if (currentUser) {
+      const currentUserNotiWithEncodedProfileImgs = await Promise.all(
+         currentUser.notifications.map(async (user, i) => {
+            let image = "";
+            if (user?.profileImg && i === 2) {
+               // Just for testing purpose. Remove the second condition in production
+               const result = await s3RetrieveV3(user.profileImg);
+               image = await result.Body?.transformToString("base64");
+            }
+            return { ...user._doc, encodedProfileImg: image };
+         })
+      );
+      res.status(200).json(currentUserNotiWithEncodedProfileImgs);
+   } else {
+      res.status(404);
+      throw new Error("Current user not found!");
+   }
+});
+
+// @desc    Create a new notification for a user
+// @route   POST /api/users/:userId/notifications/new
+// @access  Private
+export const createNewNotification = asyncHandler(async (req, res) => {
+   const { createdBy, receivedBy, notificationMessage, payload, notificationType } = req.body;
+   const targetUser = await User.findById(receivedBy);
+
+   const newNoti = new UserNotification({
+      createdBy,
+      receivedBy,
+      notificationMessage,
+      payload,
+      notificationType,
+   });
+
+   const savedNoti = await newNoti.save();
+
+   // Add notification to the user's notifications array
+   targetUser.notifications.push(savedNoti._id);
+   await targetUser.save();
+
+   res.status(201).json(savedNoti);
 });

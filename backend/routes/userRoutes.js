@@ -12,6 +12,8 @@ import {
    getAllPoemsOfUser,
    fetchFollowerList,
    fetchFollowingsList,
+   getAllNotificationsOfAUser,
+   createNewNotification,
 } from "../controllers/userController.js";
 import { protectRoutes } from "../middleware/authMiddleware.js";
 
@@ -31,5 +33,7 @@ router.put("/:userId/subscribe", protectRoutes, subscribeUser);
 router.get("/user-profile/:userId/poems/:status", protectRoutes, getAllPoemsOfUser);
 router.get("/user-profile/:userId/followers", protectRoutes, fetchFollowerList);
 router.get("/user-profile/:userId/followings", protectRoutes, fetchFollowingsList);
+router.post("/:userId/notifications/new", protectRoutes, createNewNotification);
+router.get("/:userId/notifications/", protectRoutes, getAllNotificationsOfAUser);
 
 export default router;

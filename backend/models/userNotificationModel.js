@@ -1,10 +1,18 @@
 import mongoose from "mongoose";
 
 const userNotificationSchema = new mongoose.Schema({
-   user: {
+   createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
+   },
+   receivedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+   },
+   payload: {
+      type: Object,
    },
    notificationMessage: {
       type: String,
