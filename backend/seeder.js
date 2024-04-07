@@ -4,6 +4,7 @@ import connectDB from "./config/database.js";
 import dummyUsers from "./dummyData/users.js";
 import dummyPoems from "./dummyData/poems.js";
 import dummyCollections from "./dummyData/collections.js";
+import dummyNotifications from "./dummyData/notifications.js";
 import User from "./models/userModel.js";
 import Poem from "./models/poemModel.js";
 import AuthorProfileReview from "./models/authorProfileReviewModel.js";
@@ -59,6 +60,25 @@ export const seedDummyData = async () => {
          poems: user1Doc.poems,
       }));
 
+      // Sample notifications
+      const sampleNotifications = dummyNotifications.map((notification, i) => {
+         if (i === 0) {
+            return {
+               ...notification,
+               createdBy: user2Doc._id,
+               receivedBy: user1Doc._id,
+               notificationMessage: `${user1Doc.name} has liked your poem!`,
+            };
+         } else if (i === 1) {
+            return {
+               ...notification,
+               createdBy: user2Doc._id,
+               receivedBy: user1Doc._id,
+               notificationMessage: `${user1Doc.name} has followed you!`,
+            };
+         }
+      });
+
       // Insert sample collection to user1
       const collectionRes = await Collection.insertMany(sampleCollections);
       user1Doc.collections = collectionRes.map((collection) => collection._id);
@@ -66,6 +86,10 @@ export const seedDummyData = async () => {
       // Insert profile reviews to profileReviews field of the user
       const profileReviewsRes = await AuthorProfileReview.insertMany(sampleProfileReview);
       user1Doc.profileReviews = profileReviewsRes.map((review) => review._id);
+
+      // Insert sample notications to user1
+      const notificationsRes = await UserNotification.insertMany(sampleNotifications);
+      user1Doc.notifications = notificationsRes.map((notification) => notification._id);
 
       // Save the document
       await user1Doc.save();

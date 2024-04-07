@@ -11,9 +11,6 @@ const userNotificationSchema = new mongoose.Schema({
       required: true,
       ref: "User",
    },
-   payload: {
-      type: Object,
-   },
    notificationMessage: {
       type: String,
       required: true,
