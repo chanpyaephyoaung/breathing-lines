@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { UserIcon } from "@heroicons/react/24/outline";
@@ -5,15 +6,47 @@ import { useGetUserProfileQuery } from "../../slices/usersApiSlice.js";
 import UserProfileSubMenu from "../../components/Navbar/UserProfileSubMenu.jsx";
 import LoaderSpinner from "../../components/UI/LoaderSpinner.jsx";
 import Message from "../../components/Typography/Message.jsx";
+import Modal from "../../components/UI/Modal.jsx";
 import { toast } from "react-toastify";
 import { generateLineBreakBtwSentences } from "../../utils/text.jsx";
-import { useSubscribeUserMutation } from "../../slices/usersApiSlice.js";
+import {
+   useSubscribeUserMutation,
+   useGetFollowersOfUserQuery,
+} from "../../slices/usersApiSlice.js";
+import UserBox from "./UserBox.jsx";
 
 const UserProfileHeader = ({ activeNav }) => {
    const { userId } = useParams();
    const { userAccInfo } = useSelector((state) => state.authUser);
+   const [isModalOpen, setIsModalOpen] = useState(false);
+   const [followerFollowingList, setFollowerFollowingList] = useState([]);
+   const [modalDesc, setModalDesc] = useState("");
+   const [isFollowerBtnClicked, setIsFollowerBtnClicked] = useState(false);
 
-   const { data: userProfileDetails, error, isLoading, refetch } = useGetUserProfileQuery(userId);
+   const {
+      data: userProfileDetails,
+      error: fetchingUserProfileDetailsError,
+      isLoading: loadingFetchUserProfileDetails,
+      refetch,
+   } = useGetUserProfileQuery(userId);
+   const { data: userFollowersList, isLoading: loadingFetchFollowersList } =
+      useGetFollowersOfUserQuery(userId);
+
+   const closeModal = () => {
+      setIsModalOpen(false);
+   };
+
+   const openModal = () => {
+      setIsModalOpen(true);
+   };
+
+   const viewFollowersCtaHandler = () => {
+      setFollowerFollowingList(userFollowersList);
+      setIsFollowerBtnClicked(true);
+      setModalDesc("Followers");
+      openModal();
+   };
+
    const [subscribeUser] = useSubscribeUserMutation();
 
    const subscribeUserHandler = async () => {
@@ -28,10 +61,33 @@ const UserProfileHeader = ({ activeNav }) => {
 
    return (
       <>
-         {isLoading ? (
+         <Modal
+            isOpen={isModalOpen}
+            closeModal={closeModal}
+            desc={modalDesc}
+            discardBtnText={null}
+            confirmBtnText={null}
+         >
+            {followerFollowingList?.map((follower) => (
+               <UserBox
+                  key={follower._id}
+                  id={follower._id}
+                  name={follower.name}
+                  img={follower.encodedProfileImg}
+                  onCloseModal={closeModal}
+                  userProfileDetails={userProfileDetails}
+                  refetch={refetch}
+                  isFollowerBtnClicked={isFollowerBtnClicked}
+               />
+            ))}
+         </Modal>
+         {loadingFetchUserProfileDetails || loadingFetchFollowersList ? (
             <LoaderSpinner />
-         ) : error ? (
-            <Message type="danger">{error?.data?.errMessage || error.error}</Message>
+         ) : fetchingUserProfileDetailsError ? (
+            <Message type="danger">
+               {fetchingUserProfileDetailsError?.data?.errMessage ||
+                  fetchingUserProfileDetailsError.error}
+            </Message>
          ) : (
             <>
                <div className="mb-6">
@@ -55,11 +111,17 @@ const UserProfileHeader = ({ activeNav }) => {
                               {userProfileDetails?.targetUser.name}
                            </h2>
                            <p className="flex gap-x-2 text-xs md:text-sm font-light text-clr-black">
-                              <Link className="transition-all hover:text-clr-primary">
+                              <Link
+                                 onClick={viewFollowersCtaHandler}
+                                 className="transition-all hover:text-clr-primary"
+                              >
                                  {userProfileDetails?.targetUser?.followers.length} followers
                               </Link>
                               /
-                              <Link className="transition-all hover:text-clr-primary">
+                              <Link
+                                 onClick={viewFollowersCtaHandler}
+                                 className="transition-all hover:text-clr-primary"
+                              >
                                  {userProfileDetails?.targetUser?.followings.length} followings
                               </Link>
                            </p>

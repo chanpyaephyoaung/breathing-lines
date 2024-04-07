@@ -280,3 +280,32 @@ export const getAllPoemsOfUser = asyncHandler(async (req, res) => {
    }
    res.json(poems);
 });
+
+// @desc    Get user's followers list
+// @route   GET /api/users/user-profile/:userId/followers
+// @access  Private
+export const fetchFollowerList = asyncHandler(async (req, res) => {
+   const targetUser = await User.findById(req.params.userId).populate(
+      "followers",
+      "name profileImg"
+   );
+
+   if (targetUser) {
+      const targetUserFollowersWithEncodedProfileImgs = await Promise.all(
+         targetUser.followers.map(async (follower, i) => {
+            let image = "";
+            if (follower?.profileImg && i === 6) {
+               // Just for testing purpose. Remove the second condition in production
+               const result = await s3RetrieveV3(follower.profileImg);
+               image = await result.Body?.transformToString("base64");
+            }
+            return { ...follower._doc, encodedProfileImg: image };
+         })
+      );
+
+      res.status(200).json(targetUserFollowersWithEncodedProfileImgs);
+   } else {
+      res.status(404);
+      throw new Error("Current user not found!");
+   }
+});
