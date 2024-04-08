@@ -114,4 +114,6 @@ export const {
    useGetPoemsOfUserQuery,
    useGetFollowersOfUserQuery,
    useGetFollowingsOfUserQuery,
+   useGetNotificationsOfUserQuery,
+   useCreateNewNotificationMutation,
 } = usersApiSlice;

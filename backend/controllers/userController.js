@@ -346,7 +346,7 @@ export const getAllNotificationsOfAUser = asyncHandler(async (req, res) => {
    const currentUserId = req.currentUser._id;
    const currentUser = await User.findById(currentUserId).populate({
       path: "notifications",
-      select: "createdBy notificationMessage payload notificationType",
+      select: "createdBy notificationMessage payload notificationType createdAt",
       populate: {
          path: "createdBy",
          select: "name profileImg",
