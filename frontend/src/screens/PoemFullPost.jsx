@@ -214,7 +214,7 @@ const PoemFullPost = () => {
             userAccInfo?._id,
             poem?.author?._id,
             `${userAccInfo?.name} gave your poem "${poem.title}" a rating of ${value}!`,
-            "like"
+            "rate"
          );
 
          // Emitting socket event for rating a poem
