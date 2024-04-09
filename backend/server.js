@@ -108,6 +108,15 @@ io.on("connection", async (socket) => {
          unreadNotiCount,
       });
    });
+
+   // Reviewing poem notification
+   socket.on("sendReviewPoemNotification", ({ unreadNotiCount, author }) => {
+      const targetUser = getUser(author);
+
+      socket.to(targetUser?.socketId).emit("getReviewPoemNotification", {
+         unreadNotiCount,
+      });
+   });
 });
 
 if (process.env.NODE_ENV !== "test") {

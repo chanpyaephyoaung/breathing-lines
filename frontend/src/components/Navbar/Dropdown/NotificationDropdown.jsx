@@ -86,6 +86,10 @@ const NotificationDropdown = ({ socket }) => {
          socket.on("getRatePoemNotification", () => {
             refetch();
          });
+
+         socket.on("getReviewPoemNotification", () => {
+            refetch();
+         });
       }
    }, [socket, refetchGetNotis, refetchUnreadNoti]);
 

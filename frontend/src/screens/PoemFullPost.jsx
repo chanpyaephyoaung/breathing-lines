@@ -233,7 +233,19 @@ const PoemFullPost = () => {
       e.preventDefault();
       try {
          const res = await reviewPoem({ poemId, review: reviewInput }).unwrap();
-         toast(res.message);
+         toast.success(res.message);
+         const unreadNotiCountOfUser = await createNotification(
+            userAccInfo?._id,
+            poem?.author?._id,
+            `${userAccInfo?.name} reviewed your poem "${poem.title}"`,
+            "review"
+         );
+
+         // Emitting socket event for rating a poem
+         socket.emit("sendReviewPoemNotification", {
+            unreadNotiCount: unreadNotiCountOfUser,
+            author: poem?.author?._id,
+         });
          refetch();
          setReviewInput("");
       } catch (err) {
