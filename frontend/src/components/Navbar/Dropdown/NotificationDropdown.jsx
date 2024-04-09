@@ -100,7 +100,7 @@ const NotificationDropdown = () => {
                            )}
                         </Menu.Item>
                      ))
-                     .slice(0, 3)}
+                     .slice(0, 5)}
                </div>
             </Menu.Items>
          </Transition>
