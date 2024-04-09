@@ -97,6 +97,18 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             body: { newNotiData },
          }),
       }),
+      updateUnreadNotiCount: builder.mutation({
+         query: ({ userId, defaultCount = null }) => ({
+            url: `${USERS_URL}/${userId}/notifications/unread`,
+            method: "POST",
+            body: { userId, defaultCount },
+         }),
+      }),
+      getUnreadNotiCount: builder.query({
+         query: (userId) => ({
+            url: `${USERS_URL}/${userId}/notifications/unread`,
+         }),
+      }),
    }),
 });
 
@@ -116,4 +128,6 @@ export const {
    useGetFollowingsOfUserQuery,
    useGetNotificationsOfUserQuery,
    useCreateNewNotificationMutation,
+   useGetUnreadNotiCountQuery,
+   useUpdateUnreadNotiCountMutation,
 } = usersApiSlice;

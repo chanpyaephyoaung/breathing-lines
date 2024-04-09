@@ -20,7 +20,7 @@ const RootLayout = ({ socket }) => {
             showMainNav={showMainNav}
             socket={socket}
          />
-         <Outlet />
+         <Outlet context={socket} />
       </>
    );
 };

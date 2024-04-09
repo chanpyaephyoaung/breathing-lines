@@ -90,6 +90,17 @@ io.on("connection", async (socket) => {
    socket.on("disconnect", () => {
       removeOnlineUser(socket.id);
    });
+
+   socket.on("sendLikePoemNotification", ({ unreadNotiCount, author }) => {
+      console.log(author);
+      const targetUser = getUser(author);
+      console.log("author", targetUser);
+      console.log("unreadNotiCount", unreadNotiCount);
+
+      socket.to(targetUser?.socketId).emit("getLikePoemNotification", {
+         unreadNotiCount,
+      });
+   });
 });
 
 if (process.env.NODE_ENV !== "test") {

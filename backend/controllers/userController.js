@@ -387,6 +387,7 @@ export const createNewNotification = asyncHandler(async (req, res) => {
       notificationMessage,
       payload = null,
       notificationType,
+      createdAt,
    } = req.body.newNotiData;
    const targetUser = await User.findById(receivedBy);
 
@@ -396,6 +397,7 @@ export const createNewNotification = asyncHandler(async (req, res) => {
       notificationMessage,
       payload,
       notificationType,
+      createdAt,
    });
 
    const savedNoti = await newNoti.save();
@@ -405,4 +407,32 @@ export const createNewNotification = asyncHandler(async (req, res) => {
    await targetUser.save();
 
    res.status(201).json(savedNoti);
+});
+
+// @desc    Increase unread notification count of a user
+// @route   POST /api/users/:userId/notifications/unread
+// @access  Private
+export const updateUnreadNotiCount = asyncHandler(async (req, res) => {
+   const { defaultCount, userId } = req.body;
+   const targetUser = await User.findById(userId);
+
+   if (defaultCount === 0) {
+      targetUser.unreadNotificationsCount = defaultCount;
+   } else {
+      targetUser.unreadNotificationsCount += 1;
+   }
+
+   await targetUser.save();
+
+   res.status(201).json(targetUser.unreadNotificationsCount);
+});
+
+// @desc    Retrieve unread notifications count of a user
+// @route   GET /api/users/:userId/notifications/unread
+// @access  Private
+export const getUnreadNotiCount = asyncHandler(async (req, res) => {
+   const userId = req.currentUser._id;
+   const targetUser = await User.findById(userId);
+
+   res.status(200).json(targetUser.unreadNotificationsCount);
 });

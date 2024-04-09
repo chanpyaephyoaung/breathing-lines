@@ -14,6 +14,8 @@ import {
    fetchFollowingsList,
    getAllNotificationsOfAUser,
    createNewNotification,
+   getUnreadNotiCount,
+   updateUnreadNotiCount,
 } from "../controllers/userController.js";
 import { protectRoutes } from "../middleware/authMiddleware.js";
 
@@ -34,6 +36,8 @@ router.get("/user-profile/:userId/poems/:status", protectRoutes, getAllPoemsOfUs
 router.get("/user-profile/:userId/followers", protectRoutes, fetchFollowerList);
 router.get("/user-profile/:userId/followings", protectRoutes, fetchFollowingsList);
 router.post("/:userId/notifications/new", protectRoutes, createNewNotification);
+router.get("/:userId/notifications/unread", protectRoutes, getUnreadNotiCount);
+router.post("/:userId/notifications/unread", protectRoutes, updateUnreadNotiCount);
 router.get("/:userId/notifications/", protectRoutes, getAllNotificationsOfAUser);
 
 export default router;

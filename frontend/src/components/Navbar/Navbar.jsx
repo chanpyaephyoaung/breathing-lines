@@ -4,7 +4,7 @@ import { Bars3Icon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outlin
 import UserDropdown from "./Dropdown/UserDropdown.jsx";
 import NotificationDropdown from "./Dropdown/NotificationDropdown.jsx";
 
-const Navbar = ({ onShowMainNav }) => {
+const Navbar = ({ onShowMainNav, socket }) => {
    const { userAccInfo } = useSelector((state) => state.authUser);
 
    const handleMainNavClick = (e) => {
@@ -30,7 +30,7 @@ const Navbar = ({ onShowMainNav }) => {
             <div className="justify-self-end flex gap-3 items-center">
                {userAccInfo ? (
                   <>
-                     <NotificationDropdown />
+                     <NotificationDropdown socket={socket} />
 
                      <UserDropdown />
                   </>

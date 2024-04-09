@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import {
@@ -15,14 +15,14 @@ import {
    ChatBubbleLeftRightIcon as SolidChatBubbleLeftRightIcon,
    SparklesIcon as SolidSparklesIcon,
 } from "@heroicons/react/24/solid";
-import { useGetSinglePoemByIdQuery } from "../../../slices/poemsApiSlice.js";
-import Container from "../../UI/Container.jsx";
-import CommentBox from "../../User/CommentBox.jsx";
-import LoaderSpinner from "../../UI/LoaderSpinner.jsx";
-import Message from "../../Typography/Message.jsx";
+import { useGetSinglePoemByIdQuery } from "../slices/poemsApiSlice.js";
+import Container from "../components/UI/Container.jsx";
+import CommentBox from "../components/User/CommentBox.jsx";
+import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
+import Message from "../components/Typography/Message.jsx";
 import Rating from "react-rating";
-import Modal from "../../UI/Modal.jsx";
-import ToggleSwitch from "../../UI/ToggleSwitch.jsx";
+import Modal from "../components/UI/Modal.jsx";
+import ToggleSwitch from "../components/UI/ToggleSwitch.jsx";
 import { toast } from "react-toastify";
 import {
    useLikePoemMutation,
@@ -30,16 +30,19 @@ import {
    useReviewPoemMutation,
    useDeletePoemMutation,
    useChangePoemStatusMutation,
-} from "../../../slices/poemsApiSlice.js";
+} from "../slices/poemsApiSlice.js";
 import {
    useGetCollectionsOfUserQuery,
    useAddPoemToCollectionMutation,
-} from "../../../slices/collectionApiSlice.js";
-import { useCreateNewNotificationMutation } from "../../../slices/usersApiSlice.js";
-import { useIncreaseProfileViewCountMutation } from "../../../slices/usersApiSlice.js";
-import { calculateAverage } from "../../../utils/math.js";
-import { POEM_WRITE_STATUS_DRAFT, POEM_WRITE_STATUS_PUBLISH } from "../../../constants.js";
-import AddToCollectionComboBox from "../../Collection/AddToCollectionComboBox.jsx";
+} from "../slices/collectionApiSlice.js";
+import {
+   useCreateNewNotificationMutation,
+   useUpdateUnreadNotiCountMutation,
+} from "../slices/usersApiSlice.js";
+import { useIncreaseProfileViewCountMutation } from "../slices/usersApiSlice.js";
+import { calculateAverage } from "../utils/math.js";
+import { POEM_WRITE_STATUS_DRAFT, POEM_WRITE_STATUS_PUBLISH } from "../constants.js";
+import AddToCollectionComboBox from "../components/Collection/AddToCollectionComboBox.jsx";
 
 const emptyStarIcon = (
    <StarIcon className="transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] cursor-pointer" />
@@ -58,6 +61,7 @@ const dummyReview = {
 };
 
 const PoemFullPost = () => {
+   const socket = useOutletContext();
    const navigate = useNavigate();
    const { userAccInfo } = useSelector((state) => state.authUser);
 
@@ -84,6 +88,7 @@ const PoemFullPost = () => {
       useAddPoemToCollectionMutation();
    const [changePoemStatus, { isLoading: loadingChangePoemStatus }] = useChangePoemStatusMutation();
    const [createNewNotification] = useCreateNewNotificationMutation();
+   const [updateUnreadNotiCount] = useUpdateUnreadNotiCountMutation();
    const { data: collections } = useGetCollectionsOfUserQuery(userAccInfo._id);
 
    const isCurrentUserTheAuthor = userAccInfo?._id.toString() === poem?.author._id.toString();
@@ -170,8 +175,15 @@ const PoemFullPost = () => {
                   receivedBy: poem.author._id,
                   notificationMessage: `${userAccInfo.name} liked your poem "${poem.title}"`,
                   notificationType: "like",
+                  createdAt: new Date(),
                },
             });
+            const unreadNotiCount = await updateUnreadNotiCount({
+               userId: poem.author._id,
+            }).unwrap();
+
+            // Emitting socket event
+            socket.emit("sendLikePoemNotification", { unreadNotiCount, author: poem?.author?._id });
          }
          refetch();
       } catch (err) {

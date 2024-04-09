@@ -16,7 +16,7 @@ import ErrorPage from "./screens/ErrorPage.jsx";
 import WritePoemPage from "./screens/WritePoemPage.jsx";
 import SignInPage from "./screens/SignInPage.jsx";
 import SignUpPage from "./screens/SignUpPage.jsx";
-import PoemFullPost from "./components/Poems/PoemFullPost/PoemFullPost.jsx";
+import PoemFullPost from "./screens/PoemFullPost.jsx";
 import ProtectedComponent from "./components/UI/ProtectedComponent.jsx";
 import PrivateComponent from "./components/UI/PrivateComponent.jsx";
 import UserProfilePage from "./screens/UserProfilePage.jsx";

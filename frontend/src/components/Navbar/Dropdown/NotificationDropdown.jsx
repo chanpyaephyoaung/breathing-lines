@@ -1,8 +1,13 @@
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { BellIcon } from "@heroicons/react/24/outline";
-import { useGetNotificationsOfUserQuery } from "../../../slices/usersApiSlice";
+import {
+   useGetNotificationsOfUserQuery,
+   useGetUnreadNotiCountQuery,
+   useUpdateUnreadNotiCountMutation,
+} from "../../../slices/usersApiSlice";
 import TimeAgo from "javascript-time-ago";
 
 // English.
@@ -41,18 +46,53 @@ const timeAgo = new TimeAgo("en-US");
 //    },
 // ];
 
-const NotificationDropdown = () => {
-   const { userAccInfo } = useSelector((state) => state.authUser);
+let firstLoaded = false;
 
-   const { data: notifications } = useGetNotificationsOfUserQuery(userAccInfo?._id);
-   console.log(notifications);
+const NotificationDropdown = ({ socket }) => {
+   const { userAccInfo } = useSelector((state) => state.authUser);
+   const [unreadNotiCountOfUser, setUnreadNotiCountOfUser] = useState("");
+   const [updateUnreadNotiCount] = useUpdateUnreadNotiCountMutation();
+
+   const { data: notifications, refetch: refetchGetNotis } = useGetNotificationsOfUserQuery(
+      userAccInfo?._id
+   );
+   const { data: unreadNotificationCount, refetch: refetchUnreadNoti } = useGetUnreadNotiCountQuery(
+      userAccInfo?._id
+   );
+
+   console.log("notifications", unreadNotiCountOfUser);
+
+   const notiIconHandler = async () => {
+      await updateUnreadNotiCount({
+         userId: userAccInfo._id,
+         defaultCount: 0,
+      }).unwrap();
+      refetchUnreadNoti();
+   };
+
+   useEffect(() => {
+      if (!firstLoaded) {
+         firstLoaded = true;
+
+         socket.on("getLikePoemNotification", ({ unreadNotiCount }) => {
+            console.log("unreadNotiCount", unreadNotiCount);
+            refetchGetNotis();
+            refetchUnreadNoti();
+         });
+      }
+   }, [socket, refetchGetNotis, unreadNotificationCount, refetchUnreadNoti]);
 
    return (
       <Menu as="div" className="relative inline-block text-left z-40">
-         <div className="grid items-center">
+         <div onClick={notiIconHandler} className="grid items-center relative">
             <Menu.Button className="inline-flex w-full justify-center rounded-md ">
                <BellIcon className="transition-all w-6 md:w-8 text-clr-black hover:text-clr-primary stroke-1" />
             </Menu.Button>
+            {(unreadNotificationCount || unreadNotificationCount !== 0) && (
+               <span className="absolute -top-2 -right-2 w-6 h-6 grid place-items-center text-sm text-clr-white bg-clr-primary rounded-full">
+                  {unreadNotificationCount}
+               </span>
+            )}
          </div>
          <Transition
             as={Fragment}

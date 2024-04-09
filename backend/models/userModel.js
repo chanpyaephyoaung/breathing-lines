@@ -77,6 +77,11 @@ const userSchema = new mongoose.Schema({
          ref: "UserNotification",
       },
    ],
+   unreadNotificationsCount: {
+      type: Number,
+      required: true,
+      default: 0,
+   },
 });
 
 userSchema.methods.comparePassword = async function (inputPassword) {
