@@ -71,16 +71,23 @@ const NotificationDropdown = ({ socket }) => {
    };
 
    useEffect(() => {
+      const refetch = () => {
+         refetchGetNotis();
+         refetchUnreadNoti();
+      };
+
       if (!firstLoaded) {
          firstLoaded = true;
 
-         socket.on("getLikePoemNotification", ({ unreadNotiCount }) => {
-            console.log("unreadNotiCount", unreadNotiCount);
-            refetchGetNotis();
-            refetchUnreadNoti();
+         socket.on("getLikePoemNotification", () => {
+            refetch();
+         });
+
+         socket.on("getRatePoemNotification", () => {
+            refetch();
          });
       }
-   }, [socket, refetchGetNotis, unreadNotificationCount, refetchUnreadNoti]);
+   }, [socket, refetchGetNotis, refetchUnreadNoti]);
 
    return (
       <Menu as="div" className="relative inline-block text-left z-40">

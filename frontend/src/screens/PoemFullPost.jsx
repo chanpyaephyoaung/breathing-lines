@@ -127,6 +127,21 @@ const PoemFullPost = () => {
       openModal();
    };
 
+   const createNotification = async (currentUserId, targetUserId, notiMessage, notiType) => {
+      await createNewNotification({
+         userId: currentUserId,
+         newNotiData: {
+            createdBy: currentUserId,
+            receivedBy: targetUserId,
+            notificationMessage: notiMessage,
+            notificationType: notiType,
+            createdAt: new Date(),
+         },
+      });
+      return await updateUnreadNotiCount({
+         userId: poem.author._id,
+      }).unwrap();
+   };
    // Modal Handler Funcs
    const modalSuccessFuncHandler = async () => {
       try {
@@ -168,22 +183,18 @@ const PoemFullPost = () => {
          setIsLiked((prevState) => !prevState);
          await likePoem(poemId);
          if (!isLiked) {
-            await createNewNotification({
-               userId: userAccInfo._id,
-               newNotiData: {
-                  createdBy: userAccInfo._id,
-                  receivedBy: poem.author._id,
-                  notificationMessage: `${userAccInfo.name} liked your poem "${poem.title}"`,
-                  notificationType: "like",
-                  createdAt: new Date(),
-               },
-            });
-            const unreadNotiCount = await updateUnreadNotiCount({
-               userId: poem.author._id,
-            }).unwrap();
+            const unreadNotiCountOfUser = await createNotification(
+               userAccInfo?._id,
+               poem?.author?._id,
+               `${userAccInfo?.name} liked your poem "${poem?.title}!"`,
+               "like"
+            );
 
-            // Emitting socket event
-            socket.emit("sendLikePoemNotification", { unreadNotiCount, author: poem?.author?._id });
+            // Emitting socket event for liking a poem
+            socket.emit("sendLikePoemNotification", {
+               unreadNotiCount: unreadNotiCountOfUser,
+               author: poem?.author?._id,
+            });
          }
          refetch();
       } catch (err) {
@@ -198,6 +209,19 @@ const PoemFullPost = () => {
          // Calculating average rating
          setAverageRating(calculateAverage(poem.ratings.map((rating) => rating.rating)));
          await ratePoem({ poemId, rating: value });
+
+         const unreadNotiCountOfUser = await createNotification(
+            userAccInfo?._id,
+            poem?.author?._id,
+            `${userAccInfo?.name} gave your poem "${poem.title}" a rating of ${value}!`,
+            "like"
+         );
+
+         // Emitting socket event for rating a poem
+         socket.emit("sendRatePoemNotification", {
+            unreadNotiCount: unreadNotiCountOfUser,
+            author: poem?.author?._id,
+         });
          refetch();
       } catch (err) {
          toast(err?.data?.errMessage || err.error);

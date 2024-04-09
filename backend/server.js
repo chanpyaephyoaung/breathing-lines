@@ -91,13 +91,20 @@ io.on("connection", async (socket) => {
       removeOnlineUser(socket.id);
    });
 
+   // Liking poem notification
    socket.on("sendLikePoemNotification", ({ unreadNotiCount, author }) => {
-      console.log(author);
       const targetUser = getUser(author);
-      console.log("author", targetUser);
-      console.log("unreadNotiCount", unreadNotiCount);
 
       socket.to(targetUser?.socketId).emit("getLikePoemNotification", {
+         unreadNotiCount,
+      });
+   });
+
+   // Rating poem notification
+   socket.on("sendRatePoemNotification", ({ unreadNotiCount, author }) => {
+      const targetUser = getUser(author);
+
+      socket.to(targetUser?.socketId).emit("getRatePoemNotification", {
          unreadNotiCount,
       });
    });
