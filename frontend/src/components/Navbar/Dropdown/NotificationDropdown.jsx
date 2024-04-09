@@ -70,35 +70,37 @@ const NotificationDropdown = () => {
                         No notifications yet!
                      </p>
                   )}
-                  {notifications?.map((data) => (
-                     /* Use the `active` state to conditionally style the active item. */
-                     <Menu.Item key={data.id} as={Fragment}>
-                        {({ active }) => (
-                           <a
-                              href=" "
-                              className={`${
-                                 active ? "bg-clr-primary text-clr-white" : "text-clr-black"
-                              } group grid gap-x-2 grid-cols-[1fr_5fr] grid-rows-[2fr_1fr] w-full items-center rounded-md px-2 py-2 text-sm`}
-                           >
-                              <img
-                                 src={data.encodedProfileImg}
-                                 className="rounded-full w-9 h-10 md:w-10 md:h-10 object-cover row-span-2 self-start"
-                                 alt=""
-                              />
-                              <p className="col-start-2 text-xs md:text-sm font-normal line-clamp-2">
-                                 {data.notificationMessage}
-                              </p>
-                              <span
-                                 className={`col-start-2 row-start-2 text-2xs md:text-xs ${
-                                    active ? "text-clr-white" : "text-clr-black-faded"
-                                 }`}
+                  {notifications
+                     ?.map((data) => (
+                        /* Use the `active` state to conditionally style the active item. */
+                        <Menu.Item key={data.id} as={Fragment}>
+                           {({ active }) => (
+                              <a
+                                 href=" "
+                                 className={`${
+                                    active ? "bg-clr-primary text-clr-white" : "text-clr-black"
+                                 } group grid gap-x-2 grid-cols-[1fr_5fr] grid-rows-[2fr_1fr] w-full items-center rounded-md px-2 py-2 text-sm`}
                               >
-                                 {timeAgo.format(new Date(data.createdAt))}
-                              </span>
-                           </a>
-                        )}
-                     </Menu.Item>
-                  ))}
+                                 <img
+                                    src={data.encodedProfileImg}
+                                    className="rounded-full w-9 h-10 md:w-10 md:h-10 object-cover row-span-2 self-start"
+                                    alt=""
+                                 />
+                                 <p className="col-start-2 text-xs md:text-sm font-normal line-clamp-2">
+                                    {data.notificationMessage}
+                                 </p>
+                                 <span
+                                    className={`col-start-2 row-start-2 text-2xs md:text-xs ${
+                                       active ? "text-clr-white" : "text-clr-black-faded"
+                                    }`}
+                                 >
+                                    {timeAgo.format(new Date(data.createdAt))}
+                                 </span>
+                              </a>
+                           )}
+                        </Menu.Item>
+                     ))
+                     .slice(0, 3)}
                </div>
             </Menu.Items>
          </Transition>
