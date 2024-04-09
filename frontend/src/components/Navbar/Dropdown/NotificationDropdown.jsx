@@ -65,6 +65,11 @@ const NotificationDropdown = () => {
          >
             <Menu.Items className="absolute right-0 mt-2 w-60 md:w-80 origin-top-right rounded-md bg-white shadow-lg border border-1 border-clr-black">
                <div className="p-2">
+                  {notifications?.length === 0 && (
+                     <p className="text-clr-primary text-xs md:text-sm text-center font-normal line-clamp-2 py-2">
+                        No notifications yet!
+                     </p>
+                  )}
                   {notifications?.map((data) => (
                      /* Use the `active` state to conditionally style the active item. */
                      <Menu.Item key={data.id} as={Fragment}>

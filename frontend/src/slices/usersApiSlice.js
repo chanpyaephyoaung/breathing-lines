@@ -91,10 +91,10 @@ export const usersApiSlice = apiSlice.injectEndpoints({
          }),
       }),
       createNewNotification: builder.mutation({
-         query: (userId, newNotiData) => ({
+         query: ({ userId, newNotiData }) => ({
             url: `${USERS_URL}/${userId}/notifications/new`,
             method: "POST",
-            body: newNotiData,
+            body: { newNotiData },
          }),
       }),
    }),

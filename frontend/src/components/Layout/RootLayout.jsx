@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Outlet } from "react-router";
 import MainNav from "../Navbar/MainNav.jsx";
-import Modal from "../UI/Modal.jsx";
 
-const RootLayout = () => {
+const RootLayout = ({ socket }) => {
    const [showMainNav, setShowMainNav] = useState(false);
 
    const showMainNavHandler = () => {
@@ -19,6 +18,7 @@ const RootLayout = () => {
             onShowMainNav={showMainNavHandler}
             onHideMainNav={hideMainNavHandler}
             showMainNav={showMainNav}
+            socket={socket}
          />
          <Outlet />
       </>

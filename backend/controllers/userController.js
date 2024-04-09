@@ -365,7 +365,12 @@ export const getAllNotificationsOfAUser = asyncHandler(async (req, res) => {
             return { ...user._doc, encodedProfileImg: image };
          })
       );
-      res.status(200).json(currentUserNotiWithEncodedProfileImgs);
+
+      // Sort the notifications by placing latest first in the first index
+      const sortedNotiByDate = currentUserNotiWithEncodedProfileImgs.sort(
+         (a, b) => b.createdAt - a.createdAt
+      );
+      res.status(200).json(sortedNotiByDate);
    } else {
       res.status(404);
       throw new Error("Current user not found!");
@@ -376,7 +381,13 @@ export const getAllNotificationsOfAUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users/:userId/notifications/new
 // @access  Private
 export const createNewNotification = asyncHandler(async (req, res) => {
-   const { createdBy, receivedBy, notificationMessage, payload, notificationType } = req.body;
+   const {
+      createdBy,
+      receivedBy,
+      notificationMessage,
+      payload = null,
+      notificationType,
+   } = req.body.newNotiData;
    const targetUser = await User.findById(receivedBy);
 
    const newNoti = new UserNotification({

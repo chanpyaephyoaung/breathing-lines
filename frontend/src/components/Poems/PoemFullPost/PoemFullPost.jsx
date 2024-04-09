@@ -35,6 +35,7 @@ import {
    useGetCollectionsOfUserQuery,
    useAddPoemToCollectionMutation,
 } from "../../../slices/collectionApiSlice.js";
+import { useCreateNewNotificationMutation } from "../../../slices/usersApiSlice.js";
 import { useIncreaseProfileViewCountMutation } from "../../../slices/usersApiSlice.js";
 import { calculateAverage } from "../../../utils/math.js";
 import { POEM_WRITE_STATUS_DRAFT, POEM_WRITE_STATUS_PUBLISH } from "../../../constants.js";
@@ -82,6 +83,7 @@ const PoemFullPost = () => {
    const [addPoemToCollection, { isLoading: loadingAddPoemToCollection }] =
       useAddPoemToCollectionMutation();
    const [changePoemStatus, { isLoading: loadingChangePoemStatus }] = useChangePoemStatusMutation();
+   const [createNewNotification] = useCreateNewNotificationMutation();
    const { data: collections } = useGetCollectionsOfUserQuery(userAccInfo._id);
 
    const isCurrentUserTheAuthor = userAccInfo?._id.toString() === poem?.author._id.toString();
@@ -160,6 +162,17 @@ const PoemFullPost = () => {
       try {
          setIsLiked((prevState) => !prevState);
          await likePoem(poemId);
+         if (!isLiked) {
+            await createNewNotification({
+               userId: userAccInfo._id,
+               newNotiData: {
+                  createdBy: userAccInfo._id,
+                  receivedBy: poem.author._id,
+                  notificationMessage: `${userAccInfo.name} liked your poem "${poem.title}"`,
+                  notificationType: "like",
+               },
+            });
+         }
          refetch();
       } catch (err) {
          toast(err?.data?.errMessage || err.error);
