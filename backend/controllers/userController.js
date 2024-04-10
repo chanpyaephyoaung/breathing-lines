@@ -266,19 +266,13 @@ export const subscribeUser = asyncHandler(async (req, res) => {
 // @route   GET /api/user-profile/:userId/poems/:status
 // @access  Private
 export const getAllPoemsOfUser = asyncHandler(async (req, res) => {
-   const currentUserId = req.currentUser._id;
-   const { status } = req.params;
+   const { userId } = req.params;
+   const status = req.params.status || "published";
    let poems = [];
    if (status === "drafted") {
-      poems = await Poem.find({ author: currentUserId, status: "drafted" }).populate(
-         "author",
-         "name"
-      );
+      poems = await Poem.find({ author: userId, status: "drafted" }).populate("author", "name");
    } else if (status === "published") {
-      poems = await Poem.find({ author: currentUserId, status: "published" }).populate(
-         "author",
-         "name"
-      );
+      poems = await Poem.find({ author: userId, status: "published" }).populate("author", "name");
    }
    res.json(poems);
 });
