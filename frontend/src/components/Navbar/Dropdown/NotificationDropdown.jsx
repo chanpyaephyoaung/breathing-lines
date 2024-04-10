@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
@@ -16,41 +16,10 @@ import en from "javascript-time-ago/locale/en";
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
 
-// const dummyData = [
-//    {
-//       id: 1,
-//       otherUser: "Rose",
-//       userProfileImg:
-//          "https://images.pexels.com/photos/2681751/pexels-photo-2681751.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-//       action: "liked",
-//       targetPoem: "Whispers of the wind",
-//       time: "1 hr ago",
-//    },
-//    {
-//       id: 2,
-//       otherUser: "Rose",
-//       userProfileImg:
-//          "https://images.pexels.com/photos/2681751/pexels-photo-2681751.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-//       action: "commented",
-//       targetPoem: "Whispers of the wind",
-//       time: "1 hr ago",
-//    },
-//    {
-//       id: 3,
-//       otherUser: "Rose",
-//       userProfileImg:
-//          "https://images.pexels.com/photos/2681751/pexels-photo-2681751.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-//       action: "liked",
-//       targetPoem: "Whispers of another wind",
-//       time: "1 day ago",
-//    },
-// ];
-
 let firstLoaded = false;
 
 const NotificationDropdown = ({ socket }) => {
    const { userAccInfo } = useSelector((state) => state.authUser);
-   const [unreadNotiCountOfUser, setUnreadNotiCountOfUser] = useState("");
    const [updateUnreadNotiCount] = useUpdateUnreadNotiCountMutation();
 
    const { data: notifications, refetch: refetchGetNotis } = useGetNotificationsOfUserQuery(
@@ -59,8 +28,6 @@ const NotificationDropdown = ({ socket }) => {
    const { data: unreadNotificationCount, refetch: refetchUnreadNoti } = useGetUnreadNotiCountQuery(
       userAccInfo?._id
    );
-
-   console.log("notifications", unreadNotiCountOfUser);
 
    const notiIconHandler = async () => {
       await updateUnreadNotiCount({
@@ -88,6 +55,11 @@ const NotificationDropdown = ({ socket }) => {
          });
 
          socket.on("getReviewPoemNotification", () => {
+            refetch();
+         });
+
+         socket.on("getFollowUserNotification", () => {
+            console.log("Followed");
             refetch();
          });
       }

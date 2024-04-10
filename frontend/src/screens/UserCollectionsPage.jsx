@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UserProfileHeader from "../components/User/UserProfileHeader.jsx";
 import Container from "../components/UI/Container.jsx";
@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import CollectionBox from "../components/Collection/CollectionBox.jsx";
 
 const UserCollectionsPage = () => {
+   const socket = useOutletContext();
    const { userId } = useParams();
    const activeNav = USER_PROFILE_SUB_MENU_LINKS[2].activeNavPathIdentifier;
    const [isModalOpen, setIsModalOpen] = useState(false);
@@ -99,7 +100,7 @@ const UserCollectionsPage = () => {
          ) : (
             <Container>
                <>
-                  <UserProfileHeader activeNav={activeNav} />
+                  <UserProfileHeader activeNav={activeNav} socket={socket} />
                   <div className="grid">
                      {isTargetUserTheCurrentUser && (
                         <button

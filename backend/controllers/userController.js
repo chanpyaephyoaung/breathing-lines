@@ -212,8 +212,8 @@ export const increaseViewCount = asyncHandler(async (req, res) => {
    }
 });
 
-// @desc    Increase a user views count
-// @route   PUT /api/users/:userId/view
+// @desc    Subscribe to a user (Follow/Unfollow)
+// @route   PUT /api/users//:userId/subscribe
 // @access  Private
 export const subscribeUser = asyncHandler(async (req, res) => {
    const targetUserId = req.params.userId;
@@ -243,7 +243,9 @@ export const subscribeUser = asyncHandler(async (req, res) => {
 
          await targetUser.save();
          await currentUser.save();
-         res.status(200).json({ message: `You have now unfollowed ${targetUser.name}.` });
+         res.status(200).json({
+            message: `You have now unfollowed ${targetUser.name}.`,
+         });
       } else {
          // Add the current user to the target user's followers array
          targetUser.followers.push(currentUserId);

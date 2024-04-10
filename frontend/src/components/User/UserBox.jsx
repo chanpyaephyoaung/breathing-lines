@@ -1,20 +1,61 @@
 import { Link } from "react-router-dom";
-import { useSubscribeUserMutation } from "../../slices/usersApiSlice.js";
+import { useSelector } from "react-redux";
+import {
+   useSubscribeUserMutation,
+   useCreateNewNotificationMutation,
+   useUpdateUnreadNotiCountMutation,
+} from "../../slices/usersApiSlice.js";
 import { toast } from "react-toastify";
 
 const UserBox = ({
-   id,
+   id: targetUserId,
    name,
    img,
    onCloseModal,
    userProfileDetails,
    isFollowerBtnClicked,
    onRefetch,
+   socket,
 }) => {
+   const { userAccInfo } = useSelector((state) => state.authUser);
    const [subscribeUser] = useSubscribeUserMutation();
+   const [createNewNotification] = useCreateNewNotificationMutation();
+   const [updateUnreadNotiCount] = useUpdateUnreadNotiCountMutation();
+
+   // Create a notification
+   const createNotification = async (currentUserId, targetUserId, notiMessage, notiType) => {
+      await createNewNotification({
+         userId: currentUserId,
+         newNotiData: {
+            createdBy: currentUserId,
+            receivedBy: targetUserId,
+            notificationMessage: notiMessage,
+            notificationType: notiType,
+            createdAt: new Date(),
+         },
+      });
+      return await updateUnreadNotiCount({
+         userId: targetUserId,
+      }).unwrap();
+   };
+
    const subscribeUserHandler = async () => {
       try {
-         const res = await subscribeUser(id).unwrap();
+         const res = await subscribeUser(targetUserId).unwrap();
+         if (!userProfileDetails?.targetUser?.followings.includes(targetUserId)) {
+            const unreadNotiCountOfUser = await createNotification(
+               userAccInfo?._id,
+               targetUserId,
+               `${userAccInfo?.name} started following you!`,
+               "follow"
+            );
+
+            // Emitting socket event for following a user
+            socket.emit("sendFollowUserNotification", {
+               unreadNotiCount: unreadNotiCountOfUser,
+               targetUserId: targetUserId,
+            });
+         }
          onRefetch();
          toast(res.message);
       } catch (err) {
@@ -42,7 +83,7 @@ const UserBox = ({
             <div className="grid justify-items-start">
                <Link
                   onClick={closeModal}
-                  to={`/user-profile/${id}`}
+                  to={`/user-profile/${targetUserId}`}
                   className="transition-all text-clr-black hover:text-clr-primary font-regular text-xs md:text-base cursor-pointer"
                >
                   {name}
@@ -54,10 +95,10 @@ const UserBox = ({
                className="justify-self-end text-xs py-2 px-4 md:text-sm md:py-2 text-clr-primary font-medium border border-clr-primary rounded-lg hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
             >
                {isFollowerBtnClicked
-                  ? userProfileDetails?.targetUser?.followings.includes(id)
+                  ? userProfileDetails?.targetUser?.followings.includes(targetUserId)
                      ? " Unfollow"
                      : "Follow"
-                  : userProfileDetails?.targetUser?.followers.includes(id)
+                  : userProfileDetails?.targetUser?.followers.includes(targetUserId)
                   ? " Unfollow"
                   : "Follow"}
             </button>

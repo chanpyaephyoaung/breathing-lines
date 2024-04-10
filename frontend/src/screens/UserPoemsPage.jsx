@@ -1,18 +1,19 @@
 import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useParams, useOutletContext } from "react-router-dom";
 import Container from "../components/UI/Container";
 import UserProfileHeader from "../components/User/UserProfileHeader.jsx";
 import BorderBox from "../components/UI/BorderBox.jsx";
 import { USER_PROFILE_SUB_MENU_LINKS } from "../constants.js";
 
 const UserPoemsPage = () => {
+   const socket = useOutletContext();
    const { userId } = useParams();
    const activeNav = USER_PROFILE_SUB_MENU_LINKS[1].activeNavPathIdentifier;
 
    return (
       <Container>
          <>
-            <UserProfileHeader activeNav={activeNav} />
+            <UserProfileHeader activeNav={activeNav} socket={socket} />
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-x-10">
                <div>
                   <BorderBox>

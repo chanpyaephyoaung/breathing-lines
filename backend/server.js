@@ -91,7 +91,7 @@ io.on("connection", async (socket) => {
       removeOnlineUser(socket.id);
    });
 
-   // Liking poem notification
+   // Liking a poem notification
    socket.on("sendLikePoemNotification", ({ unreadNotiCount, author }) => {
       const targetUser = getUser(author);
 
@@ -100,7 +100,7 @@ io.on("connection", async (socket) => {
       });
    });
 
-   // Rating poem notification
+   // Rating a poem notification
    socket.on("sendRatePoemNotification", ({ unreadNotiCount, author }) => {
       const targetUser = getUser(author);
 
@@ -109,11 +109,20 @@ io.on("connection", async (socket) => {
       });
    });
 
-   // Reviewing poem notification
+   // Reviewing a poem notification
    socket.on("sendReviewPoemNotification", ({ unreadNotiCount, author }) => {
       const targetUser = getUser(author);
 
       socket.to(targetUser?.socketId).emit("getReviewPoemNotification", {
+         unreadNotiCount,
+      });
+   });
+
+   // Followiing a user notification
+   socket.on("sendFollowUserNotification", ({ unreadNotiCount, targetUserId }) => {
+      const targetUser = getUser(targetUserId);
+
+      socket.to(targetUser?.socketId).emit("getFollowUserNotification", {
          unreadNotiCount,
       });
    });

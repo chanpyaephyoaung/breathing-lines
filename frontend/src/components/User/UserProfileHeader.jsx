@@ -13,16 +13,20 @@ import {
    useSubscribeUserMutation,
    useGetFollowersOfUserQuery,
    useGetFollowingsOfUserQuery,
+   useCreateNewNotificationMutation,
+   useUpdateUnreadNotiCountMutation,
 } from "../../slices/usersApiSlice.js";
 import UserBox from "./UserBox.jsx";
 
-const UserProfileHeader = ({ activeNav }) => {
+const UserProfileHeader = ({ activeNav, socket }) => {
    const { userId } = useParams();
    const { userAccInfo } = useSelector((state) => state.authUser);
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [followerFollowingList, setFollowerFollowingList] = useState([]);
    const [modalDesc, setModalDesc] = useState("");
    const [isFollowerBtnClicked, setIsFollowerBtnClicked] = useState(false);
+   const [createNewNotification] = useCreateNewNotificationMutation();
+   const [updateUnreadNotiCount] = useUpdateUnreadNotiCountMutation();
 
    const {
       data: userProfileDetails,
@@ -42,8 +46,6 @@ const UserProfileHeader = ({ activeNav }) => {
       refetch: refetchFollowingsList,
    } = useGetFollowingsOfUserQuery(userId);
 
-   console.log(userFollowingsList);
-
    const refetchAll = () => {
       refetchFetchUserProfileDetails();
       refetchFollowersList();
@@ -56,6 +58,23 @@ const UserProfileHeader = ({ activeNav }) => {
 
    const openModal = () => {
       setIsModalOpen(true);
+   };
+
+   // Create a notification
+   const createNotification = async (currentUserId, targetUserId, notiMessage, notiType) => {
+      await createNewNotification({
+         userId: currentUserId,
+         newNotiData: {
+            createdBy: currentUserId,
+            receivedBy: targetUserId,
+            notificationMessage: notiMessage,
+            notificationType: notiType,
+            createdAt: new Date(),
+         },
+      });
+      return await updateUnreadNotiCount({
+         userId: targetUserId,
+      }).unwrap();
    };
 
    const viewFollowersCtaHandler = () => {
@@ -78,7 +97,22 @@ const UserProfileHeader = ({ activeNav }) => {
       try {
          const res = await subscribeUser(userId).unwrap();
          toast(res.message);
-         refetchFetchUserProfileDetails();
+
+         if (!userProfileDetails?.targetUser?.followers.includes(userAccInfo._id)) {
+            const unreadNotiCountOfUser = await createNotification(
+               userAccInfo?._id,
+               userId,
+               `${userAccInfo?.name} started following you!`,
+               "follow"
+            );
+
+            // Emitting socket event for following a user
+            socket.emit("sendFollowUserNotification", {
+               unreadNotiCount: unreadNotiCountOfUser,
+               targetUserId: userId,
+            });
+         }
+         refetchAll();
       } catch (err) {
          toast(err?.data?.errMessage || err.error);
       }
@@ -93,16 +127,17 @@ const UserProfileHeader = ({ activeNav }) => {
             discardBtnText={null}
             confirmBtnText={null}
          >
-            {followerFollowingList?.map((follower) => (
+            {followerFollowingList?.map((followingFollowing) => (
                <UserBox
-                  key={follower._id}
-                  id={follower._id}
-                  name={follower.name}
-                  img={follower.encodedProfileImg}
+                  key={followingFollowing._id}
+                  id={followingFollowing._id}
+                  name={followingFollowing.name}
+                  img={followingFollowing.encodedProfileImg}
                   onCloseModal={closeModal}
                   userProfileDetails={userProfileDetails}
                   onRefetch={refetchAll}
                   isFollowerBtnClicked={isFollowerBtnClicked}
+                  socket={socket}
                />
             ))}
          </Modal>

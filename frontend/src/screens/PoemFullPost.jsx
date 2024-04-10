@@ -127,6 +127,7 @@ const PoemFullPost = () => {
       openModal();
    };
 
+   // Create a notification
    const createNotification = async (currentUserId, targetUserId, notiMessage, notiType) => {
       await createNewNotification({
          userId: currentUserId,
@@ -139,9 +140,10 @@ const PoemFullPost = () => {
          },
       });
       return await updateUnreadNotiCount({
-         userId: poem.author._id,
+         userId: targetUserId,
       }).unwrap();
    };
+
    // Modal Handler Funcs
    const modalSuccessFuncHandler = async () => {
       try {
