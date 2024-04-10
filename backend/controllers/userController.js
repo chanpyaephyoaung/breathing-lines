@@ -273,8 +273,29 @@ export const getAllPoemsOfUser = asyncHandler(async (req, res) => {
       poems = await Poem.find({ author: userId, status: "drafted" }).populate("author", "name");
    } else if (status === "published") {
       poems = await Poem.find({ author: userId, status: "published" }).populate("author", "name");
+   } else if (status === "favorites") {
+      const userObj = await User.findById(userId).populate({
+         path: "favoritedPoems",
+         select: "title content author genres coverImg publishedAt status viewsCount",
+         populate: {
+            path: "author",
+            select: "name profileImg",
+         },
+      });
+      poems = userObj.favoritedPoems;
    }
-   res.json(poems);
+   const poemsWithEncodedCoverImg = await Promise.all(
+      poems.map(async (poem, i) => {
+         let image = "";
+         if (poem?.coverImg && i === 6) {
+            // Just for testing purpose. Remove the second condition in production
+            const result = await s3RetrieveV3(poem.coverImg);
+            image = await result.Body?.transformToString("base64");
+         }
+         return { ...poem._doc, encodedCoverImg: image };
+      })
+   );
+   res.json(poemsWithEncodedCoverImg);
 });
 
 // @desc    Get user's followers list

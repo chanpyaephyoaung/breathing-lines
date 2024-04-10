@@ -161,8 +161,11 @@ export const deletePoem = asyncHandler(async (req, res) => {
 export const likePoem = asyncHandler(async (req, res) => {
    const poemId = req.params.poemId;
 
-   // Retreive the poem
+   // Retrieve the current poem
    const poem = await Poem.findById(poemId);
+
+   // Retrieve the current user
+   const currentUser = await User.findById(req.currentUser._id);
 
    if (poem) {
       const alreadyLiked = poem.likes.find(
@@ -174,6 +177,9 @@ export const likePoem = asyncHandler(async (req, res) => {
          poem.likesCount += 1;
          // Add the user to the likes array
          poem.likes.push(req.currentUser._id);
+
+         // Add the poem to the user's favoritedPoems field
+         currentUser.favoritedPoems.push(poemId);
       } else {
          // Decrease the likes count
          poem.likesCount -= 1;
@@ -181,10 +187,18 @@ export const likePoem = asyncHandler(async (req, res) => {
          poem.likes = poem.likes.filter(
             (user) => user.toString() !== req.currentUser._id.toString()
          );
+
+         // Remove the poem from the user's favoritedPoems field
+         currentUser.favoritedPoems = currentUser.favoritedPoems.filter(
+            (poem) => poem.toString() !== poemId
+         );
       }
 
       // Save updated poem
       const updatedPoem = await poem.save();
+      // Save updated user
+      await currentUser.save();
+
       res.status(200).json(updatedPoem);
    } else {
       res.status(404);

@@ -42,6 +42,13 @@ const userSchema = new mongoose.Schema({
          ref: "Poem",
       },
    ],
+   favoritedPoems: [
+      {
+         type: mongoose.Schema.Types.ObjectId,
+         required: true,
+         ref: "Poem",
+      },
+   ],
    collections: [
       {
          type: mongoose.Schema.Types.ObjectId,

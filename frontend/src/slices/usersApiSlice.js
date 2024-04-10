@@ -72,7 +72,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       getPoemsOfUser: builder.query({
          query: ({ userId, status }) => ({
-            url: `${USERS_URL}/user-profile/${userId}/poems/${status || "published"}`,
+            url: `${USERS_URL}/user-profile/${userId}/poems/${status}`,
          }),
       }),
       getFollowersOfUser: builder.query({

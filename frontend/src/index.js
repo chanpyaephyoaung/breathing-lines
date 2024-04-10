@@ -27,6 +27,7 @@ import UserPoemsListPage from "./screens/UserPoemsListPage.jsx";
 import PoemEditPage from "./screens/PoemEditPage.jsx";
 import UserCollectionsPage from "./screens/UserCollectionsPage.jsx";
 import CollectionPage from "./screens/CollectionPage.jsx";
+import UserFavoritedPoemsPage from "./screens/UserFavoritedPoemsPage.jsx";
 
 const router = createBrowserRouter(
    createRoutesFromElements(
@@ -46,6 +47,7 @@ const router = createBrowserRouter(
                element={<CollectionPage />}
             />
             <Route path="/user-profile/:userId/collections" element={<UserCollectionsPage />} />
+            <Route path="/user-profile/:userId/favorites" element={<UserFavoritedPoemsPage />} />
             <Route path="" element={<PrivateComponent />}>
                <Route path="/user-profile/:userId/update" element={<UserProfileUpdatePage />} />
                <Route path="/user-profile/:userId/poems/:status" element={<UserPoemsListPage />} />

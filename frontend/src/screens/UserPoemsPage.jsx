@@ -17,7 +17,11 @@ const UserPoemsPage = () => {
 
    const isCurrentUserTheAuthor = userAccInfo._id.toString() === userId.toString();
 
-   const { data: poems, isLoading, error, refetch } = useGetPoemsOfUserQuery({ userId });
+   const {
+      data: poems,
+      isLoading,
+      error,
+   } = useGetPoemsOfUserQuery({ userId, status: "published" });
 
    const activeNav = USER_PROFILE_SUB_MENU_LINKS[1].activeNavPathIdentifier;
 
@@ -61,11 +65,17 @@ const UserPoemsPage = () => {
                      </div>
                   </>
                ) : isLoading ? (
-                  <LoaderSpinner />
+                  <div className="col-span-2">
+                     <LoaderSpinner />
+                  </div>
                ) : error ? (
-                  <Message type="danger">{error?.data?.errMessage || error.error}</Message>
+                  <div className="col-span-2">
+                     <Message type="danger">{error?.data?.errMessage || error.error}</Message>
+                  </div>
                ) : (
-                  <PoemPreviewPosts poems={poems} />
+                  <div className="col-span-2">
+                     <PoemPreviewPosts poems={poems} />
+                  </div>
                )}
             </div>
          </>
