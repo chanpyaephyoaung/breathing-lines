@@ -129,6 +129,9 @@ const PoemFullPost = () => {
 
    // Create a notification
    const createNotification = async (currentUserId, targetUserId, notiMessage, notiType) => {
+      // Do not create a notification if the current user is the target userr(e.g. author)
+      if (currentUserId.toString() === targetUserId.toString()) return;
+
       await createNewNotification({
          userId: currentUserId,
          newNotiData: {
