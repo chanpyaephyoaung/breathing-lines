@@ -59,7 +59,10 @@ const NotificationDropdown = ({ socket }) => {
          });
 
          socket.on("getFollowUserNotification", () => {
-            console.log("Followed");
+            refetch();
+         });
+
+         socket.on("getProfileReviewNotification", () => {
             refetch();
          });
       }

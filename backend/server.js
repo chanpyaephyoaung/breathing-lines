@@ -126,6 +126,15 @@ io.on("connection", async (socket) => {
          unreadNotiCount,
       });
    });
+
+   // Leaving a profile review on a user notification
+   socket.on("sendProfileReviewNotification", ({ unreadNotiCount, targetUserId }) => {
+      const targetUser = getUser(targetUserId);
+
+      socket.to(targetUser?.socketId).emit("getProfileReviewNotification", {
+         unreadNotiCount,
+      });
+   });
 });
 
 if (process.env.NODE_ENV !== "test") {

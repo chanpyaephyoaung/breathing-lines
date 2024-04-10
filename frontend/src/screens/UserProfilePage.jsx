@@ -10,7 +10,11 @@ import CommentBox from "../components/User/CommentBox.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
 import Message from "../components/Typography/Message.jsx";
 import { toast } from "react-toastify";
-import { useCreateAuthorProfileReviewMutation } from "../slices/usersApiSlice.js";
+import {
+   useCreateAuthorProfileReviewMutation,
+   useCreateNewNotificationMutation,
+   useUpdateUnreadNotiCountMutation,
+} from "../slices/usersApiSlice.js";
 
 const UserProfilePage = () => {
    const socket = useOutletContext();
@@ -22,11 +26,45 @@ const UserProfilePage = () => {
    const { data: userProfileDetails, error, isLoading, refetch } = useGetUserProfileQuery(userId);
    const [createProfileReview] = useCreateAuthorProfileReviewMutation();
 
+   const [createNewNotification] = useCreateNewNotificationMutation();
+   const [updateUnreadNotiCount] = useUpdateUnreadNotiCountMutation();
+
+   // Create a notification
+   const createNotification = async (currentUserId, targetUserId, notiMessage, notiType) => {
+      await createNewNotification({
+         userId: currentUserId,
+         newNotiData: {
+            createdBy: currentUserId,
+            receivedBy: targetUserId,
+            notificationMessage: notiMessage,
+            notificationType: notiType,
+            createdAt: new Date(),
+         },
+      });
+      return await updateUnreadNotiCount({
+         userId: targetUserId,
+      }).unwrap();
+   };
+
    const createProfileReviewSubmitHandler = async (e) => {
       e.preventDefault();
       try {
          const res = await createProfileReview({ userId, review }).unwrap();
          toast(res.message);
+
+         const unreadNotiCountOfUser = await createNotification(
+            userAccInfo?._id,
+            userId,
+            `${userAccInfo?.name} left a review on your profile. Check it out!`,
+            "profileReview"
+         );
+
+         // Emitting socket event for following a user
+         socket.emit("sendProfileReviewNotification", {
+            unreadNotiCount: unreadNotiCountOfUser,
+            targetUserId: userId,
+         });
+
          refetch();
          setReview("");
       } catch (err) {
