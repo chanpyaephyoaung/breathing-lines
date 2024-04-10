@@ -16,6 +16,7 @@ const PoemPreviewPosts = ({
                   publishedAt={poem.publishedAt}
                   viewsCount={poem.viewsCount}
                   coverImg={poem.coverImg}
+                  bgTheme={poem.bgTheme}
                   title={poem.title}
                   author={poem.author}
                   content={poem.content}

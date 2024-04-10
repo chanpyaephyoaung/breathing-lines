@@ -79,13 +79,14 @@ export const getSinglePoemById = asyncHandler(async (req, res) => {
 // @route   POST /api/poems/write
 // @access  Private
 export const writePoem = asyncHandler(async (req, res) => {
-   const { title, content, coverImg, status, genres } = req.body;
+   const { title, content, bgTheme, coverImg, status, genres } = req.body;
 
    const newPoem = new Poem({
       title,
       content,
       author: req.currentUser._id,
       coverImg,
+      bgTheme,
       status,
       genres,
    });
@@ -112,6 +113,7 @@ export const editPoem = asyncHandler(async (req, res) => {
       currentPoem.content = req.body.newPoemData.content || currentPoem.content;
       currentPoem.coverImg = req.body.newPoemData.coverImg || currentPoem.coverImg;
       currentPoem.genres = req.body.newPoemData.genres || currentPoem.genres;
+      currentPoem.bgTheme = req.body.newPoemData.bgTheme || currentPoem.bgTheme || "";
 
       const updatedCurrentPoem = await currentPoem.save();
 

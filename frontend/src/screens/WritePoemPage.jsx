@@ -13,6 +13,8 @@ import {
    useUploadPoemCoverImageMutation,
 } from "../slices/poemsApiSlice.js";
 import { toast } from "react-toastify";
+import SelectListBox from "../components/UI/SelectListBox.jsx";
+import { bgThemes } from "../constants.js";
 
 const WritePoemPage = () => {
    const navigate = useNavigate();
@@ -21,6 +23,11 @@ const WritePoemPage = () => {
    const [content, setContent] = useState("");
    const [coverImg, setCoverImg] = useState("");
    const [genres, setGenres] = useState("");
+   const [selectedBgTheme, setSelectedBgTheme] = useState(bgThemes[0]);
+
+   const onChangeSelectedBgTheme = (bgTheme) => {
+      setSelectedBgTheme(bgTheme);
+   };
 
    const [uploadPoemCoverImage, { isLoading: loadingUploadPoemCoverImage }] =
       useUploadPoemCoverImageMutation();
@@ -52,10 +59,12 @@ const WritePoemPage = () => {
          return;
       } else {
          try {
+            console.log(selectedBgTheme);
             const newPoem = {
                title,
                content,
                coverImg: coverImg || "",
+               bgTheme: selectedBgTheme,
                genres: genres.split(","),
                status,
             };
@@ -136,6 +145,18 @@ const WritePoemPage = () => {
                      />
                   </div>
                </div>
+            </div>
+
+            <div className="grid gap-y-2 text-left">
+               <span className="sr-only">Background Pattern Theme</span>
+               <label htmlFor="about" className="block text-base font-medium">
+                  Background Pattern Theme
+               </label>
+
+               <SelectListBox
+                  selectedBgTheme={selectedBgTheme}
+                  onChangeSelectedBgTheme={onChangeSelectedBgTheme}
+               />
             </div>
 
             <label className="relative text-xs grid justify-items-start gap-y-2">

@@ -7,9 +7,7 @@ import { MinusCircleIcon } from "@heroicons/react/24/outline";
 import Modal from "../../UI/Modal.jsx";
 import { toast } from "react-toastify";
 import TimeAgo from "javascript-time-ago";
-import en from "javascript-time-ago/locale/en";
 
-TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
 
 const PoemPreviewPost = ({
@@ -17,6 +15,7 @@ const PoemPreviewPost = ({
    publishedAt,
    viewsCount,
    coverImg,
+   bgTheme,
    title,
    author,
    content,
@@ -75,11 +74,18 @@ const PoemPreviewPost = ({
                successFunc={ctaHandler}
             />
          )}
-         <div className="relative grid gap-2 p-3 md:p-5 border border-clr-black">
+         <div className="relative overflow-y-hidden grid gap-2 p-3 md:p-5 border border-clr-black">
             {isCurrentUserTheCollectionOwner && (
                <MinusCircleIcon
                   onClick={openModal}
                   className={`absolute -right-6 md:-right-10 w-[17px] md:w-[25px] stroke-[2] text-clr-primary cursor-pointer`}
+               />
+            )}
+            {bgTheme && (
+               <img
+                  className="absolute top-0 left-0 -z-10 w-full overflow-y-hidden opacity-20"
+                  src={bgTheme.path}
+                  alt="sprinkle pattern"
                />
             )}
             <div className="text-2xs md:text-xs w-full flex justify-between">

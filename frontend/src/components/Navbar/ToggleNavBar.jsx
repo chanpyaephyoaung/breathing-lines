@@ -8,8 +8,8 @@ const ToggleNavBar = ({ onHideMainNav, showMainNav }) => {
 
    return (
       <div
-         className={`transition-all ${
-            showMainNav ? "opacity-100 visible z-[100]" : "opacity-0 invisible"
+         className={`transition-all z-50 ${
+            showMainNav ? "opacity-100 visible" : "opacity-0 invisible"
          } w-full h-screen overflow-hidden bg-clr-bg fixed top-0 left-0`}
       >
          <a onClick={handleMainNavClick} href=" ">

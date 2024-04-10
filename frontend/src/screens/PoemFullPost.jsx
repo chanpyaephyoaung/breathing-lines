@@ -320,103 +320,114 @@ const PoemFullPost = () => {
             </Container>
          ) : (
             <Container>
-               <div className="w-4/5 max-w-[450px] grid justify-items-start mx-auto gap-y-6 text-clr-black mb-8">
-                  {isCurrentUserTheAuthor && (
-                     <>
-                        <div className="w-full flex justify-between">
-                           <div className="transition-all text-clr-black cursor-pointer hover:text-clr-primary hover:stroke-clr-primary">
-                              <Link
-                                 to={`/user/${poem.author._id}/poem/${poemId}/edit`}
-                                 className="flex items-center gap-x-2 text-xs md:text-sm font-regular"
-                              >
-                                 <PencilSquareIcon className={`w-[15px] md:w-[20px] stroke-[1]`} />
-                                 Edit
-                              </Link>
-                           </div>
-
-                           <div className="transition-all text-clr-black cursor-pointer hover:text-clr-primary hover:stroke-clr-primary">
-                              <Link
-                                 onClick={deleteBtnHandler}
-                                 className="flex items-center gap-x-2 text-xs md:text-sm font-regular"
-                              >
-                                 <TrashIcon className={`w-[15px] md:w-[20px] stroke-[1]`} />
-                                 Delete
-                              </Link>
-                           </div>
-                        </div>
-                        <div className="w-full border-t border-clr-black-light -mt-2"></div>
-                     </>
-                  )}
-                  <div className="w-full grid grid-cols-[1fr_35px] md:grid-cols-[1fr_45px]">
-                     <div className="grid gap-y-1 text-left grid-start-1">
-                        <h2 className="text-lg md:text-2xl font-semibold break-words leading-7">
-                           {poem?.title}
-                        </h2>
-                        <Link
-                           to={`/user-profile/${poem.author._id}`}
-                           onClick={increaseProfileViewsCountHandler}
-                           className="text-clr-black text-xs md:text-sm font-regular"
-                        >
-                           By{" "}
-                           <span className="transition-all hover:text-clr-primary">
-                              {poem?.author.name}
-                           </span>
-                        </Link>
-                     </div>
-                     {userAccInfo && poem?.status !== POEM_WRITE_STATUS_DRAFT && (
-                        <div className="grid-start-2">
-                           <HeartIcon
-                              onClick={likePoemHandler}
-                              className={`transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] ${
-                                 isLiked ? "fill-clr-primary text-clr-black stroke-0" : ""
-                              } cursor-pointer hover:stroke-clr-primary hover:fill-clr-primary`}
-                           />
-                        </div>
-                     )}
-                  </div>
-                  {poem.coverImg && (
-                     <img
-                        className="w-full max-h-[350px] h-65 object-cover border border-1 border-clr-black"
-                        src={
-                           poem.encodedCoverImg
-                              ? `data:image/jpeg;base64,${poem.encodedCoverImg}`
-                              : poem?.coverImg
-                        }
-                        alt={`${poem?.title} cover image`}
-                     />
-                  )}
-                  <p className="text-xs md:text-base font-light whitespace-pre-line">
-                     {poem?.content}
-                  </p>
-                  <p className="text-2xs md:text-xs text-clr-black font-light">
-                     {poem?.publishedAt}
-                  </p>
-                  <div className="flex gap-2 items-center">
-                     <TagIcon className="w-4 md:w-5 text-clr-black-faded" />
-                     <p className="text-2xs md:text-xs text-clr-black font-light">
-                        {poem?.genres.join(", ")}
-                     </p>
-                  </div>
-                  <div className="w-full flex flex-col items-start gap-y-4 md:flex-row md:items-center md:justify-between">
-                     {userAccInfo && poem?.status !== POEM_WRITE_STATUS_DRAFT && (
-                        <div className="flex">
-                           <button
-                              type="button"
-                              onClick={addPoemToCollectionBtnHandler}
-                              className="justify-self-start text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
-                           >
-                              &#43; Add to collection
-                           </button>
-                        </div>
+               <div className="w-full relative overflow-y-hidden">
+                  <div className="w-4/5 max-w-[450px] grid justify-items-start mx-auto gap-y-6 text-clr-black mb-8">
+                     {poem.bgTheme && (
+                        <img
+                           className="absolute top-0 left-0 -z-10 w-full overflow-y-hidden opacity-20"
+                           src={poem.bgTheme.path}
+                           alt="sprinkle pattern"
+                        />
                      )}
                      {isCurrentUserTheAuthor && (
-                        <div
-                           onClick={changePoemStatusBtnHandler}
-                           className="pl-5 md:pl-0 md:ml-auto"
-                        >
-                           <ToggleSwitch label="Published" enabled={poemStatusSwitchEnabled} />
-                        </div>
+                        <>
+                           <div className="w-full flex justify-between">
+                              <div className="transition-all text-clr-black cursor-pointer hover:text-clr-primary hover:stroke-clr-primary">
+                                 <Link
+                                    to={`/user/${poem.author._id}/poem/${poemId}/edit`}
+                                    className="flex items-center gap-x-2 text-xs md:text-sm font-regular"
+                                 >
+                                    <PencilSquareIcon
+                                       className={`w-[15px] md:w-[20px] stroke-[1]`}
+                                    />
+                                    Edit
+                                 </Link>
+                              </div>
+
+                              <div className="transition-all text-clr-black cursor-pointer hover:text-clr-primary hover:stroke-clr-primary">
+                                 <Link
+                                    onClick={deleteBtnHandler}
+                                    className="flex items-center gap-x-2 text-xs md:text-sm font-regular"
+                                 >
+                                    <TrashIcon className={`w-[15px] md:w-[20px] stroke-[1]`} />
+                                    Delete
+                                 </Link>
+                              </div>
+                           </div>
+                           <div className="w-full border-t border-clr-black-light -mt-2"></div>
+                        </>
                      )}
+                     <div className="w-full grid grid-cols-[1fr_35px] md:grid-cols-[1fr_45px]">
+                        <div className="grid gap-y-1 text-left grid-start-1">
+                           <h2 className="text-lg md:text-2xl font-semibold break-words leading-7">
+                              {poem?.title}
+                           </h2>
+                           <Link
+                              to={`/user-profile/${poem.author._id}`}
+                              onClick={increaseProfileViewsCountHandler}
+                              className="text-clr-black text-xs md:text-sm font-regular"
+                           >
+                              By{" "}
+                              <span className="transition-all hover:text-clr-primary">
+                                 {poem?.author.name}
+                              </span>
+                           </Link>
+                        </div>
+                        {userAccInfo && poem?.status !== POEM_WRITE_STATUS_DRAFT && (
+                           <div className="grid-start-2">
+                              <HeartIcon
+                                 onClick={likePoemHandler}
+                                 className={`transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] ${
+                                    isLiked ? "fill-clr-primary text-clr-black stroke-0" : ""
+                                 } cursor-pointer hover:stroke-clr-primary hover:fill-clr-primary`}
+                              />
+                           </div>
+                        )}
+                     </div>
+                     {poem.coverImg && (
+                        <img
+                           className="w-full max-h-[350px] h-65 object-cover border border-1 border-clr-black"
+                           src={
+                              poem.encodedCoverImg
+                                 ? `data:image/jpeg;base64,${poem.encodedCoverImg}`
+                                 : poem?.coverImg
+                           }
+                           alt={`${poem?.title} cover image`}
+                        />
+                     )}
+                     <p className="text-xs md:text-base font-light whitespace-pre-line">
+                        {poem?.content}
+                     </p>
+                     <p className="text-2xs md:text-xs text-clr-black font-light">
+                        {poem?.publishedAt}
+                     </p>
+                     <div className="flex gap-2 items-center">
+                        <TagIcon className="w-4 md:w-5 text-clr-black-faded" />
+                        <p className="text-2xs md:text-xs text-clr-black font-light">
+                           {poem?.genres.join(", ")}
+                        </p>
+                     </div>
+                     <div className="w-full flex flex-col items-start gap-y-4 md:flex-row md:items-center md:justify-between">
+                        {userAccInfo && poem?.status !== POEM_WRITE_STATUS_DRAFT && (
+                           <div className="flex">
+                              <button
+                                 type="button"
+                                 onClick={addPoemToCollectionBtnHandler}
+                                 className="justify-self-start text-sm py-3 px-5 md:text-base text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
+                              >
+                                 &#43; Add to collection
+                              </button>
+                           </div>
+                        )}
+                        {isCurrentUserTheAuthor && (
+                           <div
+                              onClick={changePoemStatusBtnHandler}
+                              className="pl-5 md:pl-0 md:ml-auto"
+                           >
+                              <ToggleSwitch label="Published" enabled={poemStatusSwitchEnabled} />
+                           </div>
+                        )}
+                     </div>
                   </div>
                </div>
 

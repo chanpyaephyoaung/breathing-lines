@@ -10,9 +10,7 @@ import {
 } from "../../../slices/usersApiSlice";
 import TimeAgo from "javascript-time-ago";
 
-// English.
 import en from "javascript-time-ago/locale/en";
-import LoaderSpinner from "../../UI/LoaderSpinner";
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
@@ -21,7 +19,6 @@ let firstLoaded = false;
 
 const NotificationDropdown = ({ socket }) => {
    const [unreadNotiCountState, setUnreadNotiCountState] = useState(0);
-   console.log("Hello from NotificationDropdown component");
    const { userAccInfo } = useSelector((state) => state.authUser);
    const [updateUnreadNotiCount] = useUpdateUnreadNotiCountMutation();
 
@@ -52,27 +49,22 @@ const NotificationDropdown = ({ socket }) => {
          firstLoaded = true;
          socket.on("getLikePoemNotification", ({ unreadNotiCount }) => {
             setUnreadNotiCountState(unreadNotiCount);
-            console.log(unreadNotiCount);
          });
 
          socket.on("getRatePoemNotification", ({ unreadNotiCount }) => {
             setUnreadNotiCountState(unreadNotiCount);
-            console.log(unreadNotiCount);
          });
 
          socket.on("getReviewPoemNotification", ({ unreadNotiCount }) => {
             setUnreadNotiCountState(unreadNotiCount);
-            console.log(unreadNotiCount);
          });
 
          socket.on("getFollowUserNotification", ({ unreadNotiCount }) => {
             setUnreadNotiCountState(unreadNotiCount);
-            console.log(unreadNotiCount);
          });
 
          socket.on("getProfileReviewNotification", ({ unreadNotiCount }) => {
             setUnreadNotiCountState(unreadNotiCount);
-            console.log(unreadNotiCount);
          });
       }
    }, [socket]);

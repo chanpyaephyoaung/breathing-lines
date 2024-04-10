@@ -21,8 +21,8 @@ const poemSchema = new mongoose.Schema({
    coverImg: {
       type: String,
    },
-   backgroundTheme: {
-      type: String,
+   bgTheme: {
+      type: Object,
    },
    publishedAt: {
       type: Date,
