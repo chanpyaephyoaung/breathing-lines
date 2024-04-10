@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
@@ -12,6 +12,7 @@ import TimeAgo from "javascript-time-ago";
 
 // English.
 import en from "javascript-time-ago/locale/en";
+import LoaderSpinner from "../../UI/LoaderSpinner";
 
 TimeAgo.addDefaultLocale(en);
 const timeAgo = new TimeAgo("en-US");
@@ -19,54 +20,62 @@ const timeAgo = new TimeAgo("en-US");
 let firstLoaded = false;
 
 const NotificationDropdown = ({ socket }) => {
+   const [unreadNotiCountState, setUnreadNotiCountState] = useState(0);
+   console.log("Hello from NotificationDropdown component");
    const { userAccInfo } = useSelector((state) => state.authUser);
    const [updateUnreadNotiCount] = useUpdateUnreadNotiCountMutation();
 
    const { data: notifications, refetch: refetchGetNotis } = useGetNotificationsOfUserQuery(
       userAccInfo?._id
    );
-   const { data: unreadNotificationCount, refetch: refetchUnreadNoti } = useGetUnreadNotiCountQuery(
-      userAccInfo?._id
-   );
+   const { data: fetchedUnreadNotiCount, refetch: refetchUnreadNotiCount } =
+      useGetUnreadNotiCountQuery(userAccInfo?._id);
 
    const notiIconHandler = async () => {
+      refetchGetNotis();
       await updateUnreadNotiCount({
          userId: userAccInfo._id,
          defaultCount: 0,
       }).unwrap();
-      refetchUnreadNoti();
+      setUnreadNotiCountState(0);
    };
 
    useEffect(() => {
-      const refetch = () => {
-         refetchGetNotis();
-         refetchUnreadNoti();
-      };
+      refetchUnreadNotiCount();
+      if (fetchedUnreadNotiCount) {
+         setUnreadNotiCountState(fetchedUnreadNotiCount);
+      }
+   }, [fetchedUnreadNotiCount, refetchUnreadNotiCount]);
 
+   useEffect(() => {
       if (!firstLoaded) {
          firstLoaded = true;
-
-         socket.on("getLikePoemNotification", () => {
-            refetch();
+         socket.on("getLikePoemNotification", ({ unreadNotiCount }) => {
+            setUnreadNotiCountState(unreadNotiCount);
+            console.log(unreadNotiCount);
          });
 
-         socket.on("getRatePoemNotification", () => {
-            refetch();
+         socket.on("getRatePoemNotification", ({ unreadNotiCount }) => {
+            setUnreadNotiCountState(unreadNotiCount);
+            console.log(unreadNotiCount);
          });
 
-         socket.on("getReviewPoemNotification", () => {
-            refetch();
+         socket.on("getReviewPoemNotification", ({ unreadNotiCount }) => {
+            setUnreadNotiCountState(unreadNotiCount);
+            console.log(unreadNotiCount);
          });
 
-         socket.on("getFollowUserNotification", () => {
-            refetch();
+         socket.on("getFollowUserNotification", ({ unreadNotiCount }) => {
+            setUnreadNotiCountState(unreadNotiCount);
+            console.log(unreadNotiCount);
          });
 
-         socket.on("getProfileReviewNotification", () => {
-            refetch();
+         socket.on("getProfileReviewNotification", ({ unreadNotiCount }) => {
+            setUnreadNotiCountState(unreadNotiCount);
+            console.log(unreadNotiCount);
          });
       }
-   }, [socket, refetchGetNotis, refetchUnreadNoti]);
+   }, [socket]);
 
    return (
       <Menu as="div" className="relative inline-block text-left z-40">
@@ -74,9 +83,9 @@ const NotificationDropdown = ({ socket }) => {
             <Menu.Button className="inline-flex w-full justify-center rounded-md ">
                <BellIcon className="transition-all w-6 md:w-8 text-clr-black hover:text-clr-primary stroke-1" />
             </Menu.Button>
-            {(unreadNotificationCount || unreadNotificationCount !== 0) && (
+            {(unreadNotiCountState || unreadNotiCountState !== 0) && (
                <span className="absolute -top-2 -right-2 w-6 h-6 grid place-items-center text-sm text-clr-white bg-clr-primary rounded-full">
-                  {unreadNotificationCount}
+                  {unreadNotiCountState}
                </span>
             )}
          </div>
