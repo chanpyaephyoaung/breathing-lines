@@ -24,7 +24,6 @@ const PoemPreviewPost = ({
    loadingRemovePoemFromCollection,
    isCurrentUserTheCollectionOwner,
 }) => {
-   console.log(isCurrentUserTheCollectionOwner);
    const [isModalOpen, setIsModalOpen] = useState(false);
 
    const [increasePoemViewCount] = useIncreasePoemViewCountMutation();
@@ -81,11 +80,11 @@ const PoemPreviewPost = ({
                   className={`absolute -right-6 md:-right-10 w-[17px] md:w-[25px] stroke-[2] text-clr-primary cursor-pointer`}
                />
             )}
-            {bgTheme && (
+            {bgTheme?.id !== 1 && (
                <img
                   className="absolute top-0 left-0 -z-10 w-full overflow-y-hidden opacity-20"
-                  src={bgTheme.path}
-                  alt="sprinkle pattern"
+                  src={bgTheme?.path}
+                  alt={bgTheme?.name}
                />
             )}
             <div className="text-2xs md:text-xs w-full flex justify-between">

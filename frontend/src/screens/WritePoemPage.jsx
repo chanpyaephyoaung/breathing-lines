@@ -59,7 +59,6 @@ const WritePoemPage = () => {
          return;
       } else {
          try {
-            console.log(selectedBgTheme);
             const newPoem = {
                title,
                content,

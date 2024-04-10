@@ -322,7 +322,7 @@ const PoemFullPost = () => {
             <Container>
                <div className="w-full relative overflow-y-hidden">
                   <div className="w-4/5 max-w-[450px] grid justify-items-start mx-auto gap-y-6 text-clr-black mb-8">
-                     {poem.bgTheme && (
+                     {poem?.bgTheme?.id !== 1 && (
                         <img
                            className="absolute top-0 left-0 -z-10 w-full overflow-y-hidden opacity-20"
                            src={poem.bgTheme.path}

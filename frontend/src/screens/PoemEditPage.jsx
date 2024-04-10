@@ -11,6 +11,8 @@ import {
 import { toast } from "react-toastify";
 import Message from "../components/Typography/Message.jsx";
 import Modal from "../components/UI/Modal.jsx";
+import SelectListBox from "../components/UI/SelectListBox.jsx";
+import { bgThemes } from "../constants.js";
 
 const PoemEditPage = () => {
    const { poemId } = useParams();
@@ -23,6 +25,11 @@ const PoemEditPage = () => {
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [ctaType, setCtaType] = useState("");
    const [modalDesc, setModalDesc] = useState("");
+   const [selectedBgTheme, setSelectedBgTheme] = useState(bgThemes[0]);
+
+   const onChangeSelectedBgTheme = (bgTheme) => {
+      setSelectedBgTheme(bgTheme);
+   };
 
    const closeModal = () => {
       setIsModalOpen(false);
@@ -52,6 +59,7 @@ const PoemEditPage = () => {
             const newPoemData = {
                title,
                content,
+               bgTheme: selectedBgTheme,
                coverImg,
                genres,
             };
@@ -87,6 +95,7 @@ const PoemEditPage = () => {
          setContent(poem?.content);
          setCoverImg(poem?.coverImg);
          setGenres(poem?.genres);
+         setSelectedBgTheme(poem?.bgTheme);
       }
    }, [poem]);
 
@@ -187,6 +196,18 @@ const PoemEditPage = () => {
                               />
                            </div>
                         </div>
+                     </div>
+
+                     <div className="grid gap-y-2 text-left">
+                        <span className="sr-only">Background Pattern Theme</span>
+                        <label htmlFor="about" className="block text-base font-medium">
+                           Background Pattern Theme
+                        </label>
+
+                        <SelectListBox
+                           selectedBgTheme={selectedBgTheme}
+                           onChangeSelectedBgTheme={onChangeSelectedBgTheme}
+                        />
                      </div>
 
                      <label className="relative text-xs grid justify-items-start gap-y-2">
