@@ -13,7 +13,7 @@ const PoemPreviewPosts = ({
                <PoemPreviewPost
                   key={poem._id}
                   poemId={poem._id}
-                  datePosted={poem.datePosted}
+                  publishedAt={poem.publishedAt}
                   viewsCount={poem.viewsCount}
                   coverImg={poem.coverImg}
                   title={poem.title}

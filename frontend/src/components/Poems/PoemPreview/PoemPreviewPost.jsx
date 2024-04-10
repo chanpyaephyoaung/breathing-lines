@@ -6,10 +6,15 @@ import { useIncreaseProfileViewCountMutation } from "../../../slices/usersApiSli
 import { MinusCircleIcon } from "@heroicons/react/24/outline";
 import Modal from "../../UI/Modal.jsx";
 import { toast } from "react-toastify";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+
+TimeAgo.addDefaultLocale(en);
+const timeAgo = new TimeAgo("en-US");
 
 const PoemPreviewPost = ({
    poemId,
-   datePosted,
+   publishedAt,
    viewsCount,
    coverImg,
    title,
@@ -78,7 +83,7 @@ const PoemPreviewPost = ({
                />
             )}
             <div className="text-2xs md:text-xs w-full flex justify-between">
-               <span>{datePosted}</span>
+               <span>{timeAgo.format(new Date(publishedAt))}</span>
                <span className="flex gap-1">
                   <svg
                      xmlns="http://www.w3.org/2000/svg"
