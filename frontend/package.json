@@ -43,6 +43,7 @@
    },
    "devDependencies": {
       "javascript-time-ago": "^2.5.9",
+      "react-infinite-scroll-component": "^6.1.0",
       "tailwindcss": "^3.3.5"
    }
 }

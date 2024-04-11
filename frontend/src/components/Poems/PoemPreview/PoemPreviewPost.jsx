@@ -33,7 +33,7 @@ const PoemPreviewPost = ({
 
    const viewAuthorProfileHandler = async () => {
       try {
-         navigate(`/user-profile/${author._id}`);
+         // navigate(`/user-profile/${author._id}`);
          await increaseProfileViewCount(author._id);
       } catch (err) {
          toast(err?.data?.errMessage || err.error);
@@ -42,7 +42,7 @@ const PoemPreviewPost = ({
 
    const viewMoreHandler = async () => {
       try {
-         navigate(`/poem/${poemId}`);
+         // navigate(`/poem/${poemId}`);
          await increasePoemViewCount(poemId);
       } catch (err) {
          toast(err?.data?.errMessage || err.error);
@@ -124,6 +124,7 @@ const PoemPreviewPost = ({
             <div className="grid -gap-1">
                <Link
                   onClick={viewMoreHandler}
+                  to={`/poem/${poemId}`}
                   className="transition-all block text-base md:text-xl font-medium hover:text-clr-primary"
                >
                   {title}
@@ -148,7 +149,7 @@ const PoemPreviewPost = ({
 
             <Link
                onClick={viewMoreHandler}
-               preventScrollReset={true}
+               to={`/poem/${poemId}`}
                className="transition-all justify-self-start text-xs font-light md:text-base text-clr-black-faded hover:text-clr-primary inline-block underline"
             >
                Breathe more
