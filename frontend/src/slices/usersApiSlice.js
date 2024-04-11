@@ -109,6 +109,12 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             url: `${USERS_URL}/${userId}/notifications/unread`,
          }),
       }),
+      deleteUserAcc: builder.mutation({
+         query: (userId) => ({
+            url: `${USERS_URL}/${userId}/delete`,
+            method: "DELETE",
+         }),
+      }),
    }),
 });
 
@@ -130,4 +136,5 @@ export const {
    useCreateNewNotificationMutation,
    useGetUnreadNotiCountQuery,
    useUpdateUnreadNotiCountMutation,
+   useDeleteUserAccMutation,
 } = usersApiSlice;

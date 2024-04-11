@@ -3,6 +3,9 @@ import User from "../models/userModel.js";
 import Poem from "../models/poemModel.js";
 import UserNotification from "../models/userNotificationModel.js";
 import AuthorProfileReview from "../models/authorProfileReviewModel.js";
+import PoemReview from "../models/poemReviewModel.js";
+import PoemRating from "../models/poemRatingModel.js";
+import Collection from "../models/collectionModel.js";
 import generateJwtToken from "../helpers/generateJwtToken.js";
 import { s3RetrieveV3 } from "../s3Service.js";
 
@@ -60,6 +63,47 @@ export const registerUser = asyncHandler(async (req, res) => {
    } else {
       res.status(400);
       throw new Error("Invalid user form data!");
+   }
+});
+
+// @desc    Delete a useraccount
+// @route   DELETE /api/users/:userId/delete
+// @access  Private
+export const deleteUserAccount = asyncHandler(async (req, res) => {
+   const currentUser = await User.findById(req.currentUser._id);
+
+   if (currentUser) {
+      // Delete all poems created by the user
+      await Poem.deleteMany({ author: currentUser._id });
+
+      // Delete all notifications related to the user
+      await UserNotification.deleteMany({
+         $or: [{ createdBy: currentUser._id }, { receivedBy: currentUser._id }],
+      });
+
+      // Delete all reviews related to the user
+      await AuthorProfileReview.deleteMany({
+         $or: [{ reviewedBy: currentUser._id }, { reviewedFor: currentUser._id }],
+      });
+
+      // Delete all poems comments related to the user
+      await PoemReview.deleteMany({
+         $or: [{ reviewedBy: currentUser._id }, { reviewedFor: currentUser._id }],
+      });
+
+      // Delete all poem ratings related to the user
+      await PoemRating.deleteMany({ ratedBy: currentUser._id });
+
+      // Delete all the collections created by the user
+      await Collection.deleteMany({ createdBy: currentUser._id });
+
+      // Delete the user account
+      await User.deleteOne({ _id: currentUser._id });
+
+      res.status(200).json({ message: "User Account deleted successfully." });
+   } else {
+      res.status(404);
+      throw new Error("User account deletion unsuccessful. User not found.");
    }
 });
 

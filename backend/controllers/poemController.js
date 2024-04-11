@@ -264,6 +264,7 @@ export const createPoemReview = asyncHandler(async (req, res) => {
          review,
          reviewedAt: new Date(),
          reviewedBy: currentUser,
+         reviewedFor: poem.author,
          reviewedPoem: poemId,
       });
       const savedReview = await newReview.save();

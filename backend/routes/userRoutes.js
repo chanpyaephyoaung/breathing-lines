@@ -16,6 +16,7 @@ import {
    createNewNotification,
    getUnreadNotiCount,
    updateUnreadNotiCount,
+   deleteUserAccount,
 } from "../controllers/userController.js";
 import { protectRoutes } from "../middleware/authMiddleware.js";
 
@@ -32,6 +33,7 @@ router.post("/:userId/profile-review", protectRoutes, createAuthorProfileReview)
 router.put("/user-profile/account/update", protectRoutes, updateUserAccProfile);
 router.put("/:userId/view", protectRoutes, increaseViewCount);
 router.put("/:userId/subscribe", protectRoutes, subscribeUser);
+router.delete("/:userId/delete", protectRoutes, deleteUserAccount);
 router.get("/user-profile/:userId/poems/:status", protectRoutes, getAllPoemsOfUser);
 router.get("/user-profile/:userId/followers", protectRoutes, fetchFollowerList);
 router.get("/user-profile/:userId/followings", protectRoutes, fetchFollowingsList);

@@ -14,6 +14,11 @@ const poemReviewSchema = new mongoose.Schema({
       required: true,
       ref: "User",
    },
+   reviewedFor: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+   },
    reviewedPoem: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
