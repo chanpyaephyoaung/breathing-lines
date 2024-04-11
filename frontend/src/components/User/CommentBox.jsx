@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
-import { formatDate } from "../../utils/date.js";
+import TimeAgo from "javascript-time-ago";
+
+const timeAgo = new TimeAgo("en-US");
 
 const CommentBox = ({ review, type }) => {
    return (
@@ -26,7 +28,7 @@ const CommentBox = ({ review, type }) => {
                   {review.reviewedBy.name}
                </Link>
                <p className="text-clr-black-faded text-2xs md:text-xs">
-                  {formatDate(review.reviewedAt)}
+                  {timeAgo.format(new Date(review.reviewedAt))}
                </p>
             </div>
          </div>
