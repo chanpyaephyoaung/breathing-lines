@@ -1,7 +1,7 @@
 export const BASE_URL = "";
 export const POEMS_URL = "/api/poems";
 export const USERS_URL = "/api/users";
-export const ADMIN_USER_BASE_URL = "/api/poems";
+export const ADMIN_USER_BASE_URL = "/api/users/admin";
 export const UPLOAD_URL = "/api/upload";
 
 export const USER_PROFILE_SUB_MENU_LINKS = [

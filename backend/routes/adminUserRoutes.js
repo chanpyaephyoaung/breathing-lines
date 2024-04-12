@@ -9,7 +9,7 @@ import { protectRoutes, verifyAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", protectRoutes, verifyAdmin, getAllUsersByAdmin);
+router.get("/usersList", protectRoutes, verifyAdmin, getAllUsersByAdmin);
 router
    .route("/:userId")
    .get(protectRoutes, verifyAdmin, getSingleUserById)

@@ -28,6 +28,8 @@ import PoemEditPage from "./screens/PoemEditPage.jsx";
 import UserCollectionsPage from "./screens/UserCollectionsPage.jsx";
 import CollectionPage from "./screens/CollectionPage.jsx";
 import UserFavoritedPoemsPage from "./screens/UserFavoritedPoemsPage.jsx";
+import AdminProtectedComponent from "./components/UI/AdminProtectedComponent.jsx";
+import UsersListPage from "./screens/admin/UsersListPage.jsx";
 
 const router = createBrowserRouter(
    createRoutesFromElements(
@@ -52,6 +54,12 @@ const router = createBrowserRouter(
                <Route path="/user-profile/:userId/update" element={<UserProfileUpdatePage />} />
                <Route path="/user-profile/:userId/poems/:status" element={<UserPoemsListPage />} />
                <Route path="/user/:userId/poem/:poemId/edit" element={<PoemEditPage />} />
+            </Route>
+         </Route>
+
+         <Route path="" element={<AdminProtectedComponent />}>
+            <Route path="/users/admin/usersList" element={<UsersListPage />}>
+               <Route path="page/:pageNum" element={<UsersListPage />} />
             </Route>
          </Route>
       </Route>

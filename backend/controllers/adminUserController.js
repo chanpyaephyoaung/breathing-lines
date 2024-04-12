@@ -2,10 +2,18 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
 
 // @desc    Get all users
-// @route   GET /api/users/admin
+// @route   GET /api/users/admin/usersList
 // @access  Private | Admin
 export const getAllUsersByAdmin = asyncHandler(async (req, res) => {
-   res.send("Get all users by admin!");
+   const pageSize = process.env.PAGINATION_SIZE;
+   const page = Number(req.query.pageNum) || 1;
+
+   const count = await User.countDocuments({});
+   const allUsers = await User.find({})
+      .limit(pageSize)
+      .skip(pageSize * (page - 1));
+
+   res.status(200).json({ allUsers, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc    Get a single user by ID
