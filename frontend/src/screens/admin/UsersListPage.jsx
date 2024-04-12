@@ -4,7 +4,7 @@ import Container from "../../components/UI/Container.jsx";
 import LoaderSpinner from "../../components/UI/LoaderSpinner.jsx";
 import Message from "../../components/Typography/Message.jsx";
 import Modal from "../../components/UI/Modal.jsx";
-import { useGetAllUsersQuery } from "../../slices/adminUsersApiSlice.js";
+import { useGetAllUsersQuery, useBanUserAccMutation } from "../../slices/adminUsersApiSlice.js";
 import { useDeleteUserAccMutation } from "../../slices/usersApiSlice.js";
 import { toast } from "react-toastify";
 
@@ -15,6 +15,7 @@ const UsersListPage = () => {
    const [modalDesc, setModalDesc] = useState("");
 
    const [deleteUserAcc, { isLoading: loadingDeleteUserAcc }] = useDeleteUserAccMutation();
+   const [banUser, { isLoading: loadingBanUser }] = useBanUserAccMutation();
 
    const closeModal = () => {
       setIsModalOpen(false);
@@ -27,7 +28,7 @@ const UsersListPage = () => {
    const banUserHandler = (id) => {
       setTargetUser(id);
       setCtaType("ban");
-      setModalDesc("Do you really wish to ban this user?");
+      setModalDesc("Do you really wish to make this change?");
       openModal();
    };
 
@@ -41,12 +42,15 @@ const UsersListPage = () => {
    const ctaHandler = async () => {
       try {
          if (ctaType === "ban") {
-            console.log("Ban user");
+            const res = await banUser(targetUser).unwrap();
+            refetch();
+            toast.success(res.message);
+            closeModal();
          } else if (ctaType === "remove") {
-            console.log(targetUser);
             await deleteUserAcc(targetUser).unwrap();
             refetch();
-            toast.success("Account deleted successfully!");
+            toast.success("User account deleted successfully!");
+            closeModal();
          }
       } catch (err) {
          toast.error(err?.data?.errMessage || err.error);
@@ -65,7 +69,7 @@ const UsersListPage = () => {
             confirmBtnText="Confirm"
             successFunc={ctaHandler}
          >
-            {loadingDeleteUserAcc && <LoaderSpinner />}
+            {loadingDeleteUserAcc || (loadingBanUser && <LoaderSpinner />)}
          </Modal>
          <Container>
             {isLoading ? (
@@ -81,6 +85,7 @@ const UsersListPage = () => {
                            <th className="p-2 border-2 border-clr-black-faded">ID</th>
                            <th className="p-2 border-2 border-clr-black-faded">Name</th>
                            <th className="p-2 border-2 border-clr-black-faded">Email</th>
+                           <th className="p-2 border-2 border-clr-black-faded">Banned?</th>
                            <th className="p-2 border-2 border-clr-black-faded">Poems</th>
                            <th className="p-2 border-2 border-clr-black-faded">&nbsp;</th>
                            <th className="p-2 border-2 border-clr-black-faded">&nbsp;</th>
@@ -98,6 +103,9 @@ const UsersListPage = () => {
                                     {user.email}
                                  </td>
                                  <td className="p-2 border-2 border-clr-black-faded">
+                                    {user.isBanned ? "Yes" : "No"}
+                                 </td>
+                                 <td className="p-2 border-2 border-clr-black-faded">
                                     <Link className="text-sm md:text-base font-light text-clr-danger hover:underline">
                                        View
                                     </Link>
@@ -108,7 +116,7 @@ const UsersListPage = () => {
                                        onClick={() => banUserHandler(user._id)}
                                        className="text-sm md:text-base font-light text-clr-danger hover:underline"
                                     >
-                                       Ban
+                                       {user.isBanned ? "Unban" : "Ban"}
                                     </button>
                                  </td>
                                  <td className="p-2 border-2 border-clr-black-faded">

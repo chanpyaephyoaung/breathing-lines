@@ -11,7 +11,14 @@ export const adminUsersApiSlice = apiSlice.injectEndpoints({
             },
          }),
       }),
+      banUserAcc: builder.mutation({
+         query: (userId) => ({
+            url: `${ADMIN_USER_BASE_URL}/${userId}/ban`,
+            method: "PUT",
+            body: { userId },
+         }),
+      }),
    }),
 });
 
-export const { useGetAllUsersQuery } = adminUsersApiSlice;
+export const { useGetAllUsersQuery, useBanUserAccMutation } = adminUsersApiSlice;

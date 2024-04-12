@@ -485,6 +485,11 @@ const PoemFullPost = () => {
                            <Message type="danger">
                               Please sign in to rate and review this poem.
                            </Message>
+                        ) : userAccInfo.isBanned ? (
+                           <Message type="danger">
+                              You are banned from rating and reviewing poems. Please contact the
+                              admin for more information.
+                           </Message>
                         ) : userAccInfo._id !== poem.author._id ? (
                            // Render content when userAccInfo is available but user is not the author of the poem
                            <>

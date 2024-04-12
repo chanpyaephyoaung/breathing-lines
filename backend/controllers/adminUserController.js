@@ -23,16 +23,15 @@ export const getSingleUserById = asyncHandler(async (req, res) => {
    res.send("Get a single user by admin!");
 });
 
-// @desc    Delete a user
-// @route   DELETE /api/users/admin/:userId
+// @desc    Ban a user
+// @route   PUT /api/users/admin/:userId/ban
 // @access  Private | Admin
-export const deleteUserByAdmin = asyncHandler(async (req, res) => {
-   res.send("Delete a user by admin!");
-});
-
-// @desc    Update a user
-// @route   PUT /api/users/admin/:userId
-// @access  Private | Admin
-export const updateUserByAdmin = asyncHandler(async (req, res) => {
-   res.send("Update a user by admin!");
+export const banUserByAdmin = asyncHandler(async (req, res) => {
+   const targetUserId = req.body.userId;
+   const targetUser = await User.findById(targetUserId);
+   targetUser.isBanned = !targetUser.isBanned;
+   await targetUser.save();
+   res.status(201).json({
+      message: targetUser.isBanned ? "User banned successfully" : "User unbanned successfully!",
+   });
 });

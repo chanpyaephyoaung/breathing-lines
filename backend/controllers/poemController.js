@@ -79,6 +79,12 @@ export const getSinglePoemById = asyncHandler(async (req, res) => {
 // @route   POST /api/poems/write
 // @access  Private
 export const writePoem = asyncHandler(async (req, res) => {
+   const currentUser = await User.findById(req.currentUser._id);
+   if (currentUser.isBanned) {
+      res.status(403);
+      throw new Error("You are banned from writing poems.");
+   }
+
    const { title, content, bgTheme, coverImg, status, genres } = req.body;
 
    const newPoem = new Poem({
@@ -94,7 +100,6 @@ export const writePoem = asyncHandler(async (req, res) => {
    const savedPoem = await newPoem.save();
 
    // Add the poem to the user's poems field
-   const currentUser = await User.findById(req.currentUser._id);
    currentUser.poems.push(savedPoem._id);
 
    await currentUser.save();
@@ -212,20 +217,27 @@ export const likePoem = asyncHandler(async (req, res) => {
 // @route   PUT /api/poems/:poemId/rate
 // @access  Private
 export const ratePoem = asyncHandler(async (req, res) => {
+   const currentUserId = req.currentUser._id;
+   const currentUser = await User.findById(currentUserId);
+
+   if (currentUser.isBanned) {
+      res.status(403);
+      throw new Error("You are banned from writing poems.");
+   }
+
    const poemId = req.params.poemId;
    const { rating } = req.body;
 
    const poem = await Poem.findById(poemId);
-   const currentUser = req.currentUser._id;
 
-   const currentRating = await PoemRating.findOne({ ratedBy: currentUser });
+   const currentRating = await PoemRating.findOne({ ratedBy: currentUserId });
 
    if (!currentRating) {
       // Create and save new rating
       const newRating = new PoemRating({
          rating,
          ratedAt: new Date(),
-         ratedBy: currentUser,
+         ratedBy: currentUserId,
          ratedPoem: poemId,
       });
       const savedRating = await newRating.save();
@@ -247,13 +259,19 @@ export const ratePoem = asyncHandler(async (req, res) => {
 // @route   POST /api/poems/:poemId/review
 // @access  Private
 export const createPoemReview = asyncHandler(async (req, res) => {
+   const currentUserId = req.currentUser._id;
+   const currentUser = await User.findById(currentUserId);
+
+   if (currentUser.isBanned) {
+      res.status(403);
+      throw new Error("You are banned from writing poems.");
+   }
    const poemId = req.params.poemId;
    const { review } = req.body;
 
    const poem = await Poem.findById(poemId);
-   const currentUser = req.currentUser._id;
 
-   const poemReview = await PoemReview.findOne({ reviewedBy: currentUser, reviewedPoem: poemId });
+   const poemReview = await PoemReview.findOne({ reviewedBy: currentUserId, reviewedPoem: poemId });
    const alreadyReviewed = poem.reviews.find(
       (review) => review?._id?.toString() === poemReview?._id?.toString()
    );
@@ -263,7 +281,7 @@ export const createPoemReview = asyncHandler(async (req, res) => {
       const newReview = new PoemReview({
          review,
          reviewedAt: new Date(),
-         reviewedBy: currentUser,
+         reviewedBy: currentUserId,
          reviewedFor: poem.author,
          reviewedPoem: poemId,
       });
