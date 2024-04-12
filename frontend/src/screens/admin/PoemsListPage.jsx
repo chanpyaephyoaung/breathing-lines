@@ -8,6 +8,7 @@ import { useGetAllPoemsByAdminQuery } from "../../slices/adminUsersApiSlice.js";
 import { useDeletePoemMutation } from "../../slices/poemsApiSlice.js";
 import { toast } from "react-toastify";
 import TimeAgo from "javascript-time-ago";
+import PoemFilterDropDown from "../../components/Navbar/Dropdown/PoemFilterDropdown.jsx";
 
 const timeAgo = new TimeAgo("en-US");
 
@@ -16,6 +17,11 @@ const PoemsListPage = () => {
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [ctaType, setCtaType] = useState("");
    const [modalDesc, setModalDesc] = useState("");
+   const [filter, setFilter] = useState("title");
+
+   const filterOptionHandler = (option) => {
+      setFilter(option);
+   };
 
    const closeModal = () => {
       setIsModalOpen(false);
@@ -45,8 +51,13 @@ const PoemsListPage = () => {
       }
    };
 
-   const { pageNum } = useParams();
-   const { data, error, isLoading, refetch } = useGetAllPoemsByAdminQuery({ pageNum });
+   const { pageNum, filterOption = filter } = useParams();
+   const { data, error, isLoading, refetch } = useGetAllPoemsByAdminQuery({
+      pageNum,
+      filterOption,
+   });
+
+   console.log(data);
 
    const [deletePoem, { isLoading: loadingDeletePoem }] = useDeletePoemMutation();
 
@@ -69,7 +80,12 @@ const PoemsListPage = () => {
                <Message type="danger">{error?.data?.errMessage || error.error}</Message>
             ) : (
                <>
-                  <h2 className="text-lg md:text-2xl font-bold text-clr-black mb-4">Poems List</h2>
+                  <div className="flex justify-between items-center">
+                     <h2 className="text-lg md:text-2xl font-bold text-clr-black mb-4">
+                        Poems List
+                     </h2>
+                     <PoemFilterDropDown onChangeFilterOption={filterOptionHandler} />
+                  </div>
                   <table className="w-full table-auto">
                      <thead>
                         <tr className="bg-clr-primary text-clr-white">
@@ -115,7 +131,7 @@ const PoemsListPage = () => {
                   <div className="flex gap-x-2 my-8">
                      {[...Array(data?.pages).keys()].map((x) => (
                         <Link
-                           to={`page/${x + 1}`}
+                           to={`page/${x + 1}/filter/${filterOption}`}
                            className={`font-light text-sm md:text-lg ${
                               x + 1 == data?.page ? "text-clr-primary font-medium" : ""
                            }`}

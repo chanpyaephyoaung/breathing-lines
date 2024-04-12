@@ -43,12 +43,16 @@ export const banUserByAdmin = asyncHandler(async (req, res) => {
 export const getAllPoemsByAdmin = asyncHandler(async (req, res) => {
    const pageSize = process.env.PAGINATION_SIZE;
    const page = Number(req.query.pageNum) || 1;
+   const filterOption = req.query.filterOption || "publishedAt";
 
    const count = await Poem.countDocuments({});
    const allPoems = await Poem.find({})
       .populate("author", "name")
+      .sort({ [filterOption]: filterOption !== "title" ? -1 : 1 })
       .limit(pageSize)
       .skip(pageSize * (page - 1));
+
+   console.log(pageSize);
 
    res.status(200).json({ allPoems, page, pages: Math.ceil(count / pageSize) });
 });

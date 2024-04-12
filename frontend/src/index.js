@@ -62,8 +62,8 @@ const router = createBrowserRouter(
             <Route path="/users/admin/usersList" element={<UsersListPage />}>
                <Route path="page/:pageNum" element={<UsersListPage />} />
             </Route>
-            <Route path="/users/admin/poemsList" element={<PoemsListPage />}>
-               <Route path="page/:pageNum" element={<UsersListPage />} />
+            <Route path="/users/admin/poemsList/" element={<PoemsListPage />}>
+               <Route path="page/:pageNum/filter/:filterOption" element={<PoemsListPage />} />
             </Route>
          </Route>
       </Route>

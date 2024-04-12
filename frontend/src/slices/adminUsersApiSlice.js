@@ -19,10 +19,11 @@ export const adminUsersApiSlice = apiSlice.injectEndpoints({
          }),
       }),
       getAllPoemsByAdmin: builder.query({
-         query: ({ pageNum }) => ({
+         query: ({ pageNum, filterOption }) => ({
             url: `${ADMIN_USER_BASE_URL}/poemsList`,
             params: {
                pageNum,
+               filterOption,
             },
          }),
       }),
