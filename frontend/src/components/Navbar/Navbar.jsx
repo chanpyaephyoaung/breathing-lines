@@ -30,7 +30,7 @@ const Navbar = ({ onShowMainNav, socket }) => {
             <div className="justify-self-end flex gap-3 items-center">
                {userAccInfo ? (
                   <>
-                     <NotificationDropdown socket={socket} />
+                     {!userAccInfo?.isAdmin && <NotificationDropdown socket={socket} />}
 
                      <UserDropdown />
                   </>

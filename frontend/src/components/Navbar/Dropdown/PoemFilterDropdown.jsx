@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
@@ -8,7 +7,6 @@ const PoemFilterDropDown = ({ onChangeFilterOption }) => {
    const filterOptionHandler = (option) => {
       onChangeFilterOption(option);
    };
-   const { userAccInfo } = useSelector((state) => state.authUser);
 
    return (
       <Menu as="div" className="relative inline-block text-left">

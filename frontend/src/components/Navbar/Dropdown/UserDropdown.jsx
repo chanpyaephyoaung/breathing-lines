@@ -42,58 +42,61 @@ const UserDropdown = () => {
          >
             <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg border border-1 border-clr-black">
                <div className="p-2">
-                  <Menu.Item as={Fragment}>
-                     {({ active }) => (
-                        <Link
-                           to={`/user-profile/${userAccInfo._id}`}
-                           className={`${
-                              active ? "bg-clr-primary text-white" : "text-gray-900"
-                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                        >
-                           Profile ({userAccInfo.name.split(" ")[0]})
-                        </Link>
-                     )}
-                  </Menu.Item>
+                  {userAccInfo && !userAccInfo?.isAdmin && (
+                     <>
+                        <Menu.Item as={Fragment}>
+                           {({ active }) => (
+                              <Link
+                                 to={`/user-profile/${userAccInfo._id}`}
+                                 className={`${
+                                    active ? "bg-clr-primary text-white" : "text-gray-900"
+                                 } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                              >
+                                 Profile ({userAccInfo.name.split(" ")[0]})
+                              </Link>
+                           )}
+                        </Menu.Item>
 
-                  <Menu.Item as={Fragment}>
-                     {({ active }) => (
-                        <Link
-                           to={`/user-profile/${userAccInfo._id}/poems`}
-                           className={`${
-                              active ? "bg-clr-primary text-white" : "text-gray-900"
-                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                        >
-                           Poems
-                        </Link>
-                     )}
-                  </Menu.Item>
+                        <Menu.Item as={Fragment}>
+                           {({ active }) => (
+                              <Link
+                                 to={`/user-profile/${userAccInfo._id}/poems`}
+                                 className={`${
+                                    active ? "bg-clr-primary text-white" : "text-gray-900"
+                                 } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                              >
+                                 Poems
+                              </Link>
+                           )}
+                        </Menu.Item>
 
-                  <Menu.Item as={Fragment}>
-                     {({ active }) => (
-                        <Link
-                           to={`/user-profile/${userAccInfo._id}/collections`}
-                           className={`${
-                              active ? "bg-clr-primary text-white" : "text-gray-900"
-                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                        >
-                           Collections
-                        </Link>
-                     )}
-                  </Menu.Item>
+                        <Menu.Item as={Fragment}>
+                           {({ active }) => (
+                              <Link
+                                 to={`/user-profile/${userAccInfo._id}/collections`}
+                                 className={`${
+                                    active ? "bg-clr-primary text-white" : "text-gray-900"
+                                 } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                              >
+                                 Collections
+                              </Link>
+                           )}
+                        </Menu.Item>
 
-                  <Menu.Item as={Fragment}>
-                     {({ active }) => (
-                        <Link
-                           to="/user-profile/account/update"
-                           className={`${
-                              active ? "bg-clr-primary text-white" : "text-gray-900"
-                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                        >
-                           Account Settings
-                        </Link>
-                     )}
-                  </Menu.Item>
-
+                        <Menu.Item as={Fragment}>
+                           {({ active }) => (
+                              <Link
+                                 to="/user-profile/account/update"
+                                 className={`${
+                                    active ? "bg-clr-primary text-white" : "text-gray-900"
+                                 } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                              >
+                                 Account Settings
+                              </Link>
+                           )}
+                        </Menu.Item>
+                     </>
+                  )}
                   <Menu.Item as={Fragment}>
                      {({ active }) => (
                         <Link
