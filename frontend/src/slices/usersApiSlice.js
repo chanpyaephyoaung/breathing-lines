@@ -113,6 +113,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
          query: (userId) => ({
             url: `${USERS_URL}/${userId}/delete`,
             method: "DELETE",
+            body: { userId },
          }),
       }),
    }),

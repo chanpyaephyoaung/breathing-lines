@@ -70,7 +70,8 @@ export const registerUser = asyncHandler(async (req, res) => {
 // @route   DELETE /api/users/:userId/delete
 // @access  Private
 export const deleteUserAccount = asyncHandler(async (req, res) => {
-   const currentUser = await User.findById(req.currentUser._id);
+   const targetUserId = req.body.userId;
+   const currentUser = await User.findById(targetUserId);
 
    if (currentUser) {
       // Delete all poems created by the user
