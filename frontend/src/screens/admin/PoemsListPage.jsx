@@ -5,9 +5,14 @@ import LoaderSpinner from "../../components/UI/LoaderSpinner.jsx";
 import Message from "../../components/Typography/Message.jsx";
 import Modal from "../../components/UI/Modal.jsx";
 import { useGetAllPoemsByAdminQuery } from "../../slices/adminUsersApiSlice.js";
+import { useDeletePoemMutation } from "../../slices/poemsApiSlice.js";
 import { toast } from "react-toastify";
+import TimeAgo from "javascript-time-ago";
+
+const timeAgo = new TimeAgo("en-US");
 
 const PoemsListPage = () => {
+   const [targetPoemId, setTargetPoemId] = useState("");
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [ctaType, setCtaType] = useState("");
    const [modalDesc, setModalDesc] = useState("");
@@ -21,16 +26,18 @@ const PoemsListPage = () => {
    };
 
    const removePoemHandler = (id) => {
+      setTargetPoemId(id);
       setCtaType("remove");
-      setModalDesc("Do you really wish to remove this user? This action cannot be undone.");
+      setModalDesc("Do you really wish to remove this poem? This action cannot be undone.");
       openModal();
    };
 
    const ctaHandler = async () => {
       try {
          if (ctaType === "remove") {
+            await deletePoem(targetPoemId).unwrap();
             refetch();
-            toast.success("User account deleted successfully!");
+            toast.success("Poem deleted successfully!");
             closeModal();
          }
       } catch (err) {
@@ -41,6 +48,8 @@ const PoemsListPage = () => {
    const { pageNum } = useParams();
    const { data, error, isLoading, refetch } = useGetAllPoemsByAdminQuery({ pageNum });
 
+   const [deletePoem, { isLoading: loadingDeletePoem }] = useDeletePoemMutation();
+
    return (
       <>
          <Modal
@@ -50,7 +59,7 @@ const PoemsListPage = () => {
             confirmBtnText="Confirm"
             successFunc={ctaHandler}
          >
-            {/* {loadingDeleteUserAcc || (loadingBanUser && <LoaderSpinner />)} */}
+            {loadingDeletePoem && <LoaderSpinner />}
          </Modal>
          {}
          <Container>
@@ -67,7 +76,8 @@ const PoemsListPage = () => {
                            <th className="p-2 border-2 border-clr-black-faded">ID</th>
                            <th className="p-2 border-2 border-clr-black-faded">Title</th>
                            <th className="p-2 border-2 border-clr-black-faded">Author</th>
-                           <th className="p-2 border-2 border-clr-black-faded">Status</th>
+                           <th className="p-2 border-2 border-clr-black-faded">Like Count</th>
+                           <th className="p-2 border-2 border-clr-black-faded">Date Published</th>
                            <th className="p-2 border-2 border-clr-black-faded">&nbsp;</th>
                         </tr>
                      </thead>
@@ -83,7 +93,10 @@ const PoemsListPage = () => {
                                     {poem.author.name}
                                  </td>
                                  <td className="p-2 border-2 border-clr-black-faded">
-                                    {poem.status}
+                                    {poem.likesCount}
+                                 </td>
+                                 <td className="p-2 border-2 border-clr-black-faded">
+                                    {timeAgo.format(new Date(poem.publishedAt))}
                                  </td>
                                  <td className="p-2 border-2 border-clr-black-faded">
                                     <button
