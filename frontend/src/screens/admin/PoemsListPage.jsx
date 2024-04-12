@@ -4,18 +4,13 @@ import Container from "../../components/UI/Container.jsx";
 import LoaderSpinner from "../../components/UI/LoaderSpinner.jsx";
 import Message from "../../components/Typography/Message.jsx";
 import Modal from "../../components/UI/Modal.jsx";
-import { useGetAllUsersQuery, useBanUserAccMutation } from "../../slices/adminUsersApiSlice.js";
-import { useDeleteUserAccMutation } from "../../slices/usersApiSlice.js";
+import { useGetAllPoemsByAdminQuery } from "../../slices/adminUsersApiSlice.js";
 import { toast } from "react-toastify";
 
-const UsersListPage = () => {
-   const [targetUser, setTargetUser] = useState(null);
+const PoemsListPage = () => {
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [ctaType, setCtaType] = useState("");
    const [modalDesc, setModalDesc] = useState("");
-
-   const [deleteUserAcc, { isLoading: loadingDeleteUserAcc }] = useDeleteUserAccMutation();
-   const [banUser, { isLoading: loadingBanUser }] = useBanUserAccMutation();
 
    const closeModal = () => {
       setIsModalOpen(false);
@@ -25,15 +20,7 @@ const UsersListPage = () => {
       setIsModalOpen(true);
    };
 
-   const banUserHandler = (id) => {
-      setTargetUser(id);
-      setCtaType("ban");
-      setModalDesc("Do you really wish to make this change?");
-      openModal();
-   };
-
-   const removeUserHandler = (id) => {
-      setTargetUser(id);
+   const removePoemHandler = (id) => {
       setCtaType("remove");
       setModalDesc("Do you really wish to remove this user? This action cannot be undone.");
       openModal();
@@ -41,13 +28,7 @@ const UsersListPage = () => {
 
    const ctaHandler = async () => {
       try {
-         if (ctaType === "ban") {
-            const res = await banUser(targetUser).unwrap();
-            refetch();
-            toast.success(res.message);
-            closeModal();
-         } else if (ctaType === "remove") {
-            await deleteUserAcc(targetUser).unwrap();
+         if (ctaType === "remove") {
             refetch();
             toast.success("User account deleted successfully!");
             closeModal();
@@ -58,7 +39,7 @@ const UsersListPage = () => {
    };
 
    const { pageNum } = useParams();
-   const { data, error, isLoading, refetch } = useGetAllUsersQuery({ pageNum });
+   const { data, error, isLoading, refetch } = useGetAllPoemsByAdminQuery({ pageNum });
 
    return (
       <>
@@ -69,7 +50,7 @@ const UsersListPage = () => {
             confirmBtnText="Confirm"
             successFunc={ctaHandler}
          >
-            {loadingDeleteUserAcc || (loadingBanUser && <LoaderSpinner />)}
+            {/* {loadingDeleteUserAcc || (loadingBanUser && <LoaderSpinner />)} */}
          </Modal>
          {}
          <Container>
@@ -79,51 +60,35 @@ const UsersListPage = () => {
                <Message type="danger">{error?.data?.errMessage || error.error}</Message>
             ) : (
                <>
-                  <h2 className="text-lg md:text-2xl font-bold text-clr-black mb-4">Users List</h2>
+                  <h2 className="text-lg md:text-2xl font-bold text-clr-black mb-4">Poems List</h2>
                   <table className="w-full table-auto">
                      <thead>
                         <tr className="bg-clr-primary text-clr-white">
                            <th className="p-2 border-2 border-clr-black-faded">ID</th>
-                           <th className="p-2 border-2 border-clr-black-faded">Name</th>
-                           <th className="p-2 border-2 border-clr-black-faded">Email</th>
-                           <th className="p-2 border-2 border-clr-black-faded">Banned?</th>
-                           <th className="p-2 border-2 border-clr-black-faded">Poems</th>
-                           <th className="p-2 border-2 border-clr-black-faded">&nbsp;</th>
+                           <th className="p-2 border-2 border-clr-black-faded">Title</th>
+                           <th className="p-2 border-2 border-clr-black-faded">Author</th>
+                           <th className="p-2 border-2 border-clr-black-faded">Status</th>
                            <th className="p-2 border-2 border-clr-black-faded">&nbsp;</th>
                         </tr>
                      </thead>
                      <tbody>
-                        {data?.allUsers?.map((user) => {
+                        {data?.allPoems?.map((poem) => {
                            return (
-                              <tr key={user._id}>
-                                 <td className="p-2 border-2 border-clr-black-faded">{user._id}</td>
+                              <tr key={poem._id}>
+                                 <td className="p-2 border-2 border-clr-black-faded">{poem._id}</td>
                                  <td className="p-2 border-2 border-clr-black-faded">
-                                    {user.name}
+                                    {poem.title}
                                  </td>
                                  <td className="p-2 border-2 border-clr-black-faded">
-                                    {user.email}
+                                    {poem.author.name}
                                  </td>
                                  <td className="p-2 border-2 border-clr-black-faded">
-                                    {user.isBanned ? "Yes" : "No"}
-                                 </td>
-                                 <td className="p-2 border-2 border-clr-black-faded">
-                                    <Link className="text-sm md:text-base font-light text-clr-danger hover:underline">
-                                       View
-                                    </Link>
+                                    {poem.status}
                                  </td>
                                  <td className="p-2 border-2 border-clr-black-faded">
                                     <button
                                        type="button"
-                                       onClick={() => banUserHandler(user._id)}
-                                       className="text-sm md:text-base font-light text-clr-danger hover:underline"
-                                    >
-                                       {user.isBanned ? "Unban" : "Ban"}
-                                    </button>
-                                 </td>
-                                 <td className="p-2 border-2 border-clr-black-faded">
-                                    <button
-                                       type="button"
-                                       onClick={() => removeUserHandler(user._id)}
+                                       onClick={() => removePoemHandler(poem._id)}
                                        className="text-sm md:text-base font-light text-clr-danger hover:underline"
                                     >
                                        Remove
@@ -155,4 +120,4 @@ const UsersListPage = () => {
       </>
    );
 };
-export default UsersListPage;
+export default PoemsListPage;

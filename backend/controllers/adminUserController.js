@@ -1,5 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
+import Poem from "../models/poemModel.js";
 
 // @desc    Get all users
 // @route   GET /api/users/admin/usersList
@@ -34,4 +35,20 @@ export const banUserByAdmin = asyncHandler(async (req, res) => {
    res.status(201).json({
       message: targetUser.isBanned ? "User banned successfully" : "User unbanned successfully!",
    });
+});
+
+// @desc    Get all poems
+// @route   GET /api/users/admin/poemsList
+// @access  Private | Admin
+export const getAllPoemsByAdmin = asyncHandler(async (req, res) => {
+   const pageSize = process.env.PAGINATION_SIZE;
+   const page = Number(req.query.pageNum) || 1;
+
+   const count = await Poem.countDocuments({});
+   const allPoems = await Poem.find({})
+      .populate("author", "name")
+      .limit(pageSize)
+      .skip(pageSize * (page - 1));
+
+   res.status(200).json({ allPoems, page, pages: Math.ceil(count / pageSize) });
 });

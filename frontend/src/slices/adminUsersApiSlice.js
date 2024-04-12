@@ -18,7 +18,16 @@ export const adminUsersApiSlice = apiSlice.injectEndpoints({
             body: { userId },
          }),
       }),
+      getAllPoemsByAdmin: builder.query({
+         query: ({ pageNum }) => ({
+            url: `${ADMIN_USER_BASE_URL}/poemsList`,
+            params: {
+               pageNum,
+            },
+         }),
+      }),
    }),
 });
 
-export const { useGetAllUsersQuery, useBanUserAccMutation } = adminUsersApiSlice;
+export const { useGetAllUsersQuery, useBanUserAccMutation, useGetAllPoemsByAdminQuery } =
+   adminUsersApiSlice;

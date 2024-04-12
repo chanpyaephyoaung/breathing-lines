@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import HeaderSection from "../components/Section/HeaderSection.jsx";
 import PoemPreviewPosts from "../components/Poems/PoemPreview/PoemPreviewPosts.jsx";
 import Container from "../components/UI/Container.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
 import { useGetAllPoemsQuery } from "../slices/poemsApiSlice.js";
 import InfiniteScroll from "react-infinite-scroll-component";
+import AdminDashboard from "../components/Admin/AdminDashboard.jsx";
 
 const HomePage = () => {
+   const { userAccInfo } = useSelector((state) => state.authUser);
    const { data: poems, isLoading, error } = useGetAllPoemsQuery();
    const [poemList, setPoemList] = useState([]);
 
    useEffect(() => {
+      if (userAccInfo?.isAdmin) return;
       setPoemList(poems?.slice(0, 1) || []);
-   }, [poems]);
+   }, [poems, userAccInfo.isAdmin]);
 
    const fetchMoreData = () => {
       if (isLoading || error) return; // Prevent fetching more data if loading or error
@@ -24,7 +28,11 @@ const HomePage = () => {
 
    return (
       <>
-         {isLoading ? (
+         {userAccInfo?.isAdmin ? (
+            <Container>
+               <AdminDashboard />
+            </Container>
+         ) : isLoading ? (
             <Container>
                <LoaderSpinner />
             </Container>

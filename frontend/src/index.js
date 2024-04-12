@@ -30,6 +30,7 @@ import CollectionPage from "./screens/CollectionPage.jsx";
 import UserFavoritedPoemsPage from "./screens/UserFavoritedPoemsPage.jsx";
 import AdminProtectedComponent from "./components/UI/AdminProtectedComponent.jsx";
 import UsersListPage from "./screens/admin/UsersListPage.jsx";
+import PoemsListPage from "./screens/admin/PoemsListPage.jsx";
 
 const router = createBrowserRouter(
    createRoutesFromElements(
@@ -59,6 +60,9 @@ const router = createBrowserRouter(
 
          <Route path="" element={<AdminProtectedComponent />}>
             <Route path="/users/admin/usersList" element={<UsersListPage />}>
+               <Route path="page/:pageNum" element={<UsersListPage />} />
+            </Route>
+            <Route path="/users/admin/poemsList" element={<PoemsListPage />}>
                <Route path="page/:pageNum" element={<UsersListPage />} />
             </Route>
          </Route>
