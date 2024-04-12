@@ -1,6 +1,7 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
 import Poem from "../models/poemModel.js";
+import PoemOfTheDay from "../models/poemOfTheDayModel.js";
 
 // @desc    Get all users
 // @route   GET /api/users/admin/usersList
@@ -52,7 +53,44 @@ export const getAllPoemsByAdmin = asyncHandler(async (req, res) => {
       .limit(pageSize)
       .skip(pageSize * (page - 1));
 
-   console.log(pageSize);
-
    res.status(200).json({ allPoems, page, pages: Math.ceil(count / pageSize) });
+});
+
+// @desc    Award poem of the day
+// @route   POST /api/users/admin/poem/:poemId/poemOfTheDay
+// @access  Private | Admin
+export const awardPoemOfTheDay = asyncHandler(async (req, res) => {
+   const { poemId } = req.body;
+   const poem = await Poem.findById(poemId);
+
+   if (poem.poemOfTheDay) {
+      res.status(400);
+      throw new Error("Poem is already awarded!");
+   }
+
+   // Check if another poem is being awarded on the same day
+   const existingAward = await PoemOfTheDay.findOne({
+      awardedAt: {
+         $gte: new Date(new Date().setHours(0, 0, 0)),
+         $lt: new Date(new Date().setHours(23, 59, 59)),
+      },
+   });
+
+   if (existingAward) {
+      res.status(400);
+      throw new Error("Another poem is already awarded today!");
+   }
+
+   const poemData = {
+      isAwarded: true,
+      awardedAt: new Date(),
+      poem: poem._id,
+   };
+
+   const poemOfTheDay = new PoemOfTheDay(poemData);
+   const savedPoemOfTheDay = await poemOfTheDay.save();
+   poem.poemOfTheDay = savedPoemOfTheDay._id;
+   await poem.save();
+
+   res.status(200).json(savedPoemOfTheDay);
 });

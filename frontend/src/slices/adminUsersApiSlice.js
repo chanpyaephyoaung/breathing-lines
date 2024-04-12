@@ -27,8 +27,19 @@ export const adminUsersApiSlice = apiSlice.injectEndpoints({
             },
          }),
       }),
+      awardPoemOfTheDay: builder.mutation({
+         query: (poemId) => ({
+            url: `${ADMIN_USER_BASE_URL}/poem/${poemId}/poemOfTheDay`,
+            method: "POST",
+            body: { poemId },
+         }),
+      }),
    }),
 });
 
-export const { useGetAllUsersQuery, useBanUserAccMutation, useGetAllPoemsByAdminQuery } =
-   adminUsersApiSlice;
+export const {
+   useGetAllUsersQuery,
+   useBanUserAccMutation,
+   useGetAllPoemsByAdminQuery,
+   useAwardPoemOfTheDayMutation,
+} = adminUsersApiSlice;
