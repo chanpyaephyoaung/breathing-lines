@@ -31,6 +31,7 @@ import UserFavoritedPoemsPage from "./screens/UserFavoritedPoemsPage.jsx";
 import AdminProtectedComponent from "./components/UI/AdminProtectedComponent.jsx";
 import UsersListPage from "./screens/admin/UsersListPage.jsx";
 import PoemsListPage from "./screens/admin/PoemsListPage.jsx";
+import PoemsOfFollowingUsersPage from "./screens/PoemsOfFollowingUsersPage.jsx";
 
 const router = createBrowserRouter(
    createRoutesFromElements(
@@ -45,6 +46,7 @@ const router = createBrowserRouter(
          <Route path="/user-profile/:userId/poems" element={<UserPoemsPage />} />
 
          <Route path="" element={<ProtectedComponent />}>
+            <Route path="/poems/followings" element={<PoemsOfFollowingUsersPage />} />
             <Route path="/user-profile/account/update" element={<AccountUpdatePage />} />
             <Route
                path="/user-profile/:userId/collections/:collectionId"

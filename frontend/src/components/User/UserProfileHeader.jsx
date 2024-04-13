@@ -34,6 +34,12 @@ const UserProfileHeader = ({ activeNav, socket }) => {
       isLoading: loadingFetchUserProfileDetails,
       refetch: refetchFetchUserProfileDetails,
    } = useGetUserProfileQuery(userId);
+
+   const {
+      data: currentUserProfileDetails,
+      isLoading: loadingFetchCurrentUserProfileDetails,
+      refetch: refetchFetchCurrentUserProfileDetails,
+   } = useGetUserProfileQuery(userAccInfo?._id);
    const {
       data: userFollowersList,
       isLoading: loadingFetchFollowersList,
@@ -48,6 +54,7 @@ const UserProfileHeader = ({ activeNav, socket }) => {
 
    const refetchAll = () => {
       refetchFetchUserProfileDetails();
+      refetchFetchCurrentUserProfileDetails();
       refetchFollowersList();
       refetchFollowingsList();
    };
@@ -134,7 +141,8 @@ const UserProfileHeader = ({ activeNav, socket }) => {
                   name={followingFollowing.name}
                   img={followingFollowing.encodedProfileImg}
                   onCloseModal={closeModal}
-                  userProfileDetails={userProfileDetails}
+                  targetUserProfileDetails={userProfileDetails}
+                  currentUserProfileDetails={currentUserProfileDetails}
                   onRefetch={refetchAll}
                   isFollowerBtnClicked={isFollowerBtnClicked}
                   socket={socket}
@@ -142,6 +150,7 @@ const UserProfileHeader = ({ activeNav, socket }) => {
             ))}
          </Modal>
          {loadingFetchUserProfileDetails ||
+         loadingFetchCurrentUserProfileDetails ||
          loadingFetchFollowersList ||
          loadingFetchFollowingsList ? (
             <LoaderSpinner />

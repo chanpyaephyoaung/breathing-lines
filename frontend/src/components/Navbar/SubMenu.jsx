@@ -16,7 +16,10 @@ const SubMenu = () => {
                         </Link>
                      </li>
                      <li>
-                        <Link to="/followings" className="transition-all hover:text-clr-primary">
+                        <Link
+                           to="/poems/followings"
+                           className="transition-all hover:text-clr-primary"
+                        >
                            Followings
                         </Link>
                      </li>

@@ -12,7 +12,8 @@ const UserBox = ({
    name,
    img,
    onCloseModal,
-   userProfileDetails,
+   targetUserProfileDetails,
+   currentUserProfileDetails,
    isFollowerBtnClicked,
    onRefetch,
    socket,
@@ -42,7 +43,7 @@ const UserBox = ({
    const subscribeUserHandler = async () => {
       try {
          const res = await subscribeUser(targetUserId).unwrap();
-         if (!userProfileDetails?.targetUser?.followings.includes(targetUserId)) {
+         if (!targetUserProfileDetails?.targetUser?.followings.includes(targetUserId)) {
             const unreadNotiCountOfUser = await createNotification(
                userAccInfo?._id,
                targetUserId,
@@ -89,19 +90,37 @@ const UserBox = ({
                   {name}
                </Link>
             </div>
-            <button
-               onClick={subscribeUserHandler}
-               type="type"
-               className="justify-self-end text-xs py-2 px-4 md:text-sm md:py-2 text-clr-primary font-medium border border-clr-primary rounded-lg hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
-            >
-               {isFollowerBtnClicked
-                  ? userProfileDetails?.targetUser?.followings.includes(targetUserId)
+            {userAccInfo._id !== targetUserProfileDetails?.targetUser?._id &&
+               userAccInfo._id !== targetUserId && (
+                  <button
+                     onClick={subscribeUserHandler}
+                     type="type"
+                     className="justify-self-end text-xs py-2 px-4 md:text-sm md:py-2 text-clr-primary font-medium border border-clr-primary rounded-lg hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
+                  >
+                     {isFollowerBtnClicked
+                        ? targetUserProfileDetails?.targetUser?.followings.includes(targetUserId)
+                           ? " Unfollow"
+                           : "Follow"
+                        : targetUserProfileDetails?.targetUser?.followers.includes(targetUserId)
+                        ? " Follow"
+                        : "Unfollow"}
+                  </button>
+               )}
+            {userAccInfo._id === targetUserProfileDetails?.targetUser?._id && (
+               <button
+                  onClick={subscribeUserHandler}
+                  type="type"
+                  className="justify-self-end text-xs py-2 px-4 md:text-sm md:py-2 text-clr-primary font-medium border border-clr-primary rounded-lg hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
+               >
+                  {isFollowerBtnClicked
+                     ? currentUserProfileDetails?.targetUser?.followings.includes(targetUserId)
+                        ? " Unfollow"
+                        : "Follow"
+                     : currentUserProfileDetails?.targetUser?.followers.includes(targetUserId)
                      ? " Unfollow"
-                     : "Follow"
-                  : userProfileDetails?.targetUser?.followers.includes(targetUserId)
-                  ? " Unfollow"
-                  : "Follow"}
-            </button>
+                     : "Follow"}
+               </button>
+            )}
          </div>
       </div>
    );

@@ -11,12 +11,14 @@ import {
    deletePoem,
    changePoemStatus,
    getPoemsOfTheDay,
+   getAllPoemsOfFollowingUsers,
 } from "../controllers/poemController.js";
 import { protectRoutes } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.route("/").get(getAllPoems);
+router.route("/followings").get(protectRoutes, getAllPoemsOfFollowingUsers);
 router.route("/poemsOfTheDays").get(getPoemsOfTheDay);
 
 router.route("/:poemId").get(getSinglePoemById).delete(protectRoutes, deletePoem);

@@ -12,6 +12,12 @@ export const poemsApiSlice = apiSlice.injectEndpoints({
          }),
          keepUnusedDataFor: 5,
       }),
+      getAllPoemsOfFollowingUsers: builder.query({
+         query: () => ({
+            url: `${POEMS_URL}/followings`,
+         }),
+         keepUnusedDataFor: 5,
+      }),
       getSinglePoemById: builder.query({
          query: (poemId) => ({
             url: `${POEMS_URL}/${poemId}`,
@@ -90,6 +96,7 @@ export const poemsApiSlice = apiSlice.injectEndpoints({
 
 export const {
    useGetAllPoemsQuery,
+   useGetAllPoemsOfFollowingUsersQuery,
    useGetSinglePoemByIdQuery,
    useGetPoemsOfTheDayQuery,
    useWriteNewPoemMutation,

@@ -84,6 +84,38 @@ export const getSinglePoemById = asyncHandler(async (req, res) => {
    }
 });
 
+// @desc    Fetch poems of followed users
+// @route   GET /api/poems/followings
+// @access  Private
+export const getAllPoemsOfFollowingUsers = asyncHandler(async (req, res) => {
+   const currentUserId = req.currentUser._id;
+   const currentUser = await User.findById(currentUserId).populate("followings"); // Populate the followings field
+
+   // Get IDs of users that the current user follows
+   const followingUserIds = currentUser.followings;
+
+   // Find poems of followed users
+   const poemsOfFollowedUsers = await Poem.find({ author: { $in: followingUserIds } })
+      .populate("author", "name")
+      .sort({ publishedAt: -1 }); // Sort by publishedAt in descending order to get the latest poems first
+
+   const poemsWithEncodedCoverImg = await Promise.all(
+      poemsOfFollowedUsers.map(async (poem, i) => {
+         let image = "";
+         if (poem?.coverImg && i === 6) {
+            // Just for testing purpose. Remove the second condition in production
+            const result = await s3RetrieveV3(poem.coverImg);
+            image = await result.Body?.transformToString("base64");
+         }
+         return { ...poem._doc, encodedCoverImg: image };
+      })
+   );
+
+   console.log(poemsWithEncodedCoverImg);
+
+   res.json(poemsWithEncodedCoverImg);
+});
+
 // @desc    Write a poem
 // @route   POST /api/poems/write
 // @access  Private
