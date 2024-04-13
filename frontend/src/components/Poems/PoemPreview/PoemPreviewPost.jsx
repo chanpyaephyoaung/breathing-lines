@@ -24,7 +24,6 @@ const PoemPreviewPost = ({
    loadingRemovePoemFromCollection,
    isCurrentUserTheCollectionOwner,
 }) => {
-   console.log(bgTheme);
    const [isModalOpen, setIsModalOpen] = useState(false);
 
    const [increasePoemViewCount] = useIncreasePoemViewCountMutation();

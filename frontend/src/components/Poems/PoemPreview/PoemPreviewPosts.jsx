@@ -6,7 +6,6 @@ const PoemPreviewPosts = ({
    loadingRemovePoemFromCollection,
    isCurrentUserTheCollectionOwner,
 }) => {
-   console.log(poems);
    return (
       <>
          <div className="mt-6 w-4/6 md:w-5/6 max-w-[450px] mx-auto grid gap-6 py-5">

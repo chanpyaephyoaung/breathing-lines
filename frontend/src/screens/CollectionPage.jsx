@@ -6,6 +6,8 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
 import Message from "../components/Typography/Message.jsx";
 import Modal from "../components/UI/Modal.jsx";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { infiniteScrollLoaderDuration } from "../constants.js";
 import PoemPreviewPosts from "../components/Poems/PoemPreview/PoemPreviewPosts.jsx";
 import {
    useGetOneCollectionOfUserQuery,
@@ -20,6 +22,7 @@ const CollectionPage = () => {
    const { userId, collectionId } = useParams();
    const { userAccInfo } = useSelector((state) => state.authUser);
    const [isModalOpen, setIsModalOpen] = useState(false);
+   const [poemList, setPoemList] = useState([]);
 
    const {
       data: collection,
@@ -44,8 +47,18 @@ const CollectionPage = () => {
    };
 
    useEffect(() => {
+      if (userAccInfo?.isAdmin) return;
+      setPoemList(collection?.poems?.slice(0, 3) || []);
       refetch();
-   }, [refetch]);
+   }, [refetch, collection?.poems, userAccInfo.isAdmin]);
+
+   const fetchMoreData = () => {
+      if (isLoading || error) return; // Prevent fetching more data if loading or error
+      const nextPoems = collection?.poems.slice(poemList.length, poemList.length + 2);
+      setTimeout(() => {
+         setPoemList(poemList.concat(nextPoems));
+      }, infiniteScrollLoaderDuration);
+   };
 
    const isCurrentUserTheCollectionOwner =
       collection?.createdBy?._id.toString() === userAccInfo._id.toString();
@@ -130,12 +143,24 @@ const CollectionPage = () => {
                         </Message>
                      </div>
                   ) : (
-                     <PoemPreviewPosts
-                        poems={collection?.poems}
-                        removePoemFromCollectionHandler={removePoemFromCollectionHandler}
-                        loadingRemovePoemFromCollection={loadingRemovePoemFromCollection}
-                        isCurrentUserTheCollectionOwner={isCurrentUserTheCollectionOwner}
-                     />
+                     <InfiniteScroll
+                        dataLength={poemList.length}
+                        next={fetchMoreData}
+                        hasMore={poemList.length < collection?.poems.length}
+                        loader={<LoaderSpinner />}
+                        endMessage={
+                           <p className="text-xs md:text-sm text-clr-primary text-center py-6">
+                              End of results!
+                           </p>
+                        }
+                     >
+                        <PoemPreviewPosts
+                           poems={poemList}
+                           removePoemFromCollectionHandler={removePoemFromCollectionHandler}
+                           loadingRemovePoemFromCollection={loadingRemovePoemFromCollection}
+                           isCurrentUserTheCollectionOwner={isCurrentUserTheCollectionOwner}
+                        />
+                     </InfiniteScroll>
                   )}
                </>
             )}

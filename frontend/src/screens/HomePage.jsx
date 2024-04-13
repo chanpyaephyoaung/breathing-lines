@@ -9,6 +9,7 @@ import { useGetAllPoemsQuery } from "../slices/poemsApiSlice.js";
 import InfiniteScroll from "react-infinite-scroll-component";
 import AdminDashboard from "../components/Admin/AdminDashboard.jsx";
 import { ArrowLongLeftIcon } from "@heroicons/react/24/outline";
+import { infiniteScrollLoaderDuration } from "../constants.js";
 
 const HomePage = () => {
    const { keyword } = useParams();
@@ -26,7 +27,7 @@ const HomePage = () => {
       const nextPoems = poems.slice(poemList.length, poemList.length + 2);
       setTimeout(() => {
          setPoemList(poemList.concat(nextPoems));
-      }, 1500);
+      }, infiniteScrollLoaderDuration);
    };
 
    return (

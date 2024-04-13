@@ -63,3 +63,5 @@ export const bgThemes = [
       path: "/images/bg-themes/sprinkle.svg",
    },
 ];
+
+export const infiniteScrollLoaderDuration = 1000; // in milliseconds
