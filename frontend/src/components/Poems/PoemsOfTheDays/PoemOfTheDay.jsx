@@ -6,7 +6,6 @@ import { useIncreasePoemViewCountMutation } from "../../../slices/poemsApiSlice.
 import { toast } from "react-toastify";
 
 const PoemOfTheDay = ({ poem }) => {
-   console.log(poem);
    const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
    const [increasePoemViewCount] = useIncreasePoemViewCountMutation();
 

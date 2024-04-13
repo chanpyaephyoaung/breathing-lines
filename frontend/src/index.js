@@ -36,6 +36,7 @@ const router = createBrowserRouter(
    createRoutesFromElements(
       <Route path="/" element={<App />} errorElement={<ErrorPage />}>
          <Route index={true} element={<HomePage />} />
+         <Route path="/search/:keyword" element={<HomePage />} />
          <Route path="poem/:poemId" element={<PoemFullPost />} />
          <Route path="write" element={<WritePoemPage />} />
          <Route path="signin" element={<SignInPage />} />

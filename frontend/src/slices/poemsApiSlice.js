@@ -4,8 +4,11 @@ import { apiSlice } from "./apiSlice.js";
 export const poemsApiSlice = apiSlice.injectEndpoints({
    endpoints: (builder) => ({
       getAllPoems: builder.query({
-         query: () => ({
+         query: ({ keyword }) => ({
             url: POEMS_URL,
+            params: {
+               keyword,
+            },
          }),
          keepUnusedDataFor: 5,
       }),

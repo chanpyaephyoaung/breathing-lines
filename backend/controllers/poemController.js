@@ -10,7 +10,15 @@ import { s3RetrieveV3 } from "../s3Service.js";
 // @route   GET /api/poems
 // @access  Public
 export const getAllPoems = asyncHandler(async (req, res) => {
-   const poems = await Poem.find({}).populate("author", "name");
+   const keyword = req.query.keyword
+      ? {
+           title: {
+              $regex: req.query.keyword,
+              $options: "i",
+           },
+        }
+      : {};
+   const poems = await Poem.find({ ...keyword }).populate("author", "name");
 
    // res.json({ poems });
 

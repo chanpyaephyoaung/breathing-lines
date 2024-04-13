@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import HeaderSection from "../components/Section/HeaderSection.jsx";
 import PoemPreviewPosts from "../components/Poems/PoemPreview/PoemPreviewPosts.jsx";
@@ -7,15 +8,17 @@ import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
 import { useGetAllPoemsQuery } from "../slices/poemsApiSlice.js";
 import InfiniteScroll from "react-infinite-scroll-component";
 import AdminDashboard from "../components/Admin/AdminDashboard.jsx";
+import { ArrowLongLeftIcon } from "@heroicons/react/24/outline";
 
 const HomePage = () => {
+   const { keyword } = useParams();
    const { userAccInfo } = useSelector((state) => state.authUser);
-   const { data: poems, isLoading, error } = useGetAllPoemsQuery();
+   const { data: poems, isLoading, error } = useGetAllPoemsQuery({ keyword });
    const [poemList, setPoemList] = useState([]);
 
    useEffect(() => {
       if (userAccInfo?.isAdmin) return;
-      setPoemList(poems?.slice(0, 1) || []);
+      setPoemList(poems?.slice(0, 3) || []);
    }, [poems, userAccInfo.isAdmin]);
 
    const fetchMoreData = () => {
@@ -42,7 +45,20 @@ const HomePage = () => {
             </Container>
          ) : (
             <>
-               <HeaderSection />
+               {keyword && (
+                  <Container>
+                     <div className="flex gap-x-4 items-center">
+                        <Link to={"/"}>
+                           <ArrowLongLeftIcon className="w-10 text-clr-black hover:text-clr-primary cursor-pointer" />
+                        </Link>
+                        <h2 className="text-lg md:text-2xl font-bold text-clr-black">
+                           {`Search results for `}{" "}
+                           <span className="text-clr-primary">{`"${keyword}"`}</span>
+                        </h2>
+                     </div>
+                  </Container>
+               )}
+               {!keyword && <HeaderSection />}
                <InfiniteScroll
                   dataLength={poemList.length}
                   next={fetchMoreData}

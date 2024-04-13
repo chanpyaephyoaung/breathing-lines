@@ -48,7 +48,7 @@ export const getOneCollectionOfUser = asyncHandler(async (req, res) => {
    const collection = await Collection.findById(collectionId)
       .populate({
          path: "poems",
-         select: "title author content coverImg encodedCoverImg viewsCount publishedAt",
+         select: "title author content coverImg encodedCoverImg bgTheme viewsCount publishedAt",
          populate: {
             path: "author",
             select: "name",

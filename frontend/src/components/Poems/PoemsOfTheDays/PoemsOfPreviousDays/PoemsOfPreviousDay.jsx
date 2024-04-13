@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { generateLineBreakBtwSentences } from "../../../../utils/text.jsx";
 
 const PoemsOfPreviousDay = ({ poem, label }) => {
-   console.log("Hello", poem);
    return (
       <div className="grid gap-y-1 pb-2 border-b border-clr-black-faded">
          <p className="text-sm text-clr-tertiary font-medium">{label}</p>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { generateLineBreakBtwSentences } from "../../../utils/text.jsx";
 import { useIncreasePoemViewCountMutation } from "../../../slices/poemsApiSlice.js";
 import { useIncreaseProfileViewCountMutation } from "../../../slices/usersApiSlice.js";
@@ -24,12 +24,11 @@ const PoemPreviewPost = ({
    loadingRemovePoemFromCollection,
    isCurrentUserTheCollectionOwner,
 }) => {
+   console.log(bgTheme);
    const [isModalOpen, setIsModalOpen] = useState(false);
 
    const [increasePoemViewCount] = useIncreasePoemViewCountMutation();
    const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
-
-   const navigate = useNavigate();
 
    const viewAuthorProfileHandler = async () => {
       try {
@@ -71,7 +70,7 @@ const PoemPreviewPost = ({
                successFunc={ctaHandler}
             />
          )}
-         <div className="relative overflow-y-hidden grid gap-2 p-3 md:p-5 border border-clr-black">
+         <div className="relative grid gap-2 p-3 md:p-5 border border-clr-black">
             {isCurrentUserTheCollectionOwner && (
                <MinusCircleIcon
                   onClick={openModal}
@@ -80,7 +79,7 @@ const PoemPreviewPost = ({
             )}
             {bgTheme?.id !== 1 && (
                <img
-                  className="absolute top-0 left-0 -z-10 w-full overflow-y-hidden opacity-20"
+                  className="absolute top-0 left-0 -z-10 w-full max-h-full object-cover opacity-20"
                   src={bgTheme?.path}
                   alt={bgTheme?.name}
                />

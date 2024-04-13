@@ -1,6 +1,22 @@
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
 const SearchForm = () => {
+   const navigate = useNavigate();
+   const { keyword: urlKeyword } = useParams();
+   const [keyword, setKeyword] = useState(urlKeyword || "");
+
+   const submitHandler = (e) => {
+      e.preventDefault();
+      if (keyword.trim()) {
+         navigate(`/search/${keyword}`);
+      } else {
+         navigate("/");
+      }
+   };
+
    return (
-      <form>
+      <form onSubmit={submitHandler}>
          <label className="relative text-xs grid justify-items-start gap-y-2">
             <span className="sr-only">search</span>
             <div className="justify-self-stretch relative">
@@ -26,6 +42,8 @@ const SearchForm = () => {
                   placeholder="search for a poem..."
                   type="text"
                   name="search"
+                  onChange={(e) => setKeyword(e.target.value)}
+                  value={keyword}
                />
             </div>
          </label>

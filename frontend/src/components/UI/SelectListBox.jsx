@@ -11,7 +11,7 @@ const SelectListBox = ({ selectedBgTheme, onChangeSelectedBgTheme }) => {
    return (
       <div className="relative w-72">
          <Listbox value={selectedBgTheme} onChange={selectedBgThemeHandler}>
-            <div className="relative z-10 mt-1">
+            <div className="relative z-[1] mt-1">
                <Listbox.Button className="relative w-full text-left text-sm md:text-base py-3 pl-4 md:py-3 pr-3 text-clr-black-faded rounded-lg bg-clr-bg border border-clr-black-faded  focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none">
                   <span className="block truncate">{selectedBgTheme.name}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
