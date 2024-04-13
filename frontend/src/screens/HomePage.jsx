@@ -20,7 +20,7 @@ const HomePage = () => {
    useEffect(() => {
       if (userAccInfo?.isAdmin) return;
       setPoemList(poems?.slice(0, 3) || []);
-   }, [poems, userAccInfo.isAdmin]);
+   }, [poems, userAccInfo?.isAdmin]);
 
    const fetchMoreData = () => {
       if (isLoading || error) return; // Prevent fetching more data if loading or error
