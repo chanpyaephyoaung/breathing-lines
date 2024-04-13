@@ -1,10 +1,30 @@
 import { Link } from "react-router-dom";
-import { dummyPoems } from "../../../sampleData.js";
 import { generateLineBreakBtwSentences } from "../../../utils/text.jsx";
+import { useIncreaseProfileViewCountMutation } from "../../../slices/usersApiSlice.js";
+import { useIncreasePoemViewCountMutation } from "../../../slices/poemsApiSlice.js";
 
-const poemOfTheDay = dummyPoems[2];
+import { toast } from "react-toastify";
 
-const PoemOfTheDay = () => {
+const PoemOfTheDay = ({ poem }) => {
+   console.log(poem);
+   const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
+   const [increasePoemViewCount] = useIncreasePoemViewCountMutation();
+
+   const viewAuthorProfileHandler = async () => {
+      try {
+         await increaseProfileViewCount(poem.poem.author._id);
+      } catch (err) {
+         toast(err?.data?.errMessage || err.error);
+      }
+   };
+
+   const viewMoreHandler = async () => {
+      try {
+         await increasePoemViewCount(poem.poem._id);
+      } catch (err) {
+         toast(err?.data?.errMessage || err.error);
+      }
+   };
    return (
       <div>
          <div className="flex gap-2 items-center md:gap-4">
@@ -27,42 +47,39 @@ const PoemOfTheDay = () => {
             </svg>
          </div>
 
-         <div className="grid grid-cols-[2fr_1fr] mt-3 md:justify-between">
+         <div className="grid mt-3 md:justify-between">
             <div className="grid pr-3 gap-3">
                <div className="grid -gap-1">
                   <Link
-                     to={`poem/${poemOfTheDay.id}`}
+                     onClick={viewMoreHandler}
+                     to={`poem/${poem?.poem?._id}`}
                      className="transition-all block text-base md:text-xl lg:text-2xl text-clr-black hover:text-clr-tertiary font-medium"
                   >
-                     {poemOfTheDay.title}
+                     {poem?.poem?.title}
                   </Link>
-                  <a
-                     href=" "
+                  <Link
+                     onClick={viewAuthorProfileHandler}
+                     to={`/user-profile/${poem?.poem?.author._id}`}
                      className="text-xs md:text-sm lg:text-base text-clr-black-faded font-light"
                   >
-                     By {poemOfTheDay.author}
-                  </a>
+                     By {poem?.poem?.author?.name}
+                  </Link>
                </div>
 
                <div>
                   <p className="text-xs md:text-base font-light line-clamp-4">
-                     {generateLineBreakBtwSentences(poemOfTheDay.content)}
+                     {generateLineBreakBtwSentences(poem?.poem?.content)}
                   </p>
                </div>
 
                <Link
-                  to={`poem/${poemOfTheDay.id}`}
+                  onClick={viewMoreHandler}
+                  to={`poem/${poem?.poem?._id}`}
                   className="transition-all justify-self-start text-xs md:text-base text-clr-tertiary hover:text-clr-black inline-block underline"
                >
                   View
                </Link>
             </div>
-
-            <img
-               src="https://images.pexels.com/photos/167092/pexels-photo-167092.jpeg"
-               alt="music"
-               className="object-cover border w-full h-24 md:h-32 border-clr-tertiary"
-            />
          </div>
       </div>
    );

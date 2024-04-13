@@ -33,7 +33,6 @@ const PoemPreviewPost = ({
 
    const viewAuthorProfileHandler = async () => {
       try {
-         // navigate(`/user-profile/${author._id}`);
          await increaseProfileViewCount(author._id);
       } catch (err) {
          toast(err?.data?.errMessage || err.error);
@@ -42,7 +41,6 @@ const PoemPreviewPost = ({
 
    const viewMoreHandler = async () => {
       try {
-         // navigate(`/poem/${poemId}`);
          await increasePoemViewCount(poemId);
       } catch (err) {
          toast(err?.data?.errMessage || err.error);

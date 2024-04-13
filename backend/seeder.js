@@ -10,9 +10,11 @@ import Poem from "./models/poemModel.js";
 import AuthorProfileReview from "./models/authorProfileReviewModel.js";
 import PoemRating from "./models/poemRatingModel.js";
 import PoemReview from "./models/poemReviewModel.js";
+import PoemOfTheDay from "./models/poemOfTheDayModel.js";
 import Collection from "./models/collectionModel.js";
 import UserNotification from "./models/userNotificationModel.js";
 import dummyProfileReviews from "./dummyData/profileReviews.js";
+import dummyPoemsOfTheDays from "./dummyData/poemsOfTheDays.js";
 
 dotenv.config();
 
@@ -28,6 +30,7 @@ export const seedDummyData = async () => {
       await PoemReview.deleteMany();
       await Collection.deleteMany();
       await UserNotification.deleteMany();
+      await PoemOfTheDay.deleteMany();
 
       // Seed sample data
       const createdDummyUsers = await User.insertMany(dummyUsers);
@@ -45,6 +48,24 @@ export const seedDummyData = async () => {
       const poemsRes = await Poem.insertMany(samplePoems);
       // Insert poems ids to poems field of the user
       user1Doc.poems = poemsRes.map((poem) => poem._id);
+
+      // Insert sample poems of the days
+      const samplePoemsOfTheDys = dummyPoemsOfTheDays.map((poemOfTheDay, i) => ({
+         ...poemOfTheDay,
+         poem: poemsRes[poemsRes.length - 1 - i]._id,
+      }));
+      const poemsOfTheDaysRes = await PoemOfTheDay.insertMany(samplePoemsOfTheDys);
+      const lastPoem = poemsRes[poemsRes.length - 1];
+      const secondLastPoem = poemsRes[poemsRes.length - 2];
+      const thirdLastPoem = poemsRes[poemsRes.length - 3];
+
+      lastPoem.poemOfTheDay = poemsOfTheDaysRes[0]._id;
+      secondLastPoem.poemOfTheDay = poemsOfTheDaysRes[1]._id;
+      thirdLastPoem.poemOfTheDay = poemsOfTheDaysRes[2]._id;
+
+      await lastPoem.save();
+      await secondLastPoem.save();
+      await thirdLastPoem.save();
 
       // Sample profile review
       const sampleProfileReview = dummyProfileReviews.map((review) => ({
@@ -115,6 +136,7 @@ const removeDummyData = async () => {
       await PoemReview.deleteMany();
       await UserNotification.deleteMany();
       await Collection.deleteMany();
+      await PoemOfTheDay.deleteMany();
 
       console.log("Dummy Data Has Been Successfully REMOVED!");
       process.exit();

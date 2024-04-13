@@ -1,14 +1,10 @@
-import { dummyPoems } from "../../../../sampleData.js";
 import PoemsOfPreviousDay from "./PoemsOfPreviousDay.jsx";
 
-const poemOfPrevDay = dummyPoems[0];
-const poemOfPrevDay1 = dummyPoems[1];
-
-const PoemsOfPreviousDays = () => {
+const PoemsOfPreviousDays = ({ poems }) => {
    return (
       <div className="hidden md:grid gap-y-2">
-         <PoemsOfPreviousDay poem={poemOfPrevDay} />
-         <PoemsOfPreviousDay poem={poemOfPrevDay1} />
+         <PoemsOfPreviousDay poem={poems[0]} label="Yesterday" />
+         <PoemsOfPreviousDay poem={poems[1]} label="2 Days Ago" />
       </div>
    );
 };

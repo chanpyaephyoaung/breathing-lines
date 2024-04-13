@@ -3,6 +3,7 @@ import Poem from "../models/poemModel.js";
 import User from "../models/userModel.js";
 import PoemRating from "../models/poemRatingModel.js";
 import PoemReview from "../models/poemReviewModel.js";
+import PoemOfTheDay from "../models/poemOfTheDayModel.js";
 import { s3RetrieveV3 } from "../s3Service.js";
 
 // @desc    Fetch all poems
@@ -318,4 +319,24 @@ export const increaseViewCount = asyncHandler(async (req, res) => {
       res.status(404);
       throw new Error("Poem not found!");
    }
+});
+
+// @desc    Fetch 3 previous poems of the day including today's
+// @route   GET /api/poems/poemsOfTheDays
+// @access  Public
+export const getPoemsOfTheDay = asyncHandler(async (req, res) => {
+   // Query the database for the latest 3 documents sorted by the awardedAt field in descending order
+   const latestPoemsOfTheDay = await PoemOfTheDay.find({})
+      .populate({
+         path: "poem",
+         select: "title author publishedAt content",
+         populate: {
+            path: "author",
+            select: "name",
+         },
+      })
+      .sort({ awardedAt: -1 })
+      .limit(3);
+
+   res.status(200).json(latestPoemsOfTheDay);
 });

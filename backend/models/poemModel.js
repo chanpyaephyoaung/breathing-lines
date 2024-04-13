@@ -30,7 +30,6 @@ const poemSchema = new mongoose.Schema({
    },
    poemOfTheDay: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
       ref: "PoemOfTheDay",
    },
    viewsCount: {

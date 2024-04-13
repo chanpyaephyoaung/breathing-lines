@@ -35,7 +35,7 @@ const dummyPoems = [
       publishedAt: new Date(),
       viewsCount: 0,
       likesCount: 0,
-      status: "published",
+      status: "drafted",
    },
    {
       title: "Imagine",
@@ -81,7 +81,7 @@ const dummyPoems = [
       publishedAt: new Date(),
       viewsCount: 0,
       likesCount: 0,
-      status: "drafted",
+      status: "published",
    },
    {
       title: "More than words",
@@ -105,7 +105,7 @@ const dummyPoems = [
       publishedAt: new Date(),
       viewsCount: 0,
       likesCount: 0,
-      status: "drafted",
+      status: "published",
    },
 ];
 
