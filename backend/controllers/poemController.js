@@ -18,9 +18,7 @@ export const getAllPoems = asyncHandler(async (req, res) => {
            },
         }
       : {};
-   const poems = await Poem.find({ ...keyword }).populate("author", "name");
-
-   // res.json({ poems });
+   const poems = await Poem.find({ ...keyword, status: "published" }).populate("author", "name");
 
    const poemsWithEncodedCoverImg = await Promise.all(
       poems.map(async (poem, i) => {
