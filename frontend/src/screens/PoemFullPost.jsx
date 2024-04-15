@@ -43,6 +43,9 @@ import { useIncreaseProfileViewCountMutation } from "../slices/usersApiSlice.js"
 import { calculateAverage } from "../utils/math.js";
 import { POEM_WRITE_STATUS_DRAFT, POEM_WRITE_STATUS_PUBLISH } from "../constants.js";
 import AddToCollectionComboBox from "../components/Collection/AddToCollectionComboBox.jsx";
+import TimeAgo from "javascript-time-ago";
+
+const timeAgo = new TimeAgo("en-US");
 
 const emptyStarIcon = (
    <StarIcon className="transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] cursor-pointer" />
@@ -89,7 +92,7 @@ const PoemFullPost = () => {
    const [changePoemStatus, { isLoading: loadingChangePoemStatus }] = useChangePoemStatusMutation();
    const [createNewNotification] = useCreateNewNotificationMutation();
    const [updateUnreadNotiCount] = useUpdateUnreadNotiCountMutation();
-   const { data: collections } = useGetCollectionsOfUserQuery(userAccInfo._id);
+   const { data: collections } = useGetCollectionsOfUserQuery(userAccInfo?._id);
 
    const isCurrentUserTheAuthor = userAccInfo?._id.toString() === poem?.author._id.toString();
    const [poemStatusSwitchEnabled, setPoemStatusSwitchEnabled] = useState(false);
@@ -399,7 +402,7 @@ const PoemFullPost = () => {
                         {poem?.content}
                      </p>
                      <p className="text-2xs md:text-xs text-clr-black font-light">
-                        {poem?.publishedAt}
+                        Published Time: {timeAgo.format(new Date(poem?.publishedAt))}
                      </p>
                      <div className="flex gap-2 items-center">
                         <TagIcon className="w-4 md:w-5 text-clr-black-faded" />

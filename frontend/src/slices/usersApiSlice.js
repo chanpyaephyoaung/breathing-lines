@@ -116,6 +116,11 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             body: { userId },
          }),
       }),
+      getPoemsRecommendations: builder.query({
+         query: (userId) => ({
+            url: `${USERS_URL}/${userId}/poem-recommendations`,
+         }),
+      }),
    }),
 });
 
@@ -138,4 +143,5 @@ export const {
    useGetUnreadNotiCountQuery,
    useUpdateUnreadNotiCountMutation,
    useDeleteUserAccMutation,
+   useGetPoemsRecommendationsQuery,
 } = usersApiSlice;

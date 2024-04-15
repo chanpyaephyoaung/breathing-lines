@@ -333,7 +333,7 @@ export const getAllPoemsOfUser = asyncHandler(async (req, res) => {
    const poemsWithEncodedCoverImg = await Promise.all(
       poems.map(async (poem, i) => {
          let image = "";
-         if (poem?.coverImg && i === 6) {
+         if (poem?.coverImg && i === 3) {
             // Just for testing purpose. Remove the second condition in production
             const result = await s3RetrieveV3(poem.coverImg);
             image = await result.Body?.transformToString("base64");
@@ -498,4 +498,31 @@ export const getUnreadNotiCount = asyncHandler(async (req, res) => {
    const targetUser = await User.findById(userId);
 
    res.status(200).json(targetUser.unreadNotificationsCount);
+});
+
+// @desc    Retrieve poem recommendations of a user
+// @route   GET /api/users/:userId/poem-recommendations
+// @access  Private
+export const getPoemRecommendations = asyncHandler(async (req, res) => {
+   console.log("Poem recommendations route hit");
+   const currentUserId = req.currentUser._id;
+   const currentUser = await User.findById(currentUserId);
+
+   console.log(currentUser.poemRecommendations.length);
+
+   const recommendedPoemsWithEncodedCoverImg = await Promise.all(
+      currentUser.poemRecommendations.map(async (poem) => {
+         const currentPoem = await Poem.findById(poem.id).populate("author", "name");
+
+         let image = "";
+         // if (currentPoem?.coverImg) {
+         //    // Just for testing purpose. Remove the second condition in production
+         //    const result = await s3RetrieveV3(currentPoem.coverImg);
+         //    image = await result.Body?.transformToString("base64");
+         // }
+         return { ...currentPoem._doc, encodedCoverImg: image };
+      })
+   );
+
+   res.status(200).json(recommendedPoemsWithEncodedCoverImg);
 });

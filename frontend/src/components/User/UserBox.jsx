@@ -98,12 +98,12 @@ const UserBox = ({
                      className="justify-self-end text-xs py-2 px-4 md:text-sm md:py-2 text-clr-primary font-medium border border-clr-primary rounded-lg hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
                   >
                      {isFollowerBtnClicked
-                        ? targetUserProfileDetails?.targetUser?.followings.includes(targetUserId)
+                        ? targetUserProfileDetails?.targetUser?.followers.includes(targetUserId)
                            ? " Unfollow"
                            : "Follow"
-                        : targetUserProfileDetails?.targetUser?.followers.includes(targetUserId)
-                        ? " Follow"
-                        : "Unfollow"}
+                        : targetUserProfileDetails?.targetUser?.followings.includes(targetUserId)
+                        ? "Unfollow"
+                        : "Follow"}
                   </button>
                )}
             {userAccInfo._id === targetUserProfileDetails?.targetUser?._id && (
@@ -113,10 +113,10 @@ const UserBox = ({
                   className="justify-self-end text-xs py-2 px-4 md:text-sm md:py-2 text-clr-primary font-medium border border-clr-primary rounded-lg hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
                >
                   {isFollowerBtnClicked
-                     ? currentUserProfileDetails?.targetUser?.followings.includes(targetUserId)
+                     ? currentUserProfileDetails?.targetUser?.followers.includes(targetUserId)
                         ? " Unfollow"
                         : "Follow"
-                     : currentUserProfileDetails?.targetUser?.followers.includes(targetUserId)
+                     : currentUserProfileDetails?.targetUser?.followings.includes(targetUserId)
                      ? " Unfollow"
                      : "Follow"}
                </button>

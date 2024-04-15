@@ -25,7 +25,7 @@ export const getAllPoems = asyncHandler(async (req, res) => {
    const poemsWithEncodedCoverImg = await Promise.all(
       poems.map(async (poem, i) => {
          let image = "";
-         if (poem?.coverImg && i === 6) {
+         if (poem?.coverImg && i === 29) {
             // Just for testing purpose. Remove the second condition in production
             const result = await s3RetrieveV3(poem.coverImg);
             image = await result.Body?.transformToString("base64");
@@ -33,7 +33,6 @@ export const getAllPoems = asyncHandler(async (req, res) => {
          return { ...poem._doc, encodedCoverImg: image };
       })
    );
-
    res.json(poemsWithEncodedCoverImg);
 });
 
@@ -102,7 +101,7 @@ export const getAllPoemsOfFollowingUsers = asyncHandler(async (req, res) => {
    const poemsWithEncodedCoverImg = await Promise.all(
       poemsOfFollowedUsers.map(async (poem, i) => {
          let image = "";
-         if (poem?.coverImg && i === 6) {
+         if (poem?.coverImg && i === 29) {
             // Just for testing purpose. Remove the second condition in production
             const result = await s3RetrieveV3(poem.coverImg);
             image = await result.Body?.transformToString("base64");
@@ -110,8 +109,6 @@ export const getAllPoemsOfFollowingUsers = asyncHandler(async (req, res) => {
          return { ...poem._doc, encodedCoverImg: image };
       })
    );
-
-   console.log(poemsWithEncodedCoverImg);
 
    res.json(poemsWithEncodedCoverImg);
 });

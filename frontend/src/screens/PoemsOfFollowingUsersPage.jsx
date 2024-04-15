@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import PoemPreviewPosts from "../components/Poems/PoemPreview/PoemPreviewPosts.jsx";
 import Container from "../components/UI/Container.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
+import Message from "../components/Typography/Message.jsx";
 import { useGetAllPoemsOfFollowingUsersQuery } from "../slices/poemsApiSlice.js";
 import InfiniteScroll from "react-infinite-scroll-component";
 import AdminDashboard from "../components/Admin/AdminDashboard.jsx";
@@ -12,7 +13,6 @@ const PoemsOfFollowingUsersPage = () => {
    const { userAccInfo } = useSelector((state) => state.authUser);
    const { data: poems, isLoading, error } = useGetAllPoemsOfFollowingUsersQuery();
 
-   console.log(poems);
    const [poemList, setPoemList] = useState([]);
 
    useEffect(() => {
@@ -30,7 +30,15 @@ const PoemsOfFollowingUsersPage = () => {
 
    return (
       <>
-         {userAccInfo?.isAdmin ? (
+         {poems && poems.length === 0 ? (
+            <Container>
+               <div className="text-center py-6">
+                  <Message type="danger">
+                     You have not followed any author yet! Follow them to never miss their poems!
+                  </Message>
+               </div>
+            </Container>
+         ) : userAccInfo?.isAdmin ? (
             <Container>
                <AdminDashboard />
             </Container>

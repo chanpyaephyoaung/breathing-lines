@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import SearchForm from "../Forms/SearchForm.jsx";
+import UserPoemFeedsDropdown from "./Dropdown/UserPoemFeedsDropdown.jsx";
 
 const SubMenu = () => {
    const { userAccInfo } = useSelector((state) => state.authUser);
@@ -11,17 +12,7 @@ const SubMenu = () => {
                {userAccInfo && !userAccInfo.isAdmin ? (
                   <>
                      <li className="pr-1.5 md:pr-2.5">
-                        <Link to="/" className="transition-all hover:text-clr-primary">
-                           For You
-                        </Link>
-                     </li>
-                     <li>
-                        <Link
-                           to="/poems/followings"
-                           className="transition-all hover:text-clr-primary"
-                        >
-                           Followings
-                        </Link>
+                        <UserPoemFeedsDropdown />
                      </li>
                      <li>
                         <Link to="/write" className="transition-all hover:text-clr-primary">

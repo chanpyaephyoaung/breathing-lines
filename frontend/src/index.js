@@ -32,6 +32,7 @@ import AdminProtectedComponent from "./components/UI/AdminProtectedComponent.jsx
 import UsersListPage from "./screens/admin/UsersListPage.jsx";
 import PoemsListPage from "./screens/admin/PoemsListPage.jsx";
 import PoemsOfFollowingUsersPage from "./screens/PoemsOfFollowingUsersPage.jsx";
+import PoemsForYouPage from "./screens/PoemsForYouPage.jsx";
 
 const router = createBrowserRouter(
    createRoutesFromElements(
@@ -47,6 +48,7 @@ const router = createBrowserRouter(
 
          <Route path="" element={<ProtectedComponent />}>
             <Route path="/poems/followings" element={<PoemsOfFollowingUsersPage />} />
+            <Route path="/poems/for-you" element={<PoemsForYouPage />} />
             <Route path="/user-profile/account/update" element={<AccountUpdatePage />} />
             <Route
                path="/user-profile/:userId/collections/:collectionId"

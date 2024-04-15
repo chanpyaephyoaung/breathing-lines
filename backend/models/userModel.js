@@ -84,6 +84,11 @@ const userSchema = new mongoose.Schema({
          ref: "UserNotification",
       },
    ],
+   poemRecommendations: [
+      {
+         type: Object,
+      },
+   ],
    unreadNotificationsCount: {
       type: Number,
       required: true,

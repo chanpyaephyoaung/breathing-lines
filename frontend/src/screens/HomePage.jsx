@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import HeaderSection from "../components/Section/HeaderSection.jsx";
 import PoemPreviewPosts from "../components/Poems/PoemPreview/PoemPreviewPosts.jsx";
 import Container from "../components/UI/Container.jsx";
+import Message from "../components/Typography/Message.jsx";
 import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
 import { useGetAllPoemsQuery } from "../slices/poemsApiSlice.js";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -42,7 +43,7 @@ const HomePage = () => {
             </Container>
          ) : error ? (
             <Container>
-               <h2>{error?.data?.errMessage || error.error}</h2>
+               <Message type="danger">{error?.data?.errMessage || error.error}</Message>
             </Container>
          ) : (
             <>
