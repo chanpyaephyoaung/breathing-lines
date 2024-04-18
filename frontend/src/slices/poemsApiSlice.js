@@ -91,6 +91,12 @@ export const poemsApiSlice = apiSlice.injectEndpoints({
             body: { updatedReview },
          }),
       }),
+      deletePoemReview: builder.mutation({
+         query: (poemId) => ({
+            url: `${POEMS_URL}/${poemId}/review`,
+            method: "DELETE",
+         }),
+      }),
       increasePoemViewCount: builder.mutation({
          query: (poemId) => ({
             url: `${POEMS_URL}/${poemId}/view`,
@@ -115,5 +121,6 @@ export const {
    useRatePoemMutation,
    useReviewPoemMutation,
    useEditPoemReviewMutation,
+   useDeletePoemReviewMutation,
    useIncreasePoemViewCountMutation,
 } = poemsApiSlice;

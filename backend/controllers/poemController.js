@@ -352,8 +352,6 @@ export const editPoemReview = asyncHandler(async (req, res) => {
 
    const poemReview = await PoemReview.findOne({ reviewedBy: currentUserId, reviewedPoem: poemId });
 
-   console.log(currentUserId, poemReview.reviewedBy);
-
    if (!updatedReview) {
       res.status(404);
       throw new Error("Please provide a review to update.");
@@ -381,9 +379,44 @@ export const editPoemReview = asyncHandler(async (req, res) => {
    targetPoem.reviews[targetReviewIndex] = savedUpdatedReview._id;
    await targetPoem.save();
 
-   console.log(savedUpdatedReview, targetPoem.reviews);
-
    res.status(200).json(savedUpdatedReview);
+});
+
+// @desc    Edit a review for a poem
+// @route   PUT /api/poems/:poemId/review
+// @access  Private
+export const deletePoemReview = asyncHandler(async (req, res) => {
+   const currentUserId = req.currentUser._id;
+   const currentUser = await User.findById(currentUserId);
+
+   if (currentUser.isBanned) {
+      res.status(403);
+      throw new Error("You are banned from deleting poems.");
+   }
+   const poemId = req.params.poemId;
+   const targetPoem = await Poem.findById(poemId);
+   const poemReview = await PoemReview.findOne({ reviewedBy: currentUserId, reviewedPoem: poemId });
+
+   if (!poemReview) {
+      res.status(404);
+      throw new Error("Poem review not found.");
+   }
+
+   if (currentUserId.toString() !== poemReview.reviewedBy.toString()) {
+      res.status(401);
+      throw new Error("You are not allowed to modify this poem review.");
+   }
+
+   // Remove a poem review from the poem reviews array
+   targetPoem.reviews = targetPoem.reviews.filter(
+      (review) => review._id.toString() !== poemReview._id.toString()
+   );
+   // Delete a poem review
+   await PoemReview.deleteOne({ _id: poemReview._id });
+
+   await targetPoem.save();
+
+   res.status(200).json({ message: "Poem review deleted successfully!" });
 });
 
 // @desc    Increase a poem's views count

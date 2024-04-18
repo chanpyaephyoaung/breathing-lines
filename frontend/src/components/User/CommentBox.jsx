@@ -5,7 +5,10 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import TimeAgo from "javascript-time-ago";
 import LoaderSpinner from "../UI/LoaderSpinner.jsx";
 import Modal from "../UI/Modal.jsx";
-import { useEditPoemReviewMutation } from "../../slices/poemsApiSlice.js";
+import {
+   useEditPoemReviewMutation,
+   useDeletePoemReviewMutation,
+} from "../../slices/poemsApiSlice.js";
 import { toast } from "react-toastify";
 
 const timeAgo = new TimeAgo("en-US");
@@ -20,6 +23,7 @@ const CommentBox = ({ review, type }) => {
    const [modalDesc, setModalDesc] = useState("");
 
    const [editPoemReview, { isLoading: loadingEditPoemReview }] = useEditPoemReviewMutation();
+   const [deletePoemReview, { isLoading: loadingDeletePoemReview }] = useDeletePoemReviewMutation();
 
    useEffect(() => {
       if (review) setUpdatedReview(review.review);
@@ -33,20 +37,30 @@ const CommentBox = ({ review, type }) => {
       setIsModalOpen(true);
    };
 
-   const saveChangesHandler = () => {
-      setCtaType("saveChanges");
+   const updatePoemReviewHandler = () => {
+      setCtaType("updatePoemReview");
       setModalDesc("Do you really wish to save the changes?");
+      openModal();
+   };
+
+   const deletePoemReviewHandler = () => {
+      setCtaType("deletePoemReview");
+      setModalDesc("Do you really wish to delete this poem review?");
       openModal();
    };
 
    const ctaHandler = async () => {
       try {
-         if (ctaType === "saveChanges") {
+         if (ctaType === "updatePoemReview") {
             await editPoemReview({
                poemId,
                updatedReview,
             });
             toast.success("Poem updated successfully!");
+            closeModal();
+         } else if (ctaType === "deletePoemReview") {
+            const res = await deletePoemReview(poemId).unwrap();
+            toast.success(res.message);
             closeModal();
          }
       } catch (err) {
@@ -63,20 +77,22 @@ const CommentBox = ({ review, type }) => {
             confirmBtnText="Confirm"
             successFunc={ctaHandler}
          >
-            <label className="relative text-xs grid justify-items-start gap-y-2 mb-4">
-               <span className="sr-only">Review</span>
-               <p className="text-sm font-medium">Review</p>
-               <div className="justify-self-stretch relative">
-                  <input
-                     className={`placeholder:text-clr-black-faded text-sm py-3 md:py-3 pl-4 pr-4 block bg-clr-white w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
-                     placeholder="review"
-                     type="text"
-                     name="name"
-                     value={updatedReview}
-                     onChange={(e) => setUpdatedReview(e.target.value)}
-                  />
-               </div>
-            </label>
+            {ctaType === "updatePoemReview" && (
+               <label className="relative text-xs grid justify-items-start gap-y-2 mb-4">
+                  <span className="sr-only">Review</span>
+                  <p className="text-sm font-medium">Review</p>
+                  <div className="justify-self-stretch relative">
+                     <input
+                        className={`placeholder:text-clr-black-faded text-sm py-3 md:py-3 pl-4 pr-4 block bg-clr-white w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-none`}
+                        placeholder="review"
+                        type="text"
+                        name="name"
+                        value={updatedReview}
+                        onChange={(e) => setUpdatedReview(e.target.value)}
+                     />
+                  </div>
+               </label>
+            )}
             {loadingEditPoemReview && <LoaderSpinner />}
          </Modal>
          <div
@@ -110,11 +126,12 @@ const CommentBox = ({ review, type }) => {
                {userAccInfo?._id.toString() === review.reviewedBy._id.toString() && (
                   <div className="flex gap-x-4 items-center">
                      <PencilSquareIcon
-                        onClick={saveChangesHandler}
+                        onClick={updatePoemReviewHandler}
                         className={`w-[15px] md:w-[20px] stroke-[1] hover:text-clr-primary cursor-pointer`}
                      />
 
                      <TrashIcon
+                        onClick={deletePoemReviewHandler}
                         className={`w-[15px] md:w-[20px] stroke-[1] hover:text-clr-primary cursor-pointer`}
                      />
                   </div>

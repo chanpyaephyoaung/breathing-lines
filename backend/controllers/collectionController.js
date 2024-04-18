@@ -122,8 +122,13 @@ export const removePoemFromCollection = asyncHandler(async (req, res) => {
 // @access  Private
 export const deleteCollection = asyncHandler(async (req, res) => {
    const currentCollection = await Collection.findById(req.params.collectionId);
+   const currentUser = await User.findById(req.currentUser._id);
 
    if (currentCollection) {
+      // Remove a poem review from the poem reviews array
+      currentUser.collections = currentUser.collections.filter(
+         (collection) => collection._id.toString() !== currentCollection.toString()
+      );
       await Collection.deleteOne({ _id: currentCollection._id });
       res.status(200).json({ message: "Collection deleted successfully." });
    } else {
