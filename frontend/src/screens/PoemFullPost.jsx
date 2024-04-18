@@ -55,14 +55,6 @@ const fullStarIcon = (
    <StarIcon className="transition-all w-[35px] md:w-[45px] text-clr-black stroke-[0.6] cursor-pointer fill-clr-primary" />
 );
 
-const dummyReview = {
-   reviewedBy: {
-      name: "You-Know-Who",
-   },
-   review: "This is a great poem. I love it.",
-   reviewedAt: new Date(),
-};
-
 const PoemFullPost = () => {
    const socket = useOutletContext();
    const navigate = useNavigate();
@@ -549,17 +541,10 @@ const PoemFullPost = () => {
                                  key={review._id}
                                  review={review}
                                  type="large"
+                                 author={poem.author._id}
                               ></CommentBox>
                            ))}
-                           <CommentBox review={dummyReview} type="large"></CommentBox>
                         </div>
-
-                        {/* <button
-                        type="button"
-                        className="justify-self-center text-xs py-3 px-5 md:text-sm text-clr-primary font-medium border border-clr-primary rounded-full hover:bg-clr-primary hover:text-clr-white focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 transition duration-300 leading-none"
-                     >
-                        View all comments
-                     </button> */}
                      </div>
                   </>
                )}

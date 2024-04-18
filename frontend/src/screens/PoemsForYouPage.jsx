@@ -8,7 +8,7 @@ import Message from "../components/Typography/Message.jsx";
 import { useGetPoemsRecommendationsQuery } from "../slices/usersApiSlice.js";
 import InfiniteScroll from "react-infinite-scroll-component";
 import AdminDashboard from "../components/Admin/AdminDashboard.jsx";
-import { infiniteScrollLoaderDuration } from "../constants.js";
+import { infiniteScrollLoaderDuration, infiniteScrollElementLimit } from "../constants.js";
 import { toast } from "react-toastify";
 
 const PoemsForYouPage = () => {
@@ -29,7 +29,7 @@ const PoemsForYouPage = () => {
                `https://breathing-lines-rec-sys.onrender.com/personalized-feed/${userAccInfo?._id}`
             );
             setIsGeneratingRecommendations(false);
-            setPoemList(poems?.slice(0, 3) || []);
+            setPoemList(poems?.slice(0, infiniteScrollElementLimit + 1) || []);
          } catch (err) {
             toast(err?.data?.errMessage || err.error);
          }
@@ -40,7 +40,7 @@ const PoemsForYouPage = () => {
 
    const fetchMoreData = () => {
       if (isLoading || error) return; // Prevent fetching more data if loading or error
-      const nextPoems = poems.slice(poemList.length, poemList.length + 2);
+      const nextPoems = poems.slice(poemList.length, poemList.length + infiniteScrollElementLimit);
       setTimeout(() => {
          setPoemList(poemList.concat(nextPoems));
       }, infiniteScrollLoaderDuration);

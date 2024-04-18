@@ -334,6 +334,58 @@ export const createPoemReview = asyncHandler(async (req, res) => {
    }
 });
 
+// @desc    Edit a review for a poem
+// @route   PUT /api/poems/:poemId/review
+// @access  Private
+export const editPoemReview = asyncHandler(async (req, res) => {
+   const currentUserId = req.currentUser._id;
+   const currentUser = await User.findById(currentUserId);
+
+   if (currentUser.isBanned) {
+      res.status(403);
+      throw new Error("You are banned from editing poems.");
+   }
+   const poemId = req.params.poemId;
+   const { updatedReview } = req.body;
+
+   const targetPoem = await Poem.findById(poemId);
+
+   const poemReview = await PoemReview.findOne({ reviewedBy: currentUserId, reviewedPoem: poemId });
+
+   console.log(currentUserId, poemReview.reviewedBy);
+
+   if (!updatedReview) {
+      res.status(404);
+      throw new Error("Please provide a review to update.");
+   }
+
+   if (!poemReview) {
+      res.status(404);
+      throw new Error("Poem review not found.");
+   }
+
+   if (currentUserId.toString() !== poemReview.reviewedBy.toString()) {
+      res.status(401);
+      throw new Error("You are not allowed to modify this poem review.");
+   }
+
+   // Update a poem review
+   poemReview.review = updatedReview;
+   poemReview.reviewedAt = new Date();
+   const savedUpdatedReview = await poemReview.save();
+
+   // Update a poem reviews array
+   const targetReviewIndex = targetPoem.reviews.findIndex(
+      (review) => review._id.toString() === poemReview._id.toString()
+   );
+   targetPoem.reviews[targetReviewIndex] = savedUpdatedReview._id;
+   await targetPoem.save();
+
+   console.log(savedUpdatedReview, targetPoem.reviews);
+
+   res.status(200).json(savedUpdatedReview);
+});
+
 // @desc    Increase a poem's views count
 // @route   PUT /api/poems/:poemId/view
 // @access  Private

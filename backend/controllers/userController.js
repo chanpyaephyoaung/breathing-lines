@@ -333,7 +333,7 @@ export const getAllPoemsOfUser = asyncHandler(async (req, res) => {
    const poemsWithEncodedCoverImg = await Promise.all(
       poems.map(async (poem, i) => {
          let image = "";
-         if (poem?.coverImg && i === 3) {
+         if (poem?.coverImg && i === 28) {
             // Just for testing purpose. Remove the second condition in production
             const result = await s3RetrieveV3(poem.coverImg);
             image = await result.Body?.transformToString("base64");
@@ -504,11 +504,8 @@ export const getUnreadNotiCount = asyncHandler(async (req, res) => {
 // @route   GET /api/users/:userId/poem-recommendations
 // @access  Private
 export const getPoemRecommendations = asyncHandler(async (req, res) => {
-   console.log("Poem recommendations route hit");
    const currentUserId = req.currentUser._id;
    const currentUser = await User.findById(currentUserId);
-
-   console.log(currentUser.poemRecommendations.length);
 
    const recommendedPoemsWithEncodedCoverImg = await Promise.all(
       currentUser.poemRecommendations.map(async (poem) => {

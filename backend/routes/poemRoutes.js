@@ -12,6 +12,7 @@ import {
    changePoemStatus,
    getPoemsOfTheDay,
    getAllPoemsOfFollowingUsers,
+   editPoemReview,
 } from "../controllers/poemController.js";
 import { protectRoutes } from "../middleware/authMiddleware.js";
 
@@ -26,7 +27,10 @@ router.route("/:poemId/edit").put(protectRoutes, editPoem);
 router.route("/:poemId/change-status").put(protectRoutes, changePoemStatus);
 router.route("/:poemId/like").put(protectRoutes, likePoem);
 router.route("/:poemId/rate").put(protectRoutes, ratePoem);
-router.route("/:poemId/review").post(protectRoutes, createPoemReview);
+router
+   .route("/:poemId/review")
+   .post(protectRoutes, createPoemReview)
+   .put(protectRoutes, editPoemReview);
 router.route("/:poemId/view").put(protectRoutes, increaseViewCount);
 
 router.route("/write").post(protectRoutes, writePoem);

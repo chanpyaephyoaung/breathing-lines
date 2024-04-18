@@ -7,7 +7,7 @@ import LoaderSpinner from "../components/UI/LoaderSpinner.jsx";
 import Message from "../components/Typography/Message.jsx";
 import Modal from "../components/UI/Modal.jsx";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { infiniteScrollLoaderDuration } from "../constants.js";
+import { infiniteScrollLoaderDuration, infiniteScrollElementLimit } from "../constants.js";
 import PoemPreviewPosts from "../components/Poems/PoemPreview/PoemPreviewPosts.jsx";
 import {
    useGetOneCollectionOfUserQuery,
@@ -48,13 +48,16 @@ const CollectionPage = () => {
 
    useEffect(() => {
       if (userAccInfo?.isAdmin) return;
-      setPoemList(collection?.poems?.slice(0, 3) || []);
+      setPoemList(collection?.poems?.slice(0, infiniteScrollElementLimit + 1) || []);
       refetch();
    }, [refetch, collection?.poems, userAccInfo.isAdmin]);
 
    const fetchMoreData = () => {
       if (isLoading || error) return; // Prevent fetching more data if loading or error
-      const nextPoems = collection?.poems.slice(poemList.length, poemList.length + 2);
+      const nextPoems = collection?.poems.slice(
+         poemList.length,
+         poemList.length + infiniteScrollElementLimit
+      );
       setTimeout(() => {
          setPoemList(poemList.concat(nextPoems));
       }, infiniteScrollLoaderDuration);

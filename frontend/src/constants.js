@@ -65,3 +65,4 @@ export const bgThemes = [
 ];
 
 export const infiniteScrollLoaderDuration = 1000; // in milliseconds
+export const infiniteScrollElementLimit = 5;
