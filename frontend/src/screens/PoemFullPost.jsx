@@ -74,7 +74,7 @@ const PoemFullPost = () => {
 
    const [likePoem] = useLikePoemMutation();
    const [ratePoem] = useRatePoemMutation();
-   const [reviewPoem] = useReviewPoemMutation();
+   const [reviewPoem, { isLoading: loadingReviewPoem }] = useReviewPoemMutation();
    const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
 
    const { data: poem, isLoading, error, refetch } = useGetSinglePoemByIdQuery(poemId);
@@ -250,7 +250,7 @@ const PoemFullPost = () => {
          setReviewInput("");
       } catch (err) {
          setReviewInput("");
-         toast(err?.data?.errMessage || err.error);
+         toast.error(err?.data?.errMessage || err.error);
       }
    };
 
@@ -522,6 +522,7 @@ const PoemFullPost = () => {
                                  >
                                     Write a review
                                  </button>
+                                 {loadingReviewPoem && <LoaderSpinner />}
                               </form>
                            </>
                         ) : (

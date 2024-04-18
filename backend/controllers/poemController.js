@@ -305,6 +305,11 @@ export const createPoemReview = asyncHandler(async (req, res) => {
    const poemId = req.params.poemId;
    const { review } = req.body;
 
+   if (!review) {
+      res.status(400);
+      throw new Error("Please provide a review.");
+   }
+
    const poem = await Poem.findById(poemId);
 
    const poemReview = await PoemReview.findOne({ reviewedBy: currentUserId, reviewedPoem: poemId });
