@@ -243,9 +243,10 @@ export const increaseViewCount = asyncHandler(async (req, res) => {
    const { userId } = req.body;
    const targetUser = await User.findById(userId);
    const currentUser = req.currentUser._id;
+
    if (targetUser) {
       // Increase the view count only if the user is anonymous(not signed-in) or not the current user itself
-      if (!currentUser || currentUser !== userId) {
+      if (!currentUser || currentUser.toString() !== userId.toString()) {
          targetUser.profileViewsCount += 1;
          await targetUser.save();
          res.status(200).json({ message: "View count increased!" });
