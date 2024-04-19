@@ -195,58 +195,63 @@ describe("Integration tests for USERS endpoints with database.", () => {
       });
    });
 
-   describe("GET api/users/account-profile", () => {
-      it("Should retrieve the account profile of a user when signed in.", async () => {
+   describe("GET api/users/user-profile/:userId", () => {
+      it("Should retrieve the user profile of a user when signed in.", async () => {
          const createdDumUsers = await User.insertMany(users);
          const existingUserId = createdDumUsers[1]._id;
 
          const mockJwtToken = generateJwtToken(existingUserId);
 
          const res = await request(app)
-            .get("/api/users/account-profile")
+            .get(`/api/users/user-profile/${existingUserId}`)
             .set("Cookie", `jwt=${mockJwtToken}`);
 
          assert.equal(res.status, 200);
          assert.isObject(res.body, "The response body (user) should be an object.");
-         assert.property(res.body.currentUser, "_id");
-         assert.property(res.body.currentUser, "name");
-         assert.property(res.body.currentUser, "email");
-         assert.property(res.body.currentUser, "isAdmin");
-         assert.property(res.body.currentUser, "profileDesc");
-         assert.property(res.body.currentUser, "isBanned");
-         assert.property(res.body.currentUser, "poems");
-         assert.property(res.body.currentUser, "collections");
-         assert.property(res.body.currentUser, "profileReviews");
-         assert.property(res.body.currentUser, "followers");
-         assert.property(res.body.currentUser, "followings");
-         assert.property(res.body.currentUser, "notifications");
+         assert.property(res.body.targetUser, "_id");
+         assert.property(res.body.targetUser, "name");
+         assert.property(res.body.targetUser, "email");
+         assert.property(res.body.targetUser, "isAdmin");
+         assert.property(res.body.targetUser, "profileDesc");
+         assert.property(res.body.targetUser, "isBanned");
+         assert.property(res.body.targetUser, "poems");
+         assert.property(res.body.targetUser, "favoritedPoems");
+         assert.property(res.body.targetUser, "collections");
+         assert.property(res.body.targetUser, "profileReviews");
+         assert.property(res.body.targetUser, "followers");
+         assert.property(res.body.targetUser, "followings");
+         assert.property(res.body.targetUser, "notifications");
+         assert.property(res.body.targetUser, "unreadNotificationsCount");
+         assert.property(res.body.targetUser, "poemRecommendations");
          assert.property(res.body, "encodedProfileImage");
       });
 
-      it("Should not retrieve the account profile of a user who doesn't exist.", async () => {
+      it("Should not retrieve the user profile of a user who doesn't exist.", async () => {
          await User.insertMany(users);
          const notExistingUserId = "659f0a906bf7e2fa49254d99";
 
          const mockJwtToken = generateJwtToken(notExistingUserId);
 
          const res = await request(app)
-            .get("/api/users/account-profile")
+            .get(`/api/users/user-profile/${notExistingUserId}`)
             .set("Cookie", `jwt=${mockJwtToken}`);
 
          assert.equal(res.status, 404);
          assert.equal(res.body.errMessage, "Current user not found!");
       });
 
-      it("Should not retrieve the account profile of a user when NOT signed in.", async () => {
-         await User.insertMany(users);
+      it("Should not retrieve the user profile of a user when NOT signed in.", async () => {
+         const createdDumUsers = await User.insertMany(users);
+         const existingUserId = createdDumUsers[1]._id;
 
-         const res = await request(app).get("/api/users/account-profile");
+         const res = await request(app).get(`/api/users/user-profile/${existingUserId}`);
 
          assert.equal(res.status, 401);
          assert.equal(res.body.errMessage, "Unauthorised, token not presented.");
       });
    });
-   describe("PUT api/users/account-profile", () => {
+
+   describe("PUT api/users/user-profile/account/update", () => {
       it("Should update the account profile of an user when signed in.", async () => {
          const createdDumUsers = await User.insertMany(users);
          const existingUserId = createdDumUsers[1]._id;
@@ -259,7 +264,7 @@ describe("Integration tests for USERS endpoints with database.", () => {
          };
 
          const res = await request(app)
-            .put("/api/users/account-profile")
+            .put(`/api/users/user-profile/account/update`)
             .set("Cookie", `jwt=${mockJwtToken}`)
             .send(updatedUser);
 
@@ -273,37 +278,40 @@ describe("Integration tests for USERS endpoints with database.", () => {
       });
 
       it("Should not update the account profile of an user when NOT signed in.", async () => {
-         await User.insertMany(users);
+         const createdDumUsers = await User.insertMany(users);
+         const existingUserId = createdDumUsers[1]._id;
 
          const updatedUser = {
             email: "nancy@gmail.com",
             password: "123abc",
          };
 
-         const res = await request(app).put("/api/users/account-profile").send(updatedUser);
+         const res = await request(app)
+            .put(`/api/users/user-profile/${existingUserId}`)
+            .send(updatedUser);
 
          assert.equal(res.status, 401);
          assert.equal(res.body.errMessage, "Unauthorised, token not presented.");
       });
    });
 
-   describe("PUT api/users/user-profile", () => {
+   describe("PUT /api/users/user-profile/:userId", () => {
       it("Should update the 'user' profile of an user when signed in.", async () => {
          const createdDumUsers = await User.insertMany(users);
          const existingUserId = createdDumUsers[1]._id;
 
          const mockJwtToken = generateJwtToken(existingUserId);
 
-         const updatedUser = {
+         const newProfileData = {
             name: "Nancy",
             profileImg: "uploads/nancy-selfie.jpg",
             profileDesc: "Hi, I am Nancy!",
          };
 
          const res = await request(app)
-            .put("/api/users/user-profile")
+            .put(`/api/users/user-profile/${existingUserId}`)
             .set("Cookie", `jwt=${mockJwtToken}`)
-            .send(updatedUser);
+            .send({ newProfileData });
 
          assert.equal(res.status, 200);
          assert.isObject(res.body, "The response body (user) should be an object.");
@@ -319,7 +327,8 @@ describe("Integration tests for USERS endpoints with database.", () => {
       });
 
       it("Should not update the 'user' profile of an user when NOT signed in.", async () => {
-         await User.insertMany(users);
+         const createdDumUsers = await User.insertMany(users);
+         const existingUserId = createdDumUsers[1]._id;
 
          const updatedUser = {
             name: "Nancy",
@@ -327,7 +336,9 @@ describe("Integration tests for USERS endpoints with database.", () => {
             profileDesc: "Hi, I am Nancy!",
          };
 
-         const res = await request(app).put("/api/users/user-profile").send(updatedUser);
+         const res = await request(app)
+            .put(`/api/users/user-profile/${existingUserId}`)
+            .send(updatedUser);
 
          assert.equal(res.status, 401);
          assert.equal(res.body.errMessage, "Unauthorised, token not presented.");
