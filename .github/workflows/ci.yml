@@ -33,7 +33,12 @@ jobs:
          - name: Install root dependencies
            run: npm install
 
+         - name: Install backend dependencies
+           working-directory: ./backend
+           run: npm install
+
          - name: Run DB Integration Tests
+           working-directory: ./backend
            run: npm run test:db-integration
 
          - name: Run ESLint tests

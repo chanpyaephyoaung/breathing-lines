@@ -10,7 +10,6 @@
       "dev": "concurrently \"npm run server\" \"npm run client\"",
       "data:seed": "node backend/seeder.js -s",
       "data:remove": "node backend/seeder.js -r",
-      "test:db-integration": "cross-env NODE_ENV=test mocha tests/db-integration-tests/ --timeout 100000 --exit",
       "test:unit": "cross-env NODE_ENV=test mocha tests/unit-tests/ --timeout 100000 --exit",
       "lint": "eslint ./frontend/src/**/*.{js,jsx,ts,tsx}"
    },
@@ -33,13 +32,7 @@
       "supertest": "^6.3.4"
    },
    "dependencies": {
-      "@aws-sdk/client-s3": "^3.525.0",
-      "bcryptjs": "^2.4.3",
-      "cookie-parser": "^1.4.6",
       "cors": "^2.8.5",
-      "express": "^4.18.2",
-      "jsonwebtoken": "^9.0.2",
-      "mongoose": "^8.1.3",
       "uuid": "^9.0.1"
    }
 }

@@ -5,7 +5,7 @@
    "type": "module",
    "main": "server.js",
    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
+      "test:db-integration": "cross-env NODE_ENV=test mocha tests/db-integration-tests/ --timeout 100000 --exit",
       "start": "nodemon -L server.js"
    },
    "author": "",
@@ -14,10 +14,13 @@
       "@aws-sdk/client-s3": "^3.523.0",
       "aws-sdk": "^2.1566.0",
       "bcryptjs": "^2.4.3",
+      "chai": "^5.1.0",
       "cookie-parser": "^1.4.6",
       "cors": "^2.8.5",
+      "cross-env": "^7.0.3",
       "express": "^4.18.2",
       "jsonwebtoken": "^9.0.2",
+      "mocha": "^10.4.0",
       "mongoose": "^8.1.1",
       "socket.io": "^4.7.5",
       "uuid": "^9.0.1"

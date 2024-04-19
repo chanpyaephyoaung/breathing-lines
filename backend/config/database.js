@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-dotenv.config({ path: ".env" });
-dotenv.config({ path: ".env.test" });
+dotenv.config({ path: "../.env" });
+dotenv.config({ path: "../.env.test" });
 
 const connectDB = async () => {
    try {
@@ -10,6 +10,7 @@ const connectDB = async () => {
          process.env.NODE_ENV === "test"
             ? process.env.MONGOATLAS_URI_TEST
             : process.env.MONGOATLAS_URI;
+      console.log(mongoDbUri);
       const connection = await mongoose.connect(mongoDbUri);
 
       console.log(
