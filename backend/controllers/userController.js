@@ -260,13 +260,13 @@ export const increaseViewCount = asyncHandler(async (req, res) => {
 });
 
 // @desc    Subscribe to a user (Follow/Unfollow)
-// @route   PUT /api/users//:userId/subscribe
+// @route   PUT /api/users/:userId/subscribe
 // @access  Private
 export const subscribeUser = asyncHandler(async (req, res) => {
    const targetUserId = req.params.userId;
    const currentUserId = req.currentUser._id;
 
-   if (targetUserId === currentUserId) {
+   if (targetUserId.toString() === currentUserId.toString()) {
       res.status(400);
       throw new Error("You cannot subscribe to yourself!");
    }
@@ -358,7 +358,7 @@ export const fetchFollowerList = asyncHandler(async (req, res) => {
       const targetUserFollowersWithEncodedProfileImgs = await Promise.all(
          targetUser.followers.map(async (follower, i) => {
             let image = "";
-            if (follower?.profileImg && i === 6) {
+            if (follower?.profileImg) {
                // Just for testing purpose. Remove the second condition in production
                const result = await s3RetrieveV3(follower.profileImg);
                image = await result.Body?.transformToString("base64");
@@ -374,8 +374,8 @@ export const fetchFollowerList = asyncHandler(async (req, res) => {
    }
 });
 
-// @desc    Get user's followers list
-// @route   GET /api/users/user-profile/:userId/followers
+// @desc    Get user's followings list
+// @route   GET /api/users/user-profile/:userId/followings
 // @access  Private
 export const fetchFollowingsList = asyncHandler(async (req, res) => {
    const targetUser = await User.findById(req.params.userId).populate(
@@ -387,7 +387,7 @@ export const fetchFollowingsList = asyncHandler(async (req, res) => {
       const targetUserFollowingsWithEncodedProfileImgs = await Promise.all(
          targetUser.followings.map(async (following, i) => {
             let image = "";
-            if (following?.profileImg && i === 6) {
+            if (following?.profileImg) {
                // Just for testing purpose. Remove the second condition in production
                const result = await s3RetrieveV3(following.profileImg);
                image = await result.Body?.transformToString("base64");
@@ -421,9 +421,9 @@ export const getAllNotificationsOfAUser = asyncHandler(async (req, res) => {
       const currentUserNotiWithEncodedProfileImgs = await Promise.all(
          currentUser.notifications.map(async (user, i) => {
             let image = "";
-            if (user?.profileImg && i === 2) {
+            if (user?.createdBy?.profileImg) {
                // Just for testing purpose. Remove the second condition in production
-               const result = await s3RetrieveV3(user.profileImg);
+               const result = await s3RetrieveV3(user?.createdBy?.profileImg);
                image = await result.Body?.transformToString("base64");
             }
             return { ...user._doc, encodedProfileImg: image };
@@ -434,6 +434,7 @@ export const getAllNotificationsOfAUser = asyncHandler(async (req, res) => {
       const sortedNotiByDate = currentUserNotiWithEncodedProfileImgs.sort(
          (a, b) => b.createdAt - a.createdAt
       );
+
       res.status(200).json(sortedNotiByDate);
    } else {
       res.status(404);
@@ -513,11 +514,11 @@ export const getPoemRecommendations = asyncHandler(async (req, res) => {
          const currentPoem = await Poem.findById(poem.id).populate("author", "name");
 
          let image = "";
-         // if (currentPoem?.coverImg) {
-         //    // Just for testing purpose. Remove the second condition in production
-         //    const result = await s3RetrieveV3(currentPoem.coverImg);
-         //    image = await result.Body?.transformToString("base64");
-         // }
+         if (currentPoem?.coverImg) {
+            // Just for testing purpose. Remove the second condition in production
+            const result = await s3RetrieveV3(currentPoem.coverImg);
+            image = await result.Body?.transformToString("base64");
+         }
          return { ...currentPoem._doc, encodedCoverImg: image };
       })
    );

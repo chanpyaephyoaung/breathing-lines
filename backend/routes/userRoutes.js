@@ -36,6 +36,7 @@ router.put("/user-profile/account/update", protectRoutes, updateUserAccProfile);
 router.put("/:userId/view", protectRoutes, increaseViewCount);
 router.put("/:userId/subscribe", protectRoutes, subscribeUser);
 router.delete("/:userId/delete", protectRoutes, deleteUserAccount);
+2;
 router.get("/user-profile/:userId/poems/:status", protectRoutes, getAllPoemsOfUser);
 router.get("/user-profile/:userId/followers", protectRoutes, fetchFollowerList);
 router.get("/user-profile/:userId/followings", protectRoutes, fetchFollowingsList);

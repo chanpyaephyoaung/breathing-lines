@@ -25,6 +25,7 @@ const NotificationDropdown = ({ socket }) => {
    const { data: notifications, refetch: refetchGetNotis } = useGetNotificationsOfUserQuery(
       userAccInfo?._id
    );
+   console.log(notifications);
    const { data: fetchedUnreadNotiCount, refetch: refetchUnreadNotiCount } =
       useGetUnreadNotiCountQuery(userAccInfo?._id);
 
@@ -109,9 +110,9 @@ const NotificationDropdown = ({ socket }) => {
                                  } group grid gap-x-2 grid-cols-[1fr_5fr] grid-rows-[2fr_1fr] w-full items-center rounded-md px-2 py-2 text-sm`}
                               >
                                  <img
-                                    src={data.encodedProfileImg}
+                                    src={`data:image/jpeg;base64,${data?.encodedProfileImg}`}
                                     className="rounded-full w-9 h-10 md:w-10 md:h-10 object-cover row-span-2 self-start"
-                                    alt=""
+                                    alt={`data?.createdBy?.name profile image`}
                                  />
                                  <p className="col-start-2 text-xs md:text-sm font-normal line-clamp-2">
                                     {data.notificationMessage}

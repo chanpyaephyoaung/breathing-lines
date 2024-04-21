@@ -82,7 +82,9 @@ const AccountUpdatePage = () => {
             desc={modalDesc}
             confirmBtnText="Confirm"
             successFunc={ctaHandler}
-         />
+         >
+            {(loadingUpdateAccDetails || loadingDeleteUserAcc) && <LoaderSpinner />}
+         </Modal>
          <FormContainer>
             <h2 className="text-lg md:text-2xl font-bold text-clr-black">Update Account</h2>
             <form className="grid gap-6">
@@ -147,9 +149,6 @@ const AccountUpdatePage = () => {
                >
                   Update Account
                </button>
-
-               {/* Loader */}
-               {(loadingUpdateAccDetails || loadingDeleteUserAcc) && <LoaderSpinner />}
 
                {/* Error Display */}
                {error && <Message type="danger">{error}</Message>}

@@ -14,8 +14,6 @@ import { toast } from "react-toastify";
 const PoemsForYouPage = () => {
    const { userAccInfo } = useSelector((state) => state.authUser);
    const { data: poems, isLoading, error } = useGetPoemsRecommendationsQuery(userAccInfo?._id);
-   console.log(poems);
-   console.log(isLoading);
 
    const [poemList, setPoemList] = useState([]);
    const [isGeneratingRecommendations, setIsGeneratingRecommendations] = useState(false);
@@ -49,7 +47,14 @@ const PoemsForYouPage = () => {
    return (
       <>
          <Container>
-            {isGeneratingRecommendations && <LoaderSpinner />}
+            {isGeneratingRecommendations && poems && poems.length !== 0 && (
+               <div className="grid justify-center">
+                  <LoaderSpinner />
+                  <p className="text xs md:text-sm text-clr-primary">
+                     Creating poems feed just for you...
+                  </p>
+               </div>
+            )}
             {poems && poems.length === 0 ? (
                <div className="text-center py-6">
                   <Message type="danger">
@@ -65,6 +70,11 @@ const PoemsForYouPage = () => {
                <h2>{error?.data?.errMessage || error.error}</h2>
             ) : (
                <>
+                  <div className="flex items-center gap-x-6">
+                     <h2 className="text-lg md:text-2xl mx-auto font-bold text-clr-black">
+                        Poems Just For You
+                     </h2>
+                  </div>
                   <InfiniteScroll
                      dataLength={poemList.length}
                      next={fetchMoreData}
