@@ -31,7 +31,7 @@ export const getAllPoems = asyncHandler(async (req, res) => {
          return { ...poem._doc, encodedCoverImg: image };
       })
    );
-   res.json(poemsWithEncodedCoverImg);
+   res.status(200).json(poemsWithEncodedCoverImg);
 });
 
 // @desc    Fetch a single poem by ID
@@ -52,25 +52,24 @@ export const getSinglePoemById = asyncHandler(async (req, res) => {
 
    let image = "";
 
-   if (targetPoem?.coverImg && targetPoem.coverImg.startsWith("uploads/")) {
-      const result = await s3RetrieveV3(targetPoem.coverImg);
-      image = await result.Body?.transformToString("base64");
-   }
-
-   const poemWithUserProfileImgs = await Promise.all(
-      targetPoem.reviews.map(async (review) => {
-         let profileImg = "";
-         if (review.reviewedBy.profileImg) {
-            const result = await s3RetrieveV3(review.reviewedBy.profileImg);
-            profileImg = await result.Body?.transformToString("base64");
-         }
-         return { ...review._doc, encodedProfileImg: profileImg };
-      })
-   );
-
    if (targetPoem) {
-      // return res.json(targetPoem);
-      return res.json({
+      if (targetPoem?.coverImg && targetPoem.coverImg.startsWith("uploads/")) {
+         const result = await s3RetrieveV3(targetPoem.coverImg);
+         image = await result.Body?.transformToString("base64");
+      }
+
+      const poemWithUserProfileImgs = await Promise.all(
+         targetPoem?.reviews.map(async (review) => {
+            let profileImg = "";
+            if (review?.reviewedBy?.profileImg) {
+               const result = await s3RetrieveV3(review.reviewedBy.profileImg);
+               profileImg = await result.Body?.transformToString("base64");
+            }
+            return { ...review._doc, encodedProfileImg: profileImg };
+         })
+      );
+
+      return res.status(200).json({
          ...targetPoem._doc,
          encodedCoverImg: image,
          reviews: poemWithUserProfileImgs,
@@ -147,21 +146,27 @@ export const writePoem = asyncHandler(async (req, res) => {
 // @route   PUT /api/poems/:poemId/edit
 // @access  Private
 export const editPoem = asyncHandler(async (req, res) => {
+   const currentUserId = req.currentUser._id;
    const currentPoem = await Poem.findById(req.params.poemId);
 
-   if (currentPoem) {
-      currentPoem.title = req.body.newPoemData.title || currentPoem.title;
-      currentPoem.content = req.body.newPoemData.content || currentPoem.content;
-      currentPoem.coverImg = req.body.newPoemData.coverImg || currentPoem.coverImg;
-      currentPoem.genres = req.body.newPoemData.genres || currentPoem.genres;
-      currentPoem.bgTheme = req.body.newPoemData.bgTheme || currentPoem.bgTheme || "";
-
-      const updatedCurrentPoem = await currentPoem.save();
-
-      res.status(200).json(updatedCurrentPoem);
+   if (currentUserId.toString() !== currentPoem.author.toString()) {
+      res.status(401);
+      throw new Error("You are not allowed to modify this poem.");
    } else {
-      res.status(404);
-      throw new Error("Poem update unsuccessful. Poem not found.");
+      if (currentPoem) {
+         currentPoem.title = req.body.newPoemData.title || currentPoem.title;
+         currentPoem.content = req.body.newPoemData.content || currentPoem.content;
+         currentPoem.coverImg = req.body.newPoemData.coverImg || currentPoem.coverImg;
+         currentPoem.genres = req.body.newPoemData.genres || currentPoem.genres;
+         currentPoem.bgTheme = req.body.newPoemData.bgTheme || currentPoem.bgTheme || "";
+
+         const updatedCurrentPoem = await currentPoem.save();
+
+         res.status(201).json(updatedCurrentPoem);
+      } else {
+         res.status(404);
+         throw new Error("Poem update unsuccessful. Poem not found.");
+      }
    }
 });
 
@@ -169,14 +174,19 @@ export const editPoem = asyncHandler(async (req, res) => {
 // @route   PUT /api/poems/:poemId/change-status
 // @access  Private
 export const changePoemStatus = asyncHandler(async (req, res) => {
+   const currentUserId = req.currentUser._id;
    const currentPoem = await Poem.findById(req.params.poemId);
 
+   if (currentUserId.toString() !== currentPoem.author.toString()) {
+      res.status(401);
+      throw new Error("You are not allowed to modify this poem.");
+   }
    if (currentPoem) {
       currentPoem.status = req.body.newPoemStatus;
 
       const updatedCurrentPoem = await currentPoem.save();
 
-      res.status(200).json({ message: `Poem ${updatedCurrentPoem.status} successfully.` });
+      res.status(201).json({ message: `Poem ${updatedCurrentPoem.status} successfully.` });
    } else {
       res.status(404);
       throw new Error("Poem status update unsuccessful. Poem not found.");
@@ -187,7 +197,13 @@ export const changePoemStatus = asyncHandler(async (req, res) => {
 // @route   DELETE /api/poems/:poemId
 // @access  Private
 export const deletePoem = asyncHandler(async (req, res) => {
+   const currentUserId = req.currentUser._id;
    const currentPoem = await Poem.findById(req.params.poemId);
+
+   if (currentUserId.toString() !== currentPoem.author.toString()) {
+      res.status(401);
+      throw new Error("You are not allowed to modify this poem.");
+   }
 
    if (currentPoem) {
       await Poem.deleteOne({ _id: currentPoem._id });
@@ -266,6 +282,11 @@ export const ratePoem = asyncHandler(async (req, res) => {
 
    const poem = await Poem.findById(poemId);
 
+   if (currentUserId.toString() === poem.author.toString()) {
+      res.status(401);
+      throw new Error("You are not allowed to modify this poem.");
+   }
+
    const currentRating = await PoemRating.findOne({ ratedBy: currentUserId });
 
    if (!currentRating) {
@@ -311,6 +332,11 @@ export const createPoemReview = asyncHandler(async (req, res) => {
    }
 
    const poem = await Poem.findById(poemId);
+
+   if (currentUserId.toString() === poem.author.toString()) {
+      res.status(401);
+      throw new Error("You are not allowed to modify this poem.");
+   }
 
    const poemReview = await PoemReview.findOne({ reviewedBy: currentUserId, reviewedPoem: poemId });
    const alreadyReviewed = poem.reviews.find(
@@ -384,11 +410,11 @@ export const editPoemReview = asyncHandler(async (req, res) => {
    targetPoem.reviews[targetReviewIndex] = savedUpdatedReview._id;
    await targetPoem.save();
 
-   res.status(200).json(savedUpdatedReview);
+   res.status(201).json(savedUpdatedReview);
 });
 
-// @desc    Edit a review for a poem
-// @route   PUT /api/poems/:poemId/review
+// @desc    Delete a review for a poem
+// @route   DELETE /api/poems/:poemId/review
 // @access  Private
 export const deletePoemReview = asyncHandler(async (req, res) => {
    const currentUserId = req.currentUser._id;

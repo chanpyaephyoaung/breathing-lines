@@ -5,7 +5,8 @@
    "type": "module",
    "main": "server.js",
    "scripts": {
-      "test:db-integration": "cross-env NODE_ENV=test mocha tests/db-integration-tests/ --timeout 100000 --exit",
+      "test:db-integration": "cross-env NODE_ENV=test mocha tests/db-integration-tests/poems.test.js --timeout 100000 --exit",
+      "data:remove:test": "cross-env NODE_ENV=test node ./seeder.js -r",
       "start": "nodemon -L server.js"
    },
    "author": "",
