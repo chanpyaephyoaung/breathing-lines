@@ -5,7 +5,7 @@ import Collection from "../models/collectionModel.js";
 import { s3RetrieveV3 } from "../s3Service.js";
 
 // @desc    Create a new collection
-// @route   POST /api/user-profile/:userId/collections
+// @route   POST /api/users/user-profile/:userId/collections
 // @access  Private
 export const createNewCollection = asyncHandler(async (req, res) => {
    const { collectionName } = req.body;
@@ -29,7 +29,7 @@ export const createNewCollection = asyncHandler(async (req, res) => {
 });
 
 // @desc    Retrieve all collections of a specific user
-// @route   GET /api/user-profile/:userId/collections
+// @route   GET /api/users/user-profile/:userId/collections
 // @access  Private
 export const getCollectionsOfUser = asyncHandler(async (req, res) => {
    const targetUserId = req.params.userId;
@@ -40,7 +40,7 @@ export const getCollectionsOfUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    Retrieve one specific collection of a user
-// @route   GET /api/user-profile/:userId/collections/:collectionId
+// @route   GET /api/users/user-profile/:userId/collections/:collectionId
 // @access  Private
 export const getOneCollectionOfUser = asyncHandler(async (req, res) => {
    const { collectionId } = req.params;
@@ -60,7 +60,7 @@ export const getOneCollectionOfUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    Add a poem to a collection
-// @route   POST /api/user-profile/:userId/collections/:collectionId/add/poem/:poemId
+// @route   POST /api/users/user-profile/:userId/collections/:collectionId/add/poem/:poemId
 // @access  Private
 export const addPoemToCollection = asyncHandler(async (req, res) => {
    const { collectionId, poemId } = req.params;
@@ -84,7 +84,7 @@ export const addPoemToCollection = asyncHandler(async (req, res) => {
 });
 
 // @desc    Delete a poem from the collection
-// @route   DELETE /api/user-profile/:userId/collections/:collectionId/delete/poem/:poemId
+// @route   DELETE /api/users/user-profile/:userId/collections/:collectionId/delete/poem/:poemId
 // @access  Private
 export const removePoemFromCollection = asyncHandler(async (req, res) => {
    const { collectionId, poemId } = req.params;
@@ -118,7 +118,7 @@ export const removePoemFromCollection = asyncHandler(async (req, res) => {
 });
 
 // @desc    Delete a collection
-// @route   DELETE /api/user-profile/:userId/collections/:collectionId/
+// @route   DELETE /api/users/user-profile/:userId/collections/:collectionId/
 // @access  Private
 export const deleteCollection = asyncHandler(async (req, res) => {
    const currentCollection = await Collection.findById(req.params.collectionId);
