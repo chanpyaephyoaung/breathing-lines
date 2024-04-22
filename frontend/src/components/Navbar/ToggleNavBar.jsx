@@ -23,22 +23,6 @@ const ToggleNavBar = ({ onHideMainNav, showMainNav }) => {
                      className="inline-block transition-transform md:hover:scale-110 md:hover:translate-x-2 md:hover:font-normal md:hover:text-clr-primary"
                      href=" "
                   >
-                     Search
-                  </a>
-               </li>
-               <li className="cursor-pointer">
-                  <a
-                     className="inline-block transition-transform md:hover:scale-110 md:hover:translate-x-2 md:hover:font-normal md:hover:text-clr-primary"
-                     href=" "
-                  >
-                     Genres
-                  </a>
-               </li>
-               <li className="cursor-pointer">
-                  <a
-                     className="inline-block transition-transform md:hover:scale-110 md:hover:translate-x-2 md:hover:font-normal md:hover:text-clr-primary"
-                     href=" "
-                  >
                      About
                   </a>
                </li>
@@ -48,14 +32,6 @@ const ToggleNavBar = ({ onHideMainNav, showMainNav }) => {
                      href=" "
                   >
                      FAQ
-                  </a>
-               </li>
-               <li className="cursor-pointer">
-                  <a
-                     className="inline-block transition-transform md:hover:scale-110 md:hover:translate-x-2 md:hover:font-normal md:hover:text-clr-primary"
-                     href=" "
-                  >
-                     Contact
                   </a>
                </li>
             </ul>

@@ -57,7 +57,9 @@ const SignUpPage = () => {
 
    return (
       <FormContainer>
-         <h2 className="text-lg md:text-2xl font-medium text-clr-black">Sign Up</h2>
+         <h2 data-testid="heading" className="text-lg md:text-2xl font-medium text-clr-black">
+            Sign Up
+         </h2>
          <form onSubmit={submitHandler} className="grid gap-6">
             <label className="relative text-xs grid justify-items-start gap-y-2">
                <span className="sr-only">name</span>

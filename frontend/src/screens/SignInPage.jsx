@@ -45,7 +45,9 @@ const SignInPage = () => {
 
    return (
       <FormContainer>
-         <h2 className="text-lg md:text-2xl font-bold text-clr-black">Sign In</h2>
+         <h2 data-testid="heading" className="text-lg md:text-2xl font-bold text-clr-black">
+            Sign In
+         </h2>
          <form className="grid gap-6" onSubmit={submitHandler}>
             <label className="relative text-xs grid justify-items-start gap-y-2">
                <span className="sr-only">email address</span>

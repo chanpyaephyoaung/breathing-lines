@@ -37,6 +37,7 @@ const Navbar = ({ onShowMainNav, socket }) => {
                ) : (
                   <Link
                      to="/signin"
+                     data-testid="signin-link"
                      className="transition-all w-6 md:w-8 text-clr-black hover:text-clr-primary cursor-pointer"
                   >
                      <ArrowRightOnRectangleIcon className="stroke-1" />

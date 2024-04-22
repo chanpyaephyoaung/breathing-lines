@@ -8,6 +8,7 @@ const UserProfileSubMenu = ({ activeNav, userId }) => {
             <li key={nav.activeNavIdentifier} className="px-2 md:px-4">
                <Link
                   to={`/user-profile/${userId}${nav.activeNavPathIdentifier}`}
+                  data-testid={nav.activeNavIdentifier}
                   className={
                      activeNav === nav.activeNavPathIdentifier
                         ? "text-clr-primary underline"

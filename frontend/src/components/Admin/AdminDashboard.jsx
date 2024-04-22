@@ -6,6 +6,7 @@ const AdminDashboard = () => {
          <li>
             <Link
                to="/users/admin/usersList"
+               data-testid="users"
                className="text-sm md:text-lg font-light text-clr-black hover:text-clr-primary hover:underline"
             >
                Users
@@ -14,6 +15,7 @@ const AdminDashboard = () => {
          <li>
             <Link
                to="/users/admin/poemsList"
+               data-testid="poems"
                className="text-sm md:text-lg font-light text-clr-black hover:text-clr-primary hover:underline"
             >
                Poems

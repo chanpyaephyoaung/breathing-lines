@@ -91,7 +91,9 @@ const WritePoemPage = () => {
             </FormContainer>
          ) : (
             <FormContainer>
-               <h2 className="text-lg md:text-2xl font-bold text-clr-black">Upload a Poem!</h2>
+               <h2 data-testid="heading" className="text-lg md:text-2xl font-bold text-clr-black">
+                  Upload a Poem!
+               </h2>
 
                <form onSubmit={(e) => e.preventDefault} className="grid gap-6">
                   <label className="relative text-xs grid justify-items-start gap-y-2">
@@ -117,6 +119,7 @@ const WritePoemPage = () => {
 
                      <textarea
                         id="about"
+                        data-testid="content"
                         name="about"
                         rows={7}
                         className="py-3 pl-4 pr-4 placeholder:text-clr-black-faded block bg-clr-bg w-full border border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 leading-5"
