@@ -232,9 +232,11 @@ describe("Integration tests for COLLECTIONS endpoints with database.", () => {
 
          const res3 = await request(app)
             .delete(
-               `/api/users/user-profile/${secondUser}/collections/${res.body._id}/delete/poem/${samplePoemId}`
+               `/api/users/user-profile/${secondUserId}/collections/${res.body._id}/delete/poem/${samplePoemId}`
             )
             .set("Cookie", `jwt=${mockJwtToken2}`);
+
+         console.log(res3);
 
          assert.equal(res3.status, 401);
          assert.property(res3.body, "errMessage");
