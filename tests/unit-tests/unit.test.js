@@ -1,6 +1,5 @@
 import { formatDate } from "../../frontend/src/utils/date.js";
 import { calculateAverage } from "../../frontend/src/utils/math.js";
-import { generateLineBreakBtwSentences } from "../../frontend/src/utils/text.jsx";
 import { assert } from "chai";
 
 describe("Formatting date function", () => {
