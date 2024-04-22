@@ -18,13 +18,6 @@ export const getAllUsersByAdmin = asyncHandler(async (req, res) => {
    res.status(200).json({ allUsers, page, pages: Math.ceil(count / pageSize) });
 });
 
-// @desc    Get a single user by ID
-// @route   GET /api/users/admin/:userId
-// @access  Private | Admin
-export const getSingleUserById = asyncHandler(async (req, res) => {
-   res.send("Get a single user by admin!");
-});
-
 // @desc    Ban a user
 // @route   PUT /api/users/admin/:userId/ban
 // @access  Private | Admin
