@@ -236,8 +236,6 @@ describe("Integration tests for COLLECTIONS endpoints with database.", () => {
             )
             .set("Cookie", `jwt=${mockJwtToken2}`);
 
-         console.log(res3);
-
          assert.equal(res3.status, 401);
          assert.property(res3.body, "errMessage");
          assert.equal(
