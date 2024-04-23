@@ -33,6 +33,8 @@ import UsersListPage from "./screens/admin/UsersListPage.jsx";
 import PoemsListPage from "./screens/admin/PoemsListPage.jsx";
 import PoemsOfFollowingUsersPage from "./screens/PoemsOfFollowingUsersPage.jsx";
 import PoemsForYouPage from "./screens/PoemsForYouPage.jsx";
+import AboutPage from "./screens/AboutPage.jsx";
+import FAQPage from "./screens/FAQPage.jsx";
 
 const router = createBrowserRouter(
    createRoutesFromElements(
@@ -43,6 +45,8 @@ const router = createBrowserRouter(
          <Route path="write" element={<WritePoemPage />} />
          <Route path="signin" element={<SignInPage />} />
          <Route path="signup" element={<SignUpPage />} />
+         <Route path="about" element={<AboutPage />} />
+         <Route path="faq" element={<FAQPage />} />
          <Route path="/user-profile/:userId" element={<UserProfilePage />} />
          <Route path="/user-profile/:userId/poems" element={<UserPoemsPage />} />
 
