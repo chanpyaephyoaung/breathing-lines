@@ -19,6 +19,7 @@ const PoemPreviewPosts = ({
                   bgTheme={poem.bgTheme}
                   title={poem.title}
                   author={poem.author}
+                  originalAuthor={poem.originalAuthor || ""}
                   content={poem.content}
                   encodedCoverImg={poem.encodedCoverImg || ""}
                   onRemovePoemFromCollection={removePoemFromCollectionHandler}

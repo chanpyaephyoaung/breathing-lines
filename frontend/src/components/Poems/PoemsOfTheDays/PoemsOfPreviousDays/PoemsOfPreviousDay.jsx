@@ -12,7 +12,13 @@ const PoemsOfPreviousDay = ({ poem, label }) => {
             {poem?.poem?.title}
          </Link>
          <p className="text-sm -mt-1.5 text-clr-black-faded font-light">
-            By <a href=" ">{poem?.poem?.author?.name}</a>
+            By{" "}
+            <Link
+               className="transition-all hover:text-clr-tertiary"
+               to={`/user-profile/${poem?.poem?.author._id}`}
+            >
+               {poem?.poem?.originalAuthor || poem?.poem?.author?.name}
+            </Link>
          </p>
          <p className="text-base font-light line-clamp-1">
             {generateLineBreakBtwSentences(poem?.poem?.content)}

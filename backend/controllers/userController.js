@@ -142,6 +142,9 @@ export const getUserAccProfile = asyncHandler(async (req, res) => {
             path: "reviewedBy",
             select: "name",
          },
+         options: {
+            sort: { reviewedAt: -1 },
+         },
       });
 
       res.status(200).json({
@@ -328,13 +331,16 @@ export const getAllPoemsOfUser = asyncHandler(async (req, res) => {
             path: "author",
             select: "name profileImg",
          },
+         options: {
+            sort: { publishedAt: -1 },
+         },
       });
       poems = userObj.favoritedPoems;
    }
    const poemsWithEncodedCoverImg = await Promise.all(
       poems.map(async (poem, i) => {
          let image = "";
-         if (poem?.coverImg && i === 28) {
+         if (poem?.coverImg) {
             // Just for testing purpose. Remove the second condition in production
             const result = await s3RetrieveV3(poem.coverImg);
             image = await result.Body?.transformToString("base64");
@@ -510,11 +516,11 @@ export const getPoemRecommendations = asyncHandler(async (req, res) => {
    const currentUser = await User.findById(currentUserId);
 
    const recommendedPoemsWithEncodedCoverImg = await Promise.all(
-      currentUser.poemRecommendations.map(async (poem) => {
+      currentUser.poemRecommendations.map(async (poem, i) => {
          const currentPoem = await Poem.findById(poem.id).populate("author", "name");
 
          let image = "";
-         if (currentPoem?.coverImg) {
+         if (currentPoem?.coverImg && i === 30) {
             // Just for testing purpose. Remove the second condition in production
             const result = await s3RetrieveV3(currentPoem.coverImg);
             image = await result.Body?.transformToString("base64");

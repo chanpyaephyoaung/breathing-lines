@@ -23,6 +23,7 @@ const PoemsForYouPage = () => {
          try {
             if (!userAccInfo?._id) return;
             setIsGeneratingRecommendations(true);
+
             await axios.post(
                `https://breathing-lines-rec-sys.onrender.com/personalized-feed/${userAccInfo?._id}`
             );

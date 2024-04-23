@@ -38,6 +38,7 @@ export const seedDummyData = async () => {
       const user = createdDummyUsers[1]._id;
       const user1Doc = createdDummyUsers[1];
       const user2Doc = createdDummyUsers[2];
+      const user3Doc = createdDummyUsers[3];
 
       // Use first normal user as the author to sample poems
       const samplePoems = dummyPoems.map((poem) => ({
@@ -86,15 +87,15 @@ export const seedDummyData = async () => {
          if (i === 0) {
             return {
                ...notification,
-               createdBy: user2Doc._id,
-               receivedBy: user1Doc._id,
+               createdBy: user1Doc._id,
+               receivedBy: user3Doc._id,
                notificationMessage: `${user1Doc.name} has liked your poem!`,
             };
          } else if (i === 1) {
             return {
                ...notification,
-               createdBy: user2Doc._id,
-               receivedBy: user1Doc._id,
+               createdBy: user1Doc._id,
+               receivedBy: user3Doc._id,
                notificationMessage: `${user1Doc.name} has followed you!`,
             };
          }
@@ -110,7 +111,7 @@ export const seedDummyData = async () => {
 
       // Insert sample notications to user1
       const notificationsRes = await UserNotification.insertMany(sampleNotifications);
-      user1Doc.notifications = notificationsRes.map((notification) => notification._id);
+      user3Doc.notifications = notificationsRes.map((notification) => notification._id);
 
       // Save the document
       await user1Doc.save();

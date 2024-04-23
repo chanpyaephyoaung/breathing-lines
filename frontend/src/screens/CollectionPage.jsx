@@ -30,6 +30,7 @@ const CollectionPage = () => {
       error,
       refetch,
    } = useGetOneCollectionOfUserQuery({ userId, collectionId });
+   console.log(collection);
 
    const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
    const [removePoemFromCollection, { isLoading: loadingRemovePoemFromCollection }] =

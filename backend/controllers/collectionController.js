@@ -56,7 +56,19 @@ export const getOneCollectionOfUser = asyncHandler(async (req, res) => {
       })
       .populate("createdBy", "name");
 
-   res.status(200).json(collection);
+   const poemsWithEncodedCoverImg = await Promise.all(
+      collection.poems.map(async (poem, i) => {
+         let image = "";
+         if (poem?.coverImg && i === 0) {
+            // Just for testing purpose. Remove the second condition in production
+            const result = await s3RetrieveV3(poem.coverImg);
+            image = await result.Body?.transformToString("base64");
+         }
+         return { ...poem._doc, encodedCoverImg: image };
+      })
+   );
+
+   res.status(200).json({ ...collection._doc, poems: poemsWithEncodedCoverImg });
 });
 
 // @desc    Add a poem to a collection

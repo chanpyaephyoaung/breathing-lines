@@ -1,5 +1,32 @@
 const dummyPoems = [
    {
+      title: "Theme in Yellow",
+      content: `I spot the hills 
+      With yellow balls in autumn. 
+      I light the prairie cornfields 
+      Orange and tawny gold clusters 
+      And I am called pumpkins. 
+      On the last of October 
+      When dusk is fallen 
+
+      Children join hands 
+      And circle round me 
+      Singing ghost songs 
+      And love to the harvest moon; 
+      I am a jack-o'-lantern 
+      With terrible teeth 
+      And the children know 
+      I am fooling.
+      `,
+      genres: ["Love", "Romance"],
+      coverImg: "/images/img-2.jpg",
+      originalAuthor: "Carl Sandburg",
+      publishedAt: new Date(),
+      viewsCount: 0,
+      likesCount: 0,
+      status: "drafted",
+   },
+   {
       title: "A Jelly-Fish",
       content: `Visible, invisible,
       A fluctuating charm,
@@ -25,7 +52,7 @@ const dummyPoems = [
       From you.
       `,
       genres: ["Love", "Motivation"],
-      coverImg: "/images/img-1.jpg",
+      coverImg: "",
       originalAuthor: "Marianne Moore",
       publishedAt: new Date(),
       viewsCount: 0,
@@ -52,7 +79,7 @@ const dummyPoems = [
       I am fooling.
       `,
       genres: ["Love", "Romance"],
-      coverImg: "/images/img-2.jpg",
+      coverImg: "/images/img-1.jpg",
       originalAuthor: "Carl Sandburg",
       publishedAt: new Date(),
       viewsCount: 0,
@@ -97,7 +124,8 @@ const dummyPoems = [
       Girdle the world with peace.
       `,
       genres: ["Humanity", "Love", "Peace"],
-      coverImg: "/images/img-3.jpg",
+      coverImg: "/images/img-2.jpg",
+      originalAuthor: "Frances Ellen Watkins Harper",
       publishedAt: new Date(),
       viewsCount: 0,
       likesCount: 0,
@@ -146,7 +174,7 @@ const dummyPoems = [
       a humming on this soft earth.
       `,
       genres: ["Humanity", "Love", "Peace"],
-      coverImg: "/images/img-4.jpg",
+      coverImg: "/images/img-3.jpg",
       originalAuthor: "Aimee Nezhukumatathil",
       publishedAt: new Date(),
       viewsCount: 0,

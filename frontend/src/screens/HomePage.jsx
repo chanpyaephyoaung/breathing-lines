@@ -15,13 +15,14 @@ import { infiniteScrollLoaderDuration, infiniteScrollElementLimit } from "../con
 const HomePage = () => {
    const { keyword } = useParams();
    const { userAccInfo } = useSelector((state) => state.authUser);
-   const { data: poems, isLoading, error } = useGetAllPoemsQuery({ keyword });
+   const { data: poems, isLoading, error, refetch } = useGetAllPoemsQuery({ keyword });
    const [poemList, setPoemList] = useState([]);
 
    useEffect(() => {
+      refetch();
       if (userAccInfo?.isAdmin) return;
       setPoemList(poems?.slice(0, infiniteScrollElementLimit + 1) || []);
-   }, [poems, userAccInfo?.isAdmin]);
+   }, [poems, userAccInfo?.isAdmin, refetch]);
 
    const fetchMoreData = () => {
       if (isLoading || error) return; // Prevent fetching more data if loading or error

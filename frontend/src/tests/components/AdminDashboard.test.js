@@ -32,13 +32,13 @@ describe("Admin Dashboard", () => {
       const poemsLink = screen.getByTestId("poems");
 
       fireEvent.click(usersLink);
-      // Check if the route is navigated to /
+      // Check if the route is navigated to /users/admin/usersList
       await waitFor(() => {
          expect(window.location.pathname).toBe("/users/admin/usersList");
       });
 
       fireEvent.click(poemsLink);
-      // Check if the route is navigated to /
+      // Check if the route is navigated to /users/admin/poemsList
       await waitFor(() => {
          expect(window.location.pathname).toBe("/users/admin/poemsList");
       });

@@ -19,13 +19,13 @@ const PoemPreviewPost = ({
    title,
    author,
    content,
+   originalAuthor,
    encodedCoverImg,
    onRemovePoemFromCollection,
    loadingRemovePoemFromCollection,
    isCurrentUserTheCollectionOwner,
 }) => {
    const [isModalOpen, setIsModalOpen] = useState(false);
-
    const [increasePoemViewCount] = useIncreasePoemViewCountMutation();
    const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
 
@@ -132,7 +132,7 @@ const PoemPreviewPost = ({
                      to={`/user-profile/${author._id}`}
                      className="transition-all text-xs md:text-sm text-clr-black-faded font-light hover:text-clr-primary"
                   >
-                     {author.name}
+                     {originalAuthor || author.name}
                   </Link>
                </p>
             </div>

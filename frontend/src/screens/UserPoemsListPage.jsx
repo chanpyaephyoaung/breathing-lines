@@ -40,7 +40,7 @@ const UserPoemsListPage = () => {
             <>
                <div className="flex items-center gap-x-6">
                   <h2 className="text-lg md:text-2xl mx-auto font-bold text-clr-black">
-                     My {status === "drafted" ? "Drafts" : "Publishs"}
+                     My {status === "drafted" ? "Drafts" : "Publications"}
                   </h2>
                </div>
                <InfiniteScroll

@@ -18,12 +18,14 @@ export const getAllPoems = asyncHandler(async (req, res) => {
            },
         }
       : {};
-   const poems = await Poem.find({ ...keyword, status: "published" }).populate("author", "name");
+   const poems = await Poem.find({ ...keyword, status: "published" })
+      .populate("author", "name")
+      .sort({ publishedAt: -1 });
 
    const poemsWithEncodedCoverImg = await Promise.all(
       poems.map(async (poem, i) => {
          let image = "";
-         if (poem?.coverImg && i === 29) {
+         if (poem?.coverImg && i === 0) {
             // Just for testing purpose. Remove the second condition in production
             const result = await s3RetrieveV3(poem.coverImg);
             image = await result.Body?.transformToString("base64");
@@ -47,6 +49,9 @@ export const getSinglePoemById = asyncHandler(async (req, res) => {
          populate: {
             path: "reviewedBy",
             select: "name profileImg",
+         },
+         options: {
+            sort: { reviewedAt: -1 },
          },
       });
 
@@ -98,7 +103,7 @@ export const getAllPoemsOfFollowingUsers = asyncHandler(async (req, res) => {
    const poemsWithEncodedCoverImg = await Promise.all(
       poemsOfFollowedUsers.map(async (poem, i) => {
          let image = "";
-         if (poem?.coverImg && i === 29) {
+         if (poem?.coverImg && i === 0) {
             // Just for testing purpose. Remove the second condition in production
             const result = await s3RetrieveV3(poem.coverImg);
             image = await result.Body?.transformToString("base64");
@@ -130,6 +135,7 @@ export const writePoem = asyncHandler(async (req, res) => {
       bgTheme,
       status,
       genres,
+      publishedAt: new Date(),
    });
 
    const savedPoem = await newPoem.save();
@@ -287,7 +293,7 @@ export const ratePoem = asyncHandler(async (req, res) => {
       throw new Error("You are not allowed to modify this poem.");
    }
 
-   const currentRating = await PoemRating.findOne({ ratedBy: currentUserId });
+   const currentRating = await PoemRating.findOne({ ratedBy: currentUserId, ratedPoem: poemId });
 
    if (!currentRating) {
       // Create and save new rating
@@ -480,7 +486,7 @@ export const getPoemsOfTheDay = asyncHandler(async (req, res) => {
    const latestPoemsOfTheDay = await PoemOfTheDay.find({})
       .populate({
          path: "poem",
-         select: "title author publishedAt content",
+         select: "title author publishedAt content originalAuthor",
          populate: {
             path: "author",
             select: "name",

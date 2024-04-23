@@ -6,6 +6,7 @@ import { useIncreasePoemViewCountMutation } from "../../../slices/poemsApiSlice.
 import { toast } from "react-toastify";
 
 const PoemOfTheDay = ({ poem }) => {
+   console.log(poem);
    const [increaseProfileViewCount] = useIncreaseProfileViewCountMutation();
    const [increasePoemViewCount] = useIncreasePoemViewCountMutation();
 
@@ -62,7 +63,10 @@ const PoemOfTheDay = ({ poem }) => {
                         to={`/user-profile/${poem?.poem?.author._id}`}
                         className="text-xs md:text-sm lg:text-base text-clr-black-faded font-light"
                      >
-                        By {poem?.poem?.author?.name}
+                        By{" "}
+                        <span className="transition-all hover:text-clr-tertiary">
+                           {poem?.poem?.originalAuthor || poem?.poem?.author?.name}
+                        </span>
                      </Link>
                   </div>
 

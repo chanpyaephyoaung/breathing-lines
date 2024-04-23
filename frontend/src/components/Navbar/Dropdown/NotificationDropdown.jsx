@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import { BellIcon } from "@heroicons/react/24/outline";
+import { BellIcon, UserIcon } from "@heroicons/react/24/outline";
 import {
    useGetNotificationsOfUserQuery,
    useGetUnreadNotiCountQuery,
@@ -109,11 +109,18 @@ const NotificationDropdown = ({ socket }) => {
                                     active ? "bg-clr-primary text-clr-white" : "text-clr-black"
                                  } group grid gap-x-2 grid-cols-[1fr_5fr] grid-rows-[2fr_1fr] w-full items-center rounded-md px-2 py-2 text-sm`}
                               >
-                                 <img
-                                    src={`data:image/jpeg;base64,${data?.encodedProfileImg}`}
-                                    className="rounded-full w-9 h-10 md:w-10 md:h-10 object-cover row-span-2 self-start"
-                                    alt={`data?.createdBy?.name profile image`}
-                                 />
+                                 {data?.encodedProfileImg ? (
+                                    <img
+                                       src={`data:image/jpeg;base64,${data?.encodedProfileImg}`}
+                                       className="rounded-full w-10 h-10 md:w-10 md:h-10 object-cover row-span-2 self-start"
+                                       alt={`data?.createdBy?.name profile image`}
+                                    />
+                                 ) : (
+                                    <div className="grid place-items-center w-9 h-10 md:w-10 md:h-10 text-xs rounded-full border-2 border-clr-black-faded">
+                                       <UserIcon className="w-8 h-8 md:w-8 md:h-8 text-xs rounded-full text-clr-black-faded" />
+                                    </div>
+                                 )}
+
                                  <p className="col-start-2 text-xs md:text-sm font-normal line-clamp-2">
                                     {data.notificationMessage}
                                  </p>

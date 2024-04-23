@@ -364,7 +364,7 @@ const PoemFullPost = () => {
                            >
                               By{" "}
                               <span className="transition-all hover:text-clr-primary">
-                                 {poem?.author.name}
+                                 {poem?.originalAuthor || poem?.author.name}
                               </span>
                            </Link>
                         </div>
