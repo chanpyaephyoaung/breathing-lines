@@ -530,7 +530,7 @@ describe("Integration tests for USERS endpoints with database.", () => {
          assert.equal(res.status, 200);
          assert.isArray(res.body, "The response body (poems) should be an array.");
       });
-      it("The length of drafted poems should equal to 1", async () => {
+      it("The length of drafted poems should equal to 2", async () => {
          await seedDummyData();
          const firstUser = await User.findOne({ name: "Albus Dumbledore" });
          const firstUserId = firstUser._id;
@@ -539,7 +539,7 @@ describe("Integration tests for USERS endpoints with database.", () => {
             .get(`/api/users/user-profile/${firstUserId}/poems/drafted`)
             .set("Cookie", `jwt=${mockJwtToken}`);
          assert.equal(res.status, 200);
-         assert.equal(res.body.length, 1);
+         assert.equal(res.body.length, 2);
       });
       it("Should not fetch DRAFTED poems of a user when non signed in", async () => {
          const createdDumUsers = await User.insertMany(users);

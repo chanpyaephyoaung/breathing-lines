@@ -59,7 +59,7 @@ export const getOneCollectionOfUser = asyncHandler(async (req, res) => {
    const poemsWithEncodedCoverImg = await Promise.all(
       collection.poems.map(async (poem, i) => {
          let image = "";
-         if (poem?.coverImg && i === 0) {
+         if (poem?.coverImg) {
             // Just for testing purpose. Remove the second condition in production
             const result = await s3RetrieveV3(poem.coverImg);
             image = await result.Body?.transformToString("base64");

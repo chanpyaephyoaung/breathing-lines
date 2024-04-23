@@ -520,7 +520,7 @@ export const getPoemRecommendations = asyncHandler(async (req, res) => {
          const currentPoem = await Poem.findById(poem.id).populate("author", "name");
 
          let image = "";
-         if (currentPoem?.coverImg && i === 30) {
+         if (currentPoem?.coverImg) {
             // Just for testing purpose. Remove the second condition in production
             const result = await s3RetrieveV3(currentPoem.coverImg);
             image = await result.Body?.transformToString("base64");

@@ -19,7 +19,7 @@ const dummyPoems = [
       I am fooling.
       `,
       genres: ["Love", "Romance"],
-      coverImg: "/images/img-2.jpg",
+      coverImg: "",
       originalAuthor: "Carl Sandburg",
       publishedAt: new Date(),
       viewsCount: 0,
@@ -79,7 +79,7 @@ const dummyPoems = [
       I am fooling.
       `,
       genres: ["Love", "Romance"],
-      coverImg: "/images/img-1.jpg",
+      coverImg: "",
       originalAuthor: "Carl Sandburg",
       publishedAt: new Date(),
       viewsCount: 0,
@@ -124,7 +124,7 @@ const dummyPoems = [
       Girdle the world with peace.
       `,
       genres: ["Humanity", "Love", "Peace"],
-      coverImg: "/images/img-2.jpg",
+      coverImg: "",
       originalAuthor: "Frances Ellen Watkins Harper",
       publishedAt: new Date(),
       viewsCount: 0,
@@ -174,7 +174,7 @@ const dummyPoems = [
       a humming on this soft earth.
       `,
       genres: ["Humanity", "Love", "Peace"],
-      coverImg: "/images/img-3.jpg",
+      coverImg: "",
       originalAuthor: "Aimee Nezhukumatathil",
       publishedAt: new Date(),
       viewsCount: 0,
@@ -202,7 +202,7 @@ const dummyPoems = [
       My soul has grown deep like the rivers.
       `,
       genres: ["Humanity", "Love", "Peace"],
-      coverImg: "/images/img-4.jpg",
+      coverImg: "",
       originalAuthor: "Langston Hughes",
       publishedAt: new Date(),
       viewsCount: 0,
@@ -261,7 +261,7 @@ const dummyPoems = [
       A heart whose love is innocent!
       `,
       genres: ["Humanity", "Love", "Peace"],
-      coverImg: "/images/img-4.jpg",
+      coverImg: "",
       originalAuthor: "George Gordon Byron",
       publishedAt: new Date(),
       viewsCount: 0,
