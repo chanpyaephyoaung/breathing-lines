@@ -1,15 +1,41 @@
-# Project Name
+# BreathingLines
 
-## Introduction
+![Banner](img/banner.jpg)
+
+Watch demo [here](https://youtu.be/xzdhJGS6JsE).
+
+## About
 
 BreathingLines is a social web application designed exclusively to tailor the
 needs of poetry enthusiasts in the form of a user-friendly platform to explore, interact
 and catalogue poems. In an era dominated by mainstream social media and visuals,
 BreathingLines offers a unique dedicated space where poetry takes centre stage,
 encouraging poets and readers alike to forge meaningful connections while fostering
-a profound appreciation for the harmonious display of art and literature – poetry
+a profound appreciation for the harmonious display of art and literature – poetry.
 
-## Setup Instructions
+## Table of Contents
+
+-  [Features](#features)
+-  [Usage](#usage)
+-  [Project Structure](#project-structure)
+-  [Acknowledgements](#contributing)
+
+## Features
+
+-  **Responsive Frontend**: Built with React and Tailwind CSS for an adaptive and user-friendly interface.
+-  **Personalized Recommendations**: Integrated a content-based recommender system using Python and Flask to deliver personalized poem feeds.
+-  **Real-Time Notifications**: Implemented with Socket.IO to provide real-time updates and notifications.
+-  **User Account Registration**: Allows users to register and create personal accounts seamlessly and securely.
+-  **Poem Submission**: Users can write poems, add cover images or patterns, and manage their content.
+-  **Follow/Unfollow**: Users can follow or unfollow each other to curate their social followings feed.
+-  **Poem Interaction**: Users can like and review other authors' poems.
+-  **Collection Curation**: Users can catalogue poems according to specific personal criteria such as style, mood, or subject matter.
+-  **Drafting and Publishing**: Enables users to draft poems before publishing them to their profile.
+-  **Editing Poems**: Users can edit their poems to update or improve their content.
+-  **Secure User Authentication**: Utilized JWT (JSON Web Tokens) to ensure secure user authentication and session management.
+-  **Image Storage**: Leveraged AWS S3 to store user-uploaded images such as user profile pictures and cover poem pictures securely and efficiently.
+
+## Usage
 
 ### 1. Clone the Repository
 
@@ -58,6 +84,59 @@ npm run dev
 ```
 
 This will start the application in your default web browser.
+
+## Project Structure
+
+### ./backend
+
+```plaintext
+├── /config/                  # JavaScript file for database connection
+├── /controllers/             # JavaScript files for controllers
+├── /dummyData/               # JavaScript files to store dummy data for testing
+├── /helpers/                 # JavaScript files for helper functions
+├── /middleware/              # JavaScript files for middlewares
+├── /models/                  # JavaScript files for data models for database
+├── /routes/                  # JavaScript files for backend endpoints
+├── /tests/                   # JavaScript files for database integration tests
+├── /Dockerfile               # Docker configuration file
+├── /poemSeederTest.js        # JavaScript file for seeding and removing poem dummy data for testing
+├── /s3Service.js             # JavaScript file for AWS SDK configuration
+├── /seeder.js                # JavaScript file for seeding and remove dummy data for initial application startup
+└──  /server.js                # JavaScript file entry point for the backend server
+```
+
+### ./frontend
+
+```plaintext
+├── /public/                  # Contain image files and main entry point of html file
+├── /src/components/          # JSX files for react components
+├── /src/screens/             # JSX files for pages
+├── /src/slices/              # JavaScript files for Redux slices
+├── /src/tests/               # JavaScript files for components testing
+├── /src/utils/               # JavaScript files for helper functions
+├── /index.js                 # Frontend entry point for the application
+├── /constants.js             # JavaScript file for storing constant variables
+├── /store.js                 # JavaScript file for storing and configuring Redux store
+├── /Dockerfile               # Docker configuration file
+├── /.eslintrc.json           # ESLint configuration file
+└── /tailwind.config.js       # JavaScript file for tailwind configuration
+```
+
+### ./tests/unit-tests
+
+```plaintext
+└── /unit-tests/              # JavaScript files unit testing
+```
+
+### ./
+
+```plaintext
+├── babel.config.js           # Babel configuration file
+├── docker-compose.yml        # Docker Compose configuration file
+├── template.env              # Template for env variables required to run the application
+└── template.env.test         # Template for env variables required to test the application
+
+```
 
 ## Acknowledgements
 

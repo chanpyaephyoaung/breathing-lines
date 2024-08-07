@@ -77,6 +77,12 @@ const UserProfilePage = () => {
       <Container>
          {isLoading ? (
             <LoaderSpinner />
+         ) : !userProfileDetails?.targetUser ? (
+            <div className="text-center py-6">
+               <Message type="danger">
+                  Unauthorised to access this user profile. Please sign in first.
+               </Message>
+            </div>
          ) : error ? (
             <Message type="danger">{error?.data?.errMessage || error.error}</Message>
          ) : (

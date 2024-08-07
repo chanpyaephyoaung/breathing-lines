@@ -24,9 +24,7 @@ const PoemsForYouPage = () => {
             if (!userAccInfo?._id) return;
             setIsGeneratingRecommendations(true);
 
-            await axios.post(
-               `https://breathing-lines-rec-sys.onrender.com/personalized-feed/${userAccInfo?._id}`
-            );
+            await axios.post(`http://127.0.0.1:5000/personalized-feed/${userAccInfo?._id}`);
             setIsGeneratingRecommendations(false);
             setPoemList(poems?.slice(0, infiniteScrollElementLimit + 1) || []);
          } catch (err) {

@@ -87,7 +87,7 @@ const UsersListPage = () => {
                            <th className="p-2 border-2 border-clr-black-faded">Name</th>
                            <th className="p-2 border-2 border-clr-black-faded">Email</th>
                            <th className="p-2 border-2 border-clr-black-faded">Banned?</th>
-                           <th className="p-2 border-2 border-clr-black-faded">Poems</th>
+                           {/* <th className="p-2 border-2 border-clr-black-faded">Poems</th> */}
                            <th className="p-2 border-2 border-clr-black-faded">&nbsp;</th>
                            <th className="p-2 border-2 border-clr-black-faded">&nbsp;</th>
                         </tr>
@@ -106,11 +106,11 @@ const UsersListPage = () => {
                                  <td className="p-2 border-2 border-clr-black-faded">
                                     {user.isBanned ? "Yes" : "No"}
                                  </td>
-                                 <td className="p-2 border-2 border-clr-black-faded">
+                                 {/* <td className="p-2 border-2 border-clr-black-faded">
                                     <Link className="text-sm md:text-base font-light text-clr-danger hover:underline">
                                        View
                                     </Link>
-                                 </td>
+                                 </td> */}
                                  <td className="p-2 border-2 border-clr-black-faded">
                                     <button
                                        type="button"

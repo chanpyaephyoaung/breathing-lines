@@ -206,7 +206,7 @@ export const deletePoem = asyncHandler(async (req, res) => {
    const currentUserId = req.currentUser._id;
    const currentPoem = await Poem.findById(req.params.poemId);
 
-   if (currentUserId.toString() !== currentPoem.author.toString()) {
+   if (currentUserId.toString() !== currentPoem.author.toString() && !req.currentUser.isAdmin) {
       res.status(401);
       throw new Error("You are not allowed to modify this poem.");
    }
@@ -327,7 +327,7 @@ export const createPoemReview = asyncHandler(async (req, res) => {
 
    if (currentUser.isBanned) {
       res.status(403);
-      throw new Error("You are banned from writing poems.");
+      throw new Error("You are banned from writing poems reviews.");
    }
    const poemId = req.params.poemId;
    const { review } = req.body;
