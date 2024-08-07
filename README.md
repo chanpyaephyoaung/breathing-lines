@@ -128,6 +128,12 @@ This will start the application in your default web browser.
 └── /unit-tests/              # JavaScript files unit testing
 ```
 
+### ./github/workflows
+
+```plaintext
+└── /ci.yml                   # GitHub Workflow configuration file
+```
+
 ### ./
 
 ```plaintext
