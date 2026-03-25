@@ -281,13 +281,13 @@ export const subscribeUser = asyncHandler(async (req, res) => {
       if (targetUser.followers.includes(currentUserId)) {
          // Remove the current user from the target user's followers array
          const newTargetUserFollowers = targetUser.followers.filter(
-            (user) => user.toString() !== currentUserId.toString()
+            (user) => user.toString() !== currentUserId.toString(),
          );
          targetUser.followers = newTargetUserFollowers;
 
          // Remove the target user from the current user's following array
          const newCurrentUserFollowing = currentUser.followings.filter(
-            (user) => user.toString() !== targetUserId.toString()
+            (user) => user.toString() !== targetUserId.toString(),
          );
          currentUser.followings = newCurrentUserFollowing;
 
@@ -346,7 +346,7 @@ export const getAllPoemsOfUser = asyncHandler(async (req, res) => {
             image = await result.Body?.transformToString("base64");
          }
          return { ...poem._doc, encodedCoverImg: image };
-      })
+      }),
    );
    res.json(poemsWithEncodedCoverImg);
 });
@@ -357,7 +357,7 @@ export const getAllPoemsOfUser = asyncHandler(async (req, res) => {
 export const fetchFollowerList = asyncHandler(async (req, res) => {
    const targetUser = await User.findById(req.params.userId).populate(
       "followers",
-      "name profileImg"
+      "name profileImg",
    );
 
    if (targetUser) {
@@ -370,7 +370,7 @@ export const fetchFollowerList = asyncHandler(async (req, res) => {
                image = await result.Body?.transformToString("base64");
             }
             return { ...follower._doc, encodedProfileImg: image };
-         })
+         }),
       );
 
       res.status(200).json(targetUserFollowersWithEncodedProfileImgs);
@@ -386,7 +386,7 @@ export const fetchFollowerList = asyncHandler(async (req, res) => {
 export const fetchFollowingsList = asyncHandler(async (req, res) => {
    const targetUser = await User.findById(req.params.userId).populate(
       "followings",
-      "name profileImg"
+      "name profileImg",
    );
 
    if (targetUser) {
@@ -399,7 +399,7 @@ export const fetchFollowingsList = asyncHandler(async (req, res) => {
                image = await result.Body?.transformToString("base64");
             }
             return { ...following._doc, encodedProfileImg: image };
-         })
+         }),
       );
 
       res.status(200).json(targetUserFollowingsWithEncodedProfileImgs);
@@ -433,12 +433,12 @@ export const getAllNotificationsOfAUser = asyncHandler(async (req, res) => {
                image = await result.Body?.transformToString("base64");
             }
             return { ...user._doc, encodedProfileImg: image };
-         })
+         }),
       );
 
       // Sort the notifications by placing latest first in the first index
       const sortedNotiByDate = currentUserNotiWithEncodedProfileImgs.sort(
-         (a, b) => b.createdAt - a.createdAt
+         (a, b) => b.createdAt - a.createdAt,
       );
 
       res.status(200).json(sortedNotiByDate);
@@ -526,7 +526,7 @@ export const getPoemRecommendations = asyncHandler(async (req, res) => {
             image = await result.Body?.transformToString("base64");
          }
          return { ...currentPoem._doc, encodedCoverImg: image };
-      })
+      }),
    );
 
    res.status(200).json(recommendedPoemsWithEncodedCoverImg);
