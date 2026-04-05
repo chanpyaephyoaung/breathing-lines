@@ -15,12 +15,12 @@ const PoemPreviewPost = ({
    publishedAt,
    viewsCount,
    coverImg,
+   coverImgUrl,
    bgTheme,
    title,
    author,
    content,
    originalAuthor,
-   encodedCoverImg,
    onRemovePoemFromCollection,
    loadingRemovePoemFromCollection,
    isCurrentUserTheCollectionOwner,
@@ -112,7 +112,8 @@ const PoemPreviewPost = ({
             {coverImg && (
                <img
                   className="w-full h-32 md:h-40 lg:h-60 object-cover"
-                  src={encodedCoverImg ? `data:image/jpeg;base64,${encodedCoverImg}` : coverImg}
+                  src={coverImgUrl}
+                  loading="lazy"
                   alt=""
                />
             )}

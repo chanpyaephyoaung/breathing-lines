@@ -23,7 +23,7 @@ const NotificationDropdown = ({ socket }) => {
    const [updateUnreadNotiCount] = useUpdateUnreadNotiCountMutation();
 
    const { data: notifications, refetch: refetchGetNotis } = useGetNotificationsOfUserQuery(
-      userAccInfo?._id
+      userAccInfo?._id,
    );
    console.log(notifications);
    const { data: fetchedUnreadNotiCount, refetch: refetchUnreadNotiCount } =
@@ -109,9 +109,9 @@ const NotificationDropdown = ({ socket }) => {
                                     active ? "bg-clr-primary text-clr-white" : "text-clr-black"
                                  } group grid gap-x-2 grid-cols-[1fr_5fr] grid-rows-[2fr_1fr] w-full items-center rounded-md px-2 py-2 text-sm`}
                               >
-                                 {data?.encodedProfileImg ? (
+                                 {data?.profileImg ? (
                                     <img
-                                       src={`data:image/jpeg;base64,${data?.encodedProfileImg}`}
+                                       src={data?.profileImg}
                                        className="rounded-full w-10 h-10 md:w-10 md:h-10 object-cover row-span-2 self-start"
                                        alt={`data?.createdBy?.name profile image`}
                                     />

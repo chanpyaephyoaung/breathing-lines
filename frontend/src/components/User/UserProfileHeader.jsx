@@ -112,7 +112,7 @@ const UserProfileHeader = ({ activeNav, socket }) => {
                userAccInfo?._id,
                userId,
                `${userAccInfo?.name} started following you!`,
-               "follow"
+               "follow",
             );
 
             // Emitting socket event for following a user
@@ -141,7 +141,7 @@ const UserProfileHeader = ({ activeNav, socket }) => {
                   key={followerFollowing._id}
                   id={followerFollowing._id}
                   name={followerFollowing.name}
-                  img={followerFollowing.encodedProfileImg}
+                  img={followerFollowing.profileImgUrl}
                   onCloseModal={closeModal}
                   targetUserProfileDetails={userProfileDetails}
                   currentUserProfileDetails={currentUserProfileDetails}
@@ -166,9 +166,9 @@ const UserProfileHeader = ({ activeNav, socket }) => {
                <div className="mb-6">
                   <div className="flex items-center gap-x-6">
                      <div className="self-start">
-                        {userProfileDetails?.encodedProfileImage ? (
+                        {userProfileDetails?.profileImg ? (
                            <img
-                              src={`data:image/jpeg;base64,${userProfileDetails?.encodedProfileImage}`}
+                              src={userProfileDetails?.profileImg}
                               className="w-16 h-16 md:w-20 md:h-20 text-xs rounded-full object-cover border-2 border-clr-black"
                               alt="user profile image"
                            />
@@ -217,8 +217,8 @@ const UserProfileHeader = ({ activeNav, socket }) => {
                   {userProfileDetails?.targetUser?.profileDesc
                      ? generateLineBreakBtwSentences(userProfileDetails?.targetUser?.profileDesc)
                      : userAccInfo._id === userProfileDetails?.targetUser._id
-                     ? "Add your description..."
-                     : ""}
+                       ? "Add your description..."
+                       : ""}
                </p>
                {userAccInfo._id === userProfileDetails?.targetUser._id && (
                   <Link

@@ -7,7 +7,7 @@ import PoemReview from "../models/poemReviewModel.js";
 import PoemRating from "../models/poemRatingModel.js";
 import Collection from "../models/collectionModel.js";
 import generateJwtToken from "../helpers/generateJwtToken.js";
-import { s3RetrieveV3 } from "../s3Service.js";
+import retrieveImgUrl from "../helpers/retrieveImgUrl.js";
 
 // @desc    Authenticate user & get token
 // @route   POST /api/users/signin
@@ -127,12 +127,7 @@ export const signOutUser = asyncHandler(async (req, res) => {
 export const getUserAccProfile = asyncHandler(async (req, res) => {
    const targetUser = await User.findById(req.params.userId);
 
-   let image = "";
-
-   if (targetUser?.profileImg) {
-      const result = await s3RetrieveV3(targetUser.profileImg);
-      image = await result.Body?.transformToString("base64");
-   }
+   const image = await retrieveImgUrl(targetUser?.profileImg);
 
    if (targetUser && targetUser.profileReviews.length > 0) {
       const targetUserWithProfileReviews = await targetUser.populate({
@@ -149,10 +144,10 @@ export const getUserAccProfile = asyncHandler(async (req, res) => {
 
       res.status(200).json({
          targetUser: targetUserWithProfileReviews,
-         encodedProfileImage: image,
+         profileImg: image,
       });
    } else if (targetUser && targetUser.profileReviews.length === 0) {
-      res.status(200).json({ targetUser, encodedProfileImage: image });
+      res.status(200).json({ targetUser, profileImg: image });
    } else {
       res.status(404);
       throw new Error("Current user not found!");
@@ -337,18 +332,14 @@ export const getAllPoemsOfUser = asyncHandler(async (req, res) => {
       });
       poems = userObj.favoritedPoems;
    }
-   const poemsWithEncodedCoverImg = await Promise.all(
+   const poemsWithCoverImgs = await Promise.all(
       poems.map(async (poem, i) => {
-         let image = "";
-         if (poem?.coverImg) {
-            // Just for testing purpose. Remove the second condition in production
-            const result = await s3RetrieveV3(poem.coverImg);
-            image = await result.Body?.transformToString("base64");
-         }
-         return { ...poem._doc, encodedCoverImg: image };
+         const image = await retrieveImgUrl(poem?.coverImg);
+
+         return { ...poem._doc, coverImgUrl: image };
       }),
    );
-   res.json(poemsWithEncodedCoverImg);
+   res.json(poemsWithCoverImgs);
 });
 
 // @desc    Get user's followers list
@@ -363,12 +354,8 @@ export const fetchFollowerList = asyncHandler(async (req, res) => {
    if (targetUser) {
       const targetUserFollowersWithEncodedProfileImgs = await Promise.all(
          targetUser.followers.map(async (follower, i) => {
-            let image = "";
-            if (follower?.profileImg) {
-               // Just for testing purpose. Remove the second condition in production
-               const result = await s3RetrieveV3(follower.profileImg);
-               image = await result.Body?.transformToString("base64");
-            }
+            const image = await retrieveImgUrl(follower?.profileImg);
+
             return { ...follower._doc, encodedProfileImg: image };
          }),
       );
@@ -392,12 +379,8 @@ export const fetchFollowingsList = asyncHandler(async (req, res) => {
    if (targetUser) {
       const targetUserFollowingsWithEncodedProfileImgs = await Promise.all(
          targetUser.followings.map(async (following, i) => {
-            let image = "";
-            if (following?.profileImg) {
-               // Just for testing purpose. Remove the second condition in production
-               const result = await s3RetrieveV3(following.profileImg);
-               image = await result.Body?.transformToString("base64");
-            }
+            const image = await retrieveImgUrl(following?.profileImg);
+
             return { ...following._doc, encodedProfileImg: image };
          }),
       );
@@ -424,22 +407,16 @@ export const getAllNotificationsOfAUser = asyncHandler(async (req, res) => {
    });
 
    if (currentUser) {
-      const currentUserNotiWithEncodedProfileImgs = await Promise.all(
+      const currentUserNoti = await Promise.all(
          currentUser.notifications.map(async (user, i) => {
-            let image = "";
-            if (user?.createdBy?.profileImg) {
-               // Just for testing purpose. Remove the second condition in production
-               const result = await s3RetrieveV3(user?.createdBy?.profileImg);
-               image = await result.Body?.transformToString("base64");
-            }
-            return { ...user._doc, encodedProfileImg: image };
+            const image = await retrieveImgUrl(user?.createdBy?.profileImg);
+
+            return { ...user._doc, profileImg: image };
          }),
       );
 
       // Sort the notifications by placing latest first in the first index
-      const sortedNotiByDate = currentUserNotiWithEncodedProfileImgs.sort(
-         (a, b) => b.createdAt - a.createdAt,
-      );
+      const sortedNotiByDate = currentUserNoti.sort((a, b) => b.createdAt - a.createdAt);
 
       res.status(200).json(sortedNotiByDate);
    } else {
@@ -515,19 +492,15 @@ export const getPoemRecommendations = asyncHandler(async (req, res) => {
    const currentUserId = req.currentUser._id;
    const currentUser = await User.findById(currentUserId);
 
-   const recommendedPoemsWithEncodedCoverImg = await Promise.all(
+   const recommendedPoemsWithCoverImgs = await Promise.all(
       currentUser.poemRecommendations.map(async (poem, i) => {
          const currentPoem = await Poem.findById(poem.id).populate("author", "name");
 
-         let image = "";
-         if (currentPoem?.coverImg) {
-            // Just for testing purpose. Remove the second condition in production
-            const result = await s3RetrieveV3(currentPoem.coverImg);
-            image = await result.Body?.transformToString("base64");
-         }
-         return { ...currentPoem._doc, encodedCoverImg: image };
+         const image = await retrieveImgUrl(currentPoem?.coverImg);
+
+         return { ...currentPoem._doc, coverImgUrl: image };
       }),
    );
 
-   res.status(200).json(recommendedPoemsWithEncodedCoverImg);
+   res.status(200).json(recommendedPoemsWithCoverImgs);
 });

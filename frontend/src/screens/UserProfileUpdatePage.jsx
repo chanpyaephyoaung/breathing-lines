@@ -80,7 +80,7 @@ const UserProfileUpdatePage = () => {
       try {
          const res = await uploadUserProfileImage(formData).unwrap();
          toast.success(res.message);
-         setProfileImg(res.result.fileKey);
+         setProfileImg(res.fileKey);
       } catch (err) {
          toast.error(err?.data?.errMessage || err.error);
       }

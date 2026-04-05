@@ -4,7 +4,8 @@ import User from "../models/userModel.js";
 import PoemRating from "../models/poemRatingModel.js";
 import PoemReview from "../models/poemReviewModel.js";
 import PoemOfTheDay from "../models/poemOfTheDayModel.js";
-import { s3RetrieveV3 } from "../s3Service.js";
+import { getSignedImageUrl } from "../s3Service.js";
+import retrieveImgUrl from "../helpers/retrieveImgUrl.js";
 
 // @desc    Fetch all poems
 // @route   GET /api/poems
@@ -22,18 +23,31 @@ export const getAllPoems = asyncHandler(async (req, res) => {
       .populate("author", "name")
       .sort({ publishedAt: -1 });
 
-   const poemsWithEncodedCoverImg = await Promise.all(
-      poems.map(async (poem, i) => {
-         let image = "";
-         if (poem?.coverImg) {
-            // Just for testing purpose. Remove the second condition in production
-            const result = await s3RetrieveV3(poem.coverImg);
-            image = await result.Body?.transformToString("base64");
+   const imageCache = new Map();
+
+   const poemsWithImages = await Promise.all(
+      poems.map(async (poem) => {
+         const key = poem?.coverImg;
+
+         let coverImgUrl = null;
+
+         if (key) {
+            if (!imageCache.has(key)) {
+               const url = await getSignedImageUrl(key);
+               imageCache.set(key, url);
+            }
+
+            coverImgUrl = imageCache.get(key);
          }
-         return { ...poem._doc, encodedCoverImg: image };
-      })
+
+         return {
+            ...poem._doc,
+            coverImgUrl,
+         };
+      }),
    );
-   res.status(200).json(poemsWithEncodedCoverImg);
+
+   res.status(200).json(poemsWithImages);
 });
 
 // @desc    Fetch a single poem by ID
@@ -55,28 +69,20 @@ export const getSinglePoemById = asyncHandler(async (req, res) => {
          },
       });
 
-   let image = "";
-
    if (targetPoem) {
-      if (targetPoem?.coverImg && targetPoem.coverImg.startsWith("uploads/")) {
-         const result = await s3RetrieveV3(targetPoem.coverImg);
-         image = await result.Body?.transformToString("base64");
-      }
+      const poemCoverImgUrl = await retrieveImgUrl(targetPoem?.coverImg);
 
       const poemWithUserProfileImgs = await Promise.all(
          targetPoem?.reviews.map(async (review) => {
-            let profileImg = "";
-            if (review?.reviewedBy?.profileImg) {
-               const result = await s3RetrieveV3(review.reviewedBy.profileImg);
-               profileImg = await result.Body?.transformToString("base64");
-            }
+            const profileImg = await retrieveImgUrl(review?.reviewedBy?.profileImg);
+
             return { ...review._doc, encodedProfileImg: profileImg };
-         })
+         }),
       );
 
       return res.status(200).json({
          ...targetPoem._doc,
-         encodedCoverImg: image,
+         coverImgUrl: poemCoverImgUrl,
          reviews: poemWithUserProfileImgs,
       });
    } else {
@@ -100,19 +106,15 @@ export const getAllPoemsOfFollowingUsers = asyncHandler(async (req, res) => {
       .populate("author", "name")
       .sort({ publishedAt: -1 }); // Sort by publishedAt in descending order to get the latest poems first
 
-   const poemsWithEncodedCoverImg = await Promise.all(
+   const poemsWithCoverImg = await Promise.all(
       poemsOfFollowedUsers.map(async (poem, i) => {
-         let image = "";
-         if (poem?.coverImg) {
-            // Just for testing purpose. Remove the second condition in production
-            const result = await s3RetrieveV3(poem.coverImg);
-            image = await result.Body?.transformToString("base64");
-         }
-         return { ...poem._doc, encodedCoverImg: image };
-      })
+         const image = await retrieveImgUrl(poem?.coverImg);
+
+         return { ...poem._doc, coverImgUrl: image };
+      }),
    );
 
-   res.json(poemsWithEncodedCoverImg);
+   res.json(poemsWithCoverImg);
 });
 
 // @desc    Write a poem
@@ -234,7 +236,7 @@ export const likePoem = asyncHandler(async (req, res) => {
 
    if (poem) {
       const alreadyLiked = poem.likes.find(
-         (user) => user.toString() === req.currentUser._id.toString()
+         (user) => user.toString() === req.currentUser._id.toString(),
       );
 
       if (!alreadyLiked) {
@@ -250,12 +252,12 @@ export const likePoem = asyncHandler(async (req, res) => {
          poem.likesCount -= 1;
          // Remove the user from the likes array
          poem.likes = poem.likes.filter(
-            (user) => user.toString() !== req.currentUser._id.toString()
+            (user) => user.toString() !== req.currentUser._id.toString(),
          );
 
          // Remove the poem from the user's favoritedPoems field
          currentUser.favoritedPoems = currentUser.favoritedPoems.filter(
-            (poem) => poem.toString() !== poemId
+            (poem) => poem.toString() !== poemId,
          );
       }
 
@@ -346,7 +348,7 @@ export const createPoemReview = asyncHandler(async (req, res) => {
 
    const poemReview = await PoemReview.findOne({ reviewedBy: currentUserId, reviewedPoem: poemId });
    const alreadyReviewed = poem.reviews.find(
-      (review) => review?._id?.toString() === poemReview?._id?.toString()
+      (review) => review?._id?.toString() === poemReview?._id?.toString(),
    );
 
    if (!alreadyReviewed) {
@@ -411,7 +413,7 @@ export const editPoemReview = asyncHandler(async (req, res) => {
 
    // Update a poem reviews array
    const targetReviewIndex = targetPoem.reviews.findIndex(
-      (review) => review._id.toString() === poemReview._id.toString()
+      (review) => review._id.toString() === poemReview._id.toString(),
    );
    targetPoem.reviews[targetReviewIndex] = savedUpdatedReview._id;
    await targetPoem.save();
@@ -446,7 +448,7 @@ export const deletePoemReview = asyncHandler(async (req, res) => {
 
    // Remove a poem review from the poem reviews array
    targetPoem.reviews = targetPoem.reviews.filter(
-      (review) => review._id.toString() !== poemReview._id.toString()
+      (review) => review._id.toString() !== poemReview._id.toString(),
    );
    // Delete a poem review
    await PoemReview.deleteOne({ _id: poemReview._id });

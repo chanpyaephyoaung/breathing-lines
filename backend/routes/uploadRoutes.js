@@ -21,7 +21,8 @@ router.post("/", upload.single("file"), async (req, res) => {
    const file = req.file;
    try {
       const result = await s3UploadV3(file);
-      res.json({ message: "Image successfully uploaded!", result });
+
+      res.json({ message: "Image successfully uploaded!", fileKey: result.fileKey });
    } catch (err) {
       throw new Error(err);
    }

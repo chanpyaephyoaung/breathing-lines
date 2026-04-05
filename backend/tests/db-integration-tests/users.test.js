@@ -144,7 +144,7 @@ describe("Integration tests for USERS endpoints with database.", () => {
          assert.equal(res.status, 500);
          assert.equal(
             res.body.errMessage,
-            "User validation failed: name: Path `name` is required."
+            "User validation failed: name: Path `name` is required.",
          );
       });
 
@@ -161,7 +161,7 @@ describe("Integration tests for USERS endpoints with database.", () => {
          assert.equal(res.status, 500);
          assert.equal(
             res.body.errMessage,
-            "User validation failed: email: Path `email` is required."
+            "User validation failed: email: Path `email` is required.",
          );
       });
 
@@ -178,7 +178,7 @@ describe("Integration tests for USERS endpoints with database.", () => {
          assert.equal(res.status, 500);
          assert.equal(
             res.body.errMessage,
-            "User validation failed: password: Path `password` is required."
+            "User validation failed: password: Path `password` is required.",
          );
       });
    });
@@ -227,7 +227,6 @@ describe("Integration tests for USERS endpoints with database.", () => {
          assert.property(res.body.targetUser, "notifications");
          assert.property(res.body.targetUser, "unreadNotificationsCount");
          assert.property(res.body.targetUser, "poemRecommendations");
-         assert.property(res.body, "encodedProfileImage");
       });
 
       it("Should not retrieve the user profile of a user who doesn't exist.", async () => {
@@ -574,7 +573,7 @@ describe("Integration tests for USERS endpoints with database.", () => {
          const createdDumUsers = await User.insertMany(users);
          const firstUserId = createdDumUsers[1]._id;
          const res = await request(app).get(
-            `/api/users/user-profile/${firstUserId}/poems/published`
+            `/api/users/user-profile/${firstUserId}/poems/published`,
          );
          assert.equal(res.status, 401);
          assert.equal(res.body.errMessage, "Unauthorised, token not presented.");
@@ -604,7 +603,7 @@ describe("Integration tests for USERS endpoints with database.", () => {
          const createdDumUsers = await User.insertMany(users);
          const firstUserId = createdDumUsers[1]._id;
          const res = await request(app).get(
-            `/api/users/user-profile/${firstUserId}/poems/favorites`
+            `/api/users/user-profile/${firstUserId}/poems/favorites`,
          );
          assert.equal(res.status, 401);
          assert.equal(res.body.errMessage, "Unauthorised, token not presented.");
@@ -786,7 +785,7 @@ describe("Integration tests for USERS endpoints with database.", () => {
          assert.equal(res.status, 201);
          assert.isNumber(
             res.body,
-            "The response body (unreadNotificationCount) should be an number."
+            "The response body (unreadNotificationCount) should be an number.",
          );
          assert.equal(res.body, 1);
       });
@@ -808,7 +807,7 @@ describe("Integration tests for USERS endpoints with database.", () => {
          assert.equal(res.status, 201);
          assert.isNumber(
             res.body,
-            "The response body (unreadNotificationCount) should be a number."
+            "The response body (unreadNotificationCount) should be a number.",
          );
          assert.equal(res.body, 0);
       });
@@ -852,7 +851,7 @@ describe("Integration tests for USERS endpoints with database.", () => {
          assert.equal(res.status, 200);
          assert.isNumber(
             res.body,
-            "The response body (unreadNotificationCount) should be a number."
+            "The response body (unreadNotificationCount) should be a number.",
          );
          assert.equal(res.body, 0);
       });

@@ -43,7 +43,7 @@ const WritePoemPage = () => {
       try {
          const res = await uploadPoemCoverImage(formData).unwrap();
          toast.success(res.message);
-         setCoverImg(res.result.fileKey);
+         setCoverImg(res.fileKey);
       } catch (err) {
          toast.error(err?.data?.errMessage || err.error);
       }

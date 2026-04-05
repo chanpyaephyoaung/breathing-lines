@@ -38,7 +38,6 @@ const checkPoemProperties = (poem) => {
    assert.property(poem, "reviews");
    assert.property(poem, "likes");
    assert.property(poem, "collections");
-   assert.property(poem, "encodedCoverImg");
 };
 
 describe("Integration tests for POEMS endpoints with database.", () => {

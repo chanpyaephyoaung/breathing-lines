@@ -187,7 +187,7 @@ const PoemFullPost = () => {
                userAccInfo?._id,
                poem?.author?._id,
                `${userAccInfo?.name} liked your poem "${poem?.title}!"`,
-               "like"
+               "like",
             );
 
             // Emitting socket event for liking a poem
@@ -214,7 +214,7 @@ const PoemFullPost = () => {
             userAccInfo?._id,
             poem?.author?._id,
             `${userAccInfo?.name} gave your poem "${poem.title}" a rating of ${value}!`,
-            "rate"
+            "rate",
          );
 
          // Emitting socket event for rating a poem
@@ -238,7 +238,7 @@ const PoemFullPost = () => {
             userAccInfo?._id,
             poem?.author?._id,
             `${userAccInfo?.name} reviewed your poem "${poem.title}"`,
-            "review"
+            "review",
          );
 
          // Emitting socket event for rating a poem
@@ -267,7 +267,7 @@ const PoemFullPost = () => {
    useEffect(() => {
       if (poem) {
          const alreadyLiked = poem?.likes.find(
-            (user) => user.toString() === userAccInfo?._id.toString()
+            (user) => user.toString() === userAccInfo?._id.toString(),
          );
          const isPoemPublished = poem?.status === POEM_WRITE_STATUS_PUBLISH;
          setPoemStatusSwitchEnabled(isPoemPublished);
@@ -382,11 +382,7 @@ const PoemFullPost = () => {
                      {poem.coverImg && (
                         <img
                            className="w-full max-h-[350px] h-65 object-cover border border-1 border-clr-black"
-                           src={
-                              poem.encodedCoverImg
-                                 ? `data:image/jpeg;base64,${poem.encodedCoverImg}`
-                                 : poem?.coverImg
-                           }
+                           src={poem?.coverImgUrl}
                            alt={`${poem?.title} cover image`}
                         />
                      )}

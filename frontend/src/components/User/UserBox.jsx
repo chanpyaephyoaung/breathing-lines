@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 const UserBox = ({
    id: targetUserId,
    name,
-   img,
+   profileImg,
    onCloseModal,
    targetUserProfileDetails,
    currentUserProfileDetails,
@@ -49,7 +49,7 @@ const UserBox = ({
                userAccInfo?._id,
                targetUserId,
                `${userAccInfo?.name} started following you!`,
-               "follow"
+               "follow",
             );
 
             // Emitting socket event for following a user
@@ -74,9 +74,9 @@ const UserBox = ({
             className={`w-5/6
              grid grid-cols-[35px_1fr_1fr] md:grid-cols-[45px_1fr_1fr] items-center gap-x-6 gap-y-6 pb-2`}
          >
-            {img ? (
+            {profileImg ? (
                <img
-                  src={`data:image/jpeg;base64,${img}`}
+                  src={profileImg}
                   alt="user profile"
                   className={`w-[35px] h-[35px] md:w-[45px] md:h-[45px] rounded-full border border-clr-black object-cover row-start-1`}
                />
@@ -106,8 +106,8 @@ const UserBox = ({
                            ? " Unfollow"
                            : "Follow"
                         : targetUserProfileDetails?.targetUser?.followings.includes(targetUserId)
-                        ? "Unfollow"
-                        : "Follow"}
+                          ? "Unfollow"
+                          : "Follow"}
                   </button>
                )}
             {userAccInfo._id === targetUserProfileDetails?.targetUser?._id && (
@@ -121,8 +121,8 @@ const UserBox = ({
                         ? " Unfollow"
                         : "Follow"
                      : currentUserProfileDetails?.targetUser?.followings.includes(targetUserId)
-                     ? " Unfollow"
-                     : "Follow"}
+                       ? " Unfollow"
+                       : "Follow"}
                </button>
             )}
          </div>

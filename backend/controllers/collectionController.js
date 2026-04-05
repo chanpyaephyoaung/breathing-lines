@@ -2,7 +2,7 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import User from "../models/userModel.js";
 import Poem from "../models/poemModel.js";
 import Collection from "../models/collectionModel.js";
-import { s3RetrieveV3 } from "../s3Service.js";
+import retrieveImgUrl from "../helpers/retrieveImgUrl.js";
 
 // @desc    Create a new collection
 // @route   POST /api/users/user-profile/:userId/collections
@@ -56,19 +56,15 @@ export const getOneCollectionOfUser = asyncHandler(async (req, res) => {
       })
       .populate("createdBy", "name");
 
-   const poemsWithEncodedCoverImg = await Promise.all(
+   const poemsWithCoverImg = await Promise.all(
       collection.poems.map(async (poem, i) => {
-         let image = "";
-         if (poem?.coverImg) {
-            // Just for testing purpose. Remove the second condition in production
-            const result = await s3RetrieveV3(poem.coverImg);
-            image = await result.Body?.transformToString("base64");
-         }
-         return { ...poem._doc, encodedCoverImg: image };
-      })
+         const image = await retrieveImgUrl(poem?.coverImg);
+
+         return { ...poem._doc, coverImgUrl: image };
+      }),
    );
 
-   res.status(200).json({ ...collection._doc, poems: poemsWithEncodedCoverImg });
+   res.status(200).json({ ...collection._doc, poems: poemsWithCoverImg });
 });
 
 // @desc    Add a poem to a collection
@@ -116,7 +112,7 @@ export const removePoemFromCollection = asyncHandler(async (req, res) => {
    if (poemExistsInCollection) {
       // Remove the poem from the collection
       targetCollection.poems = targetCollection.poems.filter(
-         (poem) => poem.toString() !== targetPoem._id.toString()
+         (poem) => poem.toString() !== targetPoem._id.toString(),
       );
       await targetCollection.save();
 
@@ -139,7 +135,7 @@ export const deleteCollection = asyncHandler(async (req, res) => {
    if (currentCollection) {
       // Remove a poem review from the poem reviews array
       currentUser.collections = currentUser.collections.filter(
-         (collection) => collection._id.toString() !== currentCollection.toString()
+         (collection) => collection._id.toString() !== currentCollection.toString(),
       );
       await Collection.deleteOne({ _id: currentCollection._id });
       res.status(200).json({ message: "Collection deleted successfully." });
