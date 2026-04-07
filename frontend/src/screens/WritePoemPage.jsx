@@ -25,6 +25,7 @@ const WritePoemPage = () => {
    const [title, setTitle] = useState("");
    const [content, setContent] = useState("");
    const [coverImg, setCoverImg] = useState("");
+   const [coverImgFromForm, setCoverImgFromForm] = useState("");
    const [genres, setGenres] = useState("");
    const [selectedBgTheme, setSelectedBgTheme] = useState(bgThemes[0]);
 
@@ -37,16 +38,10 @@ const WritePoemPage = () => {
 
    const [writeNewPoem, { isLoading: loadingWriteNewPoem }] = useWriteNewPoemMutation();
 
-   const uploadFileHandler = async (e) => {
+   const changeCoverImg = async (e) => {
       const formData = new FormData();
       formData.append("file", e.target.files[0]);
-      try {
-         const res = await uploadPoemCoverImage(formData).unwrap();
-         toast.success(res.message);
-         setCoverImg(res.fileKey);
-      } catch (err) {
-         toast.error(err?.data?.errMessage || err.error);
-      }
+      setCoverImgFromForm(formData);
    };
 
    const submitHandler = async (e, status) => {
@@ -62,10 +57,17 @@ const WritePoemPage = () => {
          return;
       } else {
          try {
+            // Upload cover image to s3
+            if (!coverImgFromForm) {
+               toast.error("Please select a cover image");
+               return;
+            }
+            const res = await uploadPoemCoverImage(coverImgFromForm).unwrap();
+
             const newPoem = {
                title,
                content,
-               coverImg: coverImg || "",
+               coverImg: res.fileKey || "",
                bgTheme: selectedBgTheme,
                genres: genres.split(","),
                status,
@@ -154,7 +156,7 @@ const WritePoemPage = () => {
                               className="block file:text-clr-white file:rounded file:border-0 file:py-3 file:px-6 file:mr-4 file:bg-clr-primary file:cursor-pointer text-clr-black-faded text-sm md:text-base pr-3 bg-clr-bg w-full border border-t-0 border-clr-black-faded rounded-lg focus:outline-none focus:border-clr-primary focus:ring-clr-primary focus:ring-1 cursor-pointer leading-none"
                               label="Choose file"
                               type="file"
-                              onChange={uploadFileHandler}
+                              onChange={changeCoverImg}
                            />
                         </div>
                      </div>
