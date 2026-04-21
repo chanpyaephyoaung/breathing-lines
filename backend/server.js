@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
+import apiLoadTestHandler from "./middleware/apiLoadTest.js";
 import { createServer } from "node:http";
 import connectDB from "./config/database.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
@@ -43,6 +44,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Cookie parser middleware
 app.use(cookieParser());
+
+app.use(apiLoadTestHandler);
 
 app.get("/", (req, res) => {
    res.send("API is running");
